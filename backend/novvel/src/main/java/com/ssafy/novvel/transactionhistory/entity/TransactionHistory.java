@@ -1,6 +1,6 @@
 package com.ssafy.novvel.transactionhistory.entity;
 
-import com.ssafy.novvel.user.entity.Member;
+import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.util.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
