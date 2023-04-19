@@ -1,11 +1,14 @@
 package com.ssafy.novvel.file.service;
 
 import com.madgag.gif.fmsware.GifDecoder;
-import com.ssafy.novvel.file.repository.FileRepository;
-import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.exception.NotSupportFormatException;
+import com.ssafy.novvel.file.entity.Resource;
+import com.ssafy.novvel.file.repository.ResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,20 +16,72 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FileServiceImpl implements FileService {
+public class ResourceServiceImpl implements ResourceService {
 
     private final AwsProxyService awsProxyService;
-    private final FileRepository fileRepository;
+    private final ResourceRepository resourceRepository;
 
 
     @Override
-    public String fileSave(File file, Member member) {
+    @Transactional
+    public Resource saveFile(File file) throws IOException {
+        String fileExtension = getFileExtension(file);
+        String fileNamePrefix = "files/" + LocalDate.now(ZoneId.of("Asia/Seoul")) + UUID.randomUUID() + "-";
+        File thumbnail = null, mid = null;
+        String url = null;
 
-        return null;
+        Resource resourceEntity = null;
+        try {
+            switch (fileExtension) {
+                case ".jpg":
+                case ".jpeg":
+                    mid = convertToPng(file);
+                    thumbnail = convertResolutionPng(mid, 200, 200);
+                    resourceEntity = new Resource(file.getName(), true);
+                    break;
+                case ".png":
+                    thumbnail = convertResolutionPng(file, 200, 200);
+                    resourceEntity = new Resource(file.getName(), true);
+                    break;
+                case ".gif":
+                    mid = makeThumbnailFromGif(file);
+                    thumbnail = convertResolutionPng(mid, 200, 200);
+                    resourceEntity = new Resource(file.getName(), true);
+                    break;
+
+                case ".mp3":
+                case ".wma":
+                    resourceEntity = new Resource(file.getName(), false);
+                    break;
+                default:
+                    throw new NotSupportFormatException();
+            }
+
+            url = awsProxyService.uploadFile(file, fileNamePrefix + file.getName());
+
+            resourceEntity.setUrl(url);
+            if (thumbnail != null) {
+                String thumbnailUrl = awsProxyService.uploadFile(thumbnail, fileNamePrefix + thumbnail.getName());
+                resourceEntity.setThumbnailUrl(thumbnailUrl);
+            }
+            resourceRepository.save(resourceEntity);
+
+        } finally {
+            if (thumbnail != null) {
+                thumbnail.delete();
+            }
+            if (mid != null) {
+                mid.delete();
+            }
+        }
+        return resourceEntity;
     }
 
     @Override
@@ -50,6 +105,10 @@ public class FileServiceImpl implements FileService {
         String fileName = getFineName(file);
         File result = new File(fileName + "_thumbnail.gif");
         gifDecoder.read(targetStream);
+
+        //todo gif중간으로 자를지 처음으로 자를지 정할것
+        int frameCount = gifDecoder.getFrameCount();
+
         BufferedImage image = gifDecoder.getFrame(0); // 인덱스에 해당하는 프레임 추출
         ImageIO.write(image, "gif", result);
 
@@ -81,10 +140,10 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public  File convertResolutionPng(File file, int newWidth, int newHeight) throws IOException {
+    public File convertResolutionPng(File file, int newWidth, int newHeight) throws IOException {
         File inputFile = file;
         String fileName = getFineName(file);
-        File outputFile = new File(fileName+"_resolution.png");
+        File outputFile = new File(fileName + "_resolution.png");
 
         BufferedImage inputImage = ImageIO.read(inputFile);
 //        int width = inputImage.getWidth();
@@ -121,4 +180,11 @@ public class FileServiceImpl implements FileService {
         }
         return fileName;
     }
+
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int index = fileName.lastIndexOf('.');
+        return fileName.substring(index);
+    }
+
 }
