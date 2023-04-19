@@ -1,12 +1,12 @@
 package com.ssafy.novvel.file.service;
 
-import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.file.entity.Resource;
 
 import java.io.File;
 import java.io.IOException;
 
-public interface FileService {
-    String fileSave(File file, Member member);
+public interface ResourceService {
+    Resource saveFile(File file) throws IOException;
 
     String findOriginByFileName(String fileName);
 
