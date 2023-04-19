@@ -1,4 +1,4 @@
-package com.ssafy.novvel.user.entity;
+package com.ssafy.novvel.member.entity;
 
 import com.ssafy.novvel.file.entity.File;
 import com.ssafy.novvel.util.BaseEntity;
@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
