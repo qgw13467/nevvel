@@ -1,11 +1,13 @@
 package com.ssafy.novvel.file.service;
 
 import com.ssafy.novvel.file.entity.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 
 public interface ResourceService {
+    Resource saveFile(MultipartFile multipartFile) throws IOException;
     Resource saveFile(File file) throws IOException;
 
     String findOriginByFileName(String fileName);
