@@ -1,5 +1,6 @@
 package com.ssafy.novvel.asset.repository;
 
+import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.AssetTag;
 import com.ssafy.novvel.asset.entity.Tag;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,11 @@ import java.util.List;
 @Repository
 public interface AssetTagRepository extends JpaRepository<AssetTag, Long> {
 
-    @Query("SELECT DISTINCT at FROM AssetTag at WHERE at.tag in :tags")
-    Page<AssetTag> findByTagIn(@Param("tags") List<Tag> tags, Pageable pageable);
+    @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag in (:tags)")
+    Page<Asset> findByTagIn(@Param(value = "tags") List<Tag> tags, Pageable pageable);
+
+    @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag in (:tags)")
+    List<Asset> findByTagIn(@Param(value = "tags") List<Tag> tags);
+//    @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag.id IN (:tags)")
+//    List<Asset> findByTagIn(@Param(value = "tags") List<Long> tags);
 }
