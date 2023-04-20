@@ -20,4 +20,7 @@ public class Tag {
     private Long id;
     private String tagName;
 
+    public Tag(String tagName){
+        this.tagName = tagName;
+    }
 }
