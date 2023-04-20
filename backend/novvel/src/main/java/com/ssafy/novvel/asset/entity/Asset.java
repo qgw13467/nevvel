@@ -2,14 +2,20 @@ package com.ssafy.novvel.asset.entity;
 
 import com.ssafy.novvel.file.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
+import lombok.*;
 import javax.persistence.*;
-import javax.validation.constraints.NegativeOrZero;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Getter
+@Builder
 public class Asset {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
     private Resource resource;
@@ -19,14 +25,8 @@ public class Asset {
     private AssetType type;
     @Size(min = 0, max = 500)
     private String description;
-    @NegativeOrZero
+    @PositiveOrZero
     private Long point;
-
-
-
-
-
-
 
 
 }
