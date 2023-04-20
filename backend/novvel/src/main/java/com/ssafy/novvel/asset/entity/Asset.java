@@ -4,6 +4,7 @@ import com.ssafy.novvel.file.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
@@ -17,6 +18,8 @@ public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
+    private String title;
     @OneToOne(fetch = FetchType.LAZY)
     private Resource resource;
     @ManyToOne(fetch = FetchType.LAZY)
