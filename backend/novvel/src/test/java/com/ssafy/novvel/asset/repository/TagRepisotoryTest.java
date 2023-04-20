@@ -18,6 +18,7 @@ public class TagRepisotoryTest {
     @Test
     void findByTagNameInTest() {
 
+
         Tag tag1 = new Tag(1L, "공포");
         Tag tag2 = new Tag(2L, "호러");
         tagRepository.saveAll(List.of(tag1, tag2));
