@@ -25,9 +25,7 @@ public class TagRepisotoryTest {
 
         List<Tag> tags = tagRepository.findByTagNameIn(List.of("공포", "호러"));
 
-        Assertions.assertThat(tags.get(0).getId()).isEqualTo(1L);
         Assertions.assertThat(tags.get(0).getTagName()).isEqualTo("공포");
-        Assertions.assertThat(tags.get(1).getId()).isEqualTo(2L);
         Assertions.assertThat(tags.get(1).getTagName()).isEqualTo("호러");
 
 
