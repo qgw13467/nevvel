@@ -1,9 +1,9 @@
-package com.ssafy.novvel.file.service;
+package com.ssafy.novvel.resource.service;
 
 import com.madgag.gif.fmsware.GifDecoder;
 import com.ssafy.novvel.exception.NotSupportFormatException;
-import com.ssafy.novvel.file.entity.Resource;
-import com.ssafy.novvel.file.repository.ResourceRepository;
+import com.ssafy.novvel.resource.entity.Resource;
+import com.ssafy.novvel.resource.repository.ResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

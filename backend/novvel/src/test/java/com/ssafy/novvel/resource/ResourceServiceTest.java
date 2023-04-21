@@ -1,9 +1,9 @@
-package com.ssafy.novvel.file;
+package com.ssafy.novvel.resource;
 
-import com.ssafy.novvel.file.entity.Resource;
-import com.ssafy.novvel.file.repository.ResourceRepository;
-import com.ssafy.novvel.file.service.AwsProxyService;
-import com.ssafy.novvel.file.service.ResourceServiceImpl;
+import com.ssafy.novvel.resource.entity.Resource;
+import com.ssafy.novvel.resource.repository.ResourceRepository;
+import com.ssafy.novvel.resource.service.AwsProxyService;
+import com.ssafy.novvel.resource.service.ResourceServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

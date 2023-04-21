@@ -3,7 +3,7 @@ package com.ssafy.novvel.util;
 import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.AssetType;
 import com.ssafy.novvel.asset.entity.Tag;
-import com.ssafy.novvel.file.entity.Resource;
+import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 
 import java.util.ArrayList;

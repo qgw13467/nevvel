@@ -1,6 +1,6 @@
-package com.ssafy.novvel.file.service;
+package com.ssafy.novvel.resource.service;
 
-import com.ssafy.novvel.file.entity.Resource;
+import com.ssafy.novvel.resource.entity.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

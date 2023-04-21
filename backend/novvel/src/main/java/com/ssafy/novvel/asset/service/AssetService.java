@@ -4,7 +4,6 @@ import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.Tag;
-import com.ssafy.novvel.file.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;

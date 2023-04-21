@@ -1,6 +1,6 @@
 package com.ssafy.novvel.asset.entity;
 
-import com.ssafy.novvel.file.entity.Resource;
+import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.*;
 import javax.persistence.*;
