@@ -23,7 +23,6 @@ public class TestUtil {
             .build();
     }
 
-<<<<<<< backend/novvel/src/test/java/com/ssafy/novvel/util/TestUtil.java
     public static Optional<Member> getGUESTMember() {
         return Optional.of(Member.builder()
             .id(1L)
