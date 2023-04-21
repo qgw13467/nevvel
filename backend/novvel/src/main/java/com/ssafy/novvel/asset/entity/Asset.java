@@ -1,35 +1,46 @@
 package com.ssafy.novvel.asset.entity;
 
-import com.ssafy.novvel.file.entity.Resource;
-import com.ssafy.novvel.util.BaseEntity;
+import com.ssafy.novvel.asset.dto.AssetRegistDto;
+import com.ssafy.novvel.resource.entity.Resource;
+import com.ssafy.novvel.member.entity.Member;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Asset extends BaseEntity {
+public class Asset {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
-    @JoinColumn(name = "id")
+    @NotNull
+    private String title;
+    @OneToOne(fetch = FetchType.LAZY)
     private Resource resource;
-
-    @Setter
-    @NotNull
-    private String type;
-
-    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+    @Enumerated(EnumType.STRING)
+    private AssetType type;
+    @Size(min = 0, max = 500)
     private String description;
-
-    @Setter
-    @NotNull
+    @PositiveOrZero
     private Long point;
 
+    public Asset(AssetRegistDto assetRegistDto, Resource resource, Member member){
+        this.title = assetRegistDto.getTitle();
+        this.description = assetRegistDto.getDescription();
+        this.point = assetRegistDto.getPoint();
+        this.type = assetRegistDto.getType();
+        this.resource = resource;
+        this.member = member;
+    }
+
+
 }
+
