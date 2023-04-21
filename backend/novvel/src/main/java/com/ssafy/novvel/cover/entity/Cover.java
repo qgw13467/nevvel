@@ -1,7 +1,7 @@
 package com.ssafy.novvel.cover.entity;
 
-import com.ssafy.novvel.file.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.util.BaseEntity;
 import lombok.*;
 
