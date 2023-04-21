@@ -4,25 +4,18 @@ import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.AssetTag;
 import com.ssafy.novvel.asset.entity.AssetType;
 import com.ssafy.novvel.asset.entity.Tag;
-import com.ssafy.novvel.util.TestUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @DataJpaTest
 public class AssetTagRepositoryTest {
-    @Autowired
-    private TestEntityManager testEntityManager;
+
     @Autowired
     private AssetTagRepository assetTagRepository;
     @Autowired
@@ -37,6 +30,7 @@ public class AssetTagRepositoryTest {
         Asset asset = Asset.builder()
                 .member(null)
                 .resource(null)
+                .title("title")
                 .description("descr")
                 .type(AssetType.IMAGE)
                 .point(100L)
