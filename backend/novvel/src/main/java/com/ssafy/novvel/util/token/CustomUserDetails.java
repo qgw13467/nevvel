@@ -1,5 +1,6 @@
 package com.ssafy.novvel.util.token;
 
+import com.ssafy.novvel.member.entity.Member;
 import java.util.Collection;
 import java.util.Set;
 import lombok.Builder;
@@ -11,11 +12,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private String role;
-    private Long id;
+    private Member member;
+
+    public Member getMember() {
+        return this.member;
+    }
 
     public Long getId() {
-        return this.id;
+        return this.member.getId();
+    }
+
+    public String getRole() {
+        return this.member.getRole();
     }
 
     @Override

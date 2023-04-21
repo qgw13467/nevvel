@@ -47,8 +47,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 String clientSub = jwtProvider.validateToken(accessToken);
                 memberRepository.findBySub(clientSub).ifPresentOrElse(member -> {
                     UserDetails userDetailsUser = CustomUserDetails.builder()
-                        .id(member.getId())
-                        .role(member.getRole())
+                        .member(member)
                         .build();
 
                     Authentication authentication =
