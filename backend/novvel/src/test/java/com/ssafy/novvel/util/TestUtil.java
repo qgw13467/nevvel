@@ -3,10 +3,13 @@ package com.ssafy.novvel.util;
 import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.AssetType;
 import com.ssafy.novvel.asset.entity.Tag;
+import com.ssafy.novvel.file.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestUtil {
 
@@ -38,6 +41,19 @@ public class TestUtil {
                     .point(100L)
                     .build();
             result.add(asset);
+        }
+        return result;
+    }
+
+    public static Resource getResource(){
+        return new Resource(1L, "test.gif","path",true,"thumbnailpath");
+    }
+
+    public static Set<Tag> getTagSet(int index) {
+        Set<Tag> result = new HashSet<>();
+        for (int i = 0; i < index; i++) {
+            Tag tag = new Tag(Long.valueOf(i), Long.valueOf(i).toString());
+            result.add(tag);
         }
         return result;
     }
