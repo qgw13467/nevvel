@@ -2,6 +2,7 @@ package com.ssafy.novvel.member.service;
 
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.member.repository.MemberRepository;
+import com.ssafy.novvel.oauth2.OidcMemberService;
 import com.ssafy.novvel.util.TestUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

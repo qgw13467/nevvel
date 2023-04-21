@@ -1,4 +1,4 @@
-package com.ssafy.novvel.member.service;
+package com.ssafy.novvel.oauth2;
 
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.member.repository.MemberRepository;
@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
@@ -32,27 +33,27 @@ public class OidcMemberService implements OAuth2UserService<OidcUserRequest, Oid
         final OidcUser oidcUser = delegate.loadUser(userRequest);
 
         String clientName = userRequest.getClientRegistration().getClientName();
+        String clientSub = clientName + "_" + oidcUser.getName();
         Set<GrantedAuthority> mappedAuthorities = getAuthority(
-            clientName + "_" + oidcUser.getName(), oidcUser.getEmail());
+            clientSub, oidcUser.getEmail());
 
         return new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(),
-            oidcUser.getUserInfo());
+            OidcUserInfo.builder().claim(CustomUserInfo.CLIENT_SUB.getValue(), clientSub).build());
     }
 
     private Set<GrantedAuthority> getAuthority(String sub, String email) {
         Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
         memberRepository.findBySub(sub)
-            .ifPresentOrElse(member ->
-                mappedAuthorities.add(new SimpleGrantedAuthority(member.getRole())), () ->
-                mappedAuthorities.add(new SimpleGrantedAuthority(
+            .ifPresentOrElse(
+                member -> mappedAuthorities.add(new SimpleGrantedAuthority(member.getRole())),
+                () -> mappedAuthorities.add(new SimpleGrantedAuthority(
                         memberRepository.save(Member.builder()
-                                .sub(sub)
-                                .email(email)
-                                .role("ROLE_GUEST")
-                                .build()
-                            )
-                            .getRole()
+                            .sub(sub)
+                            .email(email)
+                            .role("ROLE_GUEST")
+                            .build()
+                        ).getRole()
                     )
                 )
             );
