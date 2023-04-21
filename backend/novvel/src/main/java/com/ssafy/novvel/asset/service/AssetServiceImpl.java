@@ -8,8 +8,8 @@ import com.ssafy.novvel.asset.entity.Tag;
 import com.ssafy.novvel.asset.repository.AssetRepository;
 import com.ssafy.novvel.asset.repository.AssetTagRepository;
 import com.ssafy.novvel.asset.repository.TagRepository;
-import com.ssafy.novvel.file.entity.Resource;
-import com.ssafy.novvel.file.service.ResourceService;
+import com.ssafy.novvel.resource.entity.Resource;
+import com.ssafy.novvel.resource.service.ResourceService;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,13 +39,7 @@ public class AssetServiceImpl implements AssetService {
         Resource resource = resourceService.saveFile(multipartFile);
 
         //에셋 저장
-        Asset asset = Asset.builder()
-                .type(assetRegistDto.getType())
-                .description(assetRegistDto.getDescription())
-                .point(assetRegistDto.getPoint())
-                .member(member)
-                .resource(resource)
-                .build();
+        Asset asset = new Asset(assetRegistDto, resource, member);
         asset = assetRepository.save(asset);
 
         Set<Tag> savedTags = savedTags(assetRegistDto.getTags());

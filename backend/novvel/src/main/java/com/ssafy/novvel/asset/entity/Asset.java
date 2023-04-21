@@ -1,5 +1,6 @@
 package com.ssafy.novvel.asset.entity;
 
+import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.*;
@@ -30,6 +31,15 @@ public class Asset {
     private String description;
     @PositiveOrZero
     private Long point;
+
+    public Asset(AssetRegistDto assetRegistDto, Resource resource, Member member){
+        this.title = assetRegistDto.getTitle();
+        this.description = assetRegistDto.getDescription();
+        this.point = assetRegistDto.getPoint();
+        this.type = assetRegistDto.getType();
+        this.resource = resource;
+        this.member = member;
+    }
 
 
 }
