@@ -25,7 +25,7 @@ public class Cover extends BaseEntity {
     @Setter
     private Resource resource;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @Setter
     private Genre genre;
 
@@ -43,7 +43,9 @@ public class Cover extends BaseEntity {
 
     @Setter
     @NotNull
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CoverStatusType coverStatusType;
 
     @Setter
     private LocalDate publishDate;
