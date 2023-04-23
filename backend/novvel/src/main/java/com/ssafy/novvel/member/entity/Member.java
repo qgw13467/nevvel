@@ -35,12 +35,13 @@ public class Member extends BaseEntity {
 
     private String role;
 
+    private String refreshToken;
+
     @PositiveOrZero
     private Long point;
 
 
-
-
-
-
+    public void removeToken() {
+        this.refreshToken = null;
+    }
 }
