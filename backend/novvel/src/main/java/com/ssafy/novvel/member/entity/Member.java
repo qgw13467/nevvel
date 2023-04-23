@@ -35,6 +35,9 @@ public class Member extends BaseEntity {
 
     private String role;
 
+    @Size(max = 500)
+    private String description;
+
     @PositiveOrZero
     private Long point;
 
