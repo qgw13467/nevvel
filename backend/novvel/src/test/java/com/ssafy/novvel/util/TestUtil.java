@@ -29,6 +29,7 @@ public class TestUtil {
             .email("user@naver.com")
             .role("ROLE_GUEST")
             .sub("Kakao_2755574745")
+            .refreshToken("testToken")
             .build()
         );
     }
@@ -40,6 +41,7 @@ public class TestUtil {
             .role("ROLE_USER")
             .sub("Kakao_2755574745")
             .nickname("user")
+            .refreshToken("testToken")
             .point(0L)
             .build()
         );
@@ -54,6 +56,7 @@ public class TestUtil {
             .nickname("user")
             .point(0L)
             .description("test")
+            .refreshToken("testToken")
             .build();
     }
 
@@ -70,22 +73,22 @@ public class TestUtil {
         List<Asset> result = new ArrayList<>();
         for (int i = 0; i < index; i++) {
             Asset asset = Asset.builder()
-                    .id(Long.valueOf(i))
-                    .type(AssetType.IMAGE)
-                    .description(String.valueOf(i))
-                    .point(100L)
-                    .build();
+                .id(Long.valueOf(i))
+                .type(AssetType.IMAGE)
+                .description(String.valueOf(i))
+                .point(100L)
+                .build();
             result.add(asset);
         }
         return result;
     }
 
-    public static Resource getResource(){
-        return new Resource(1L, "test.gif","path",true,"thumbnailpath");
+    public static Resource getResource() {
+        return new Resource(1L, "test.gif", "path", true, "thumbnailpath");
     }
 
-    public static Resource getMemberProfile(){
-        return new Resource(1L, "cat.jpeg","path",true,"thumbnailpath");
+    public static Resource getMemberProfile() {
+        return new Resource(1L, "cat.jpeg", "path", true, "thumbnailpath");
     }
 
     public static Set<Tag> getTagSet(int index) {
