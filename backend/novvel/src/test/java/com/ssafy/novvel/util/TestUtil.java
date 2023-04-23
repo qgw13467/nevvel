@@ -26,9 +26,9 @@ public class TestUtil {
     public static Optional<Member> getGUESTMember() {
         return Optional.of(Member.builder()
             .id(1L)
-            .email("guest@naver.com")
+            .email("user@naver.com")
             .role("ROLE_GUEST")
-            .sub("Kakao_2755574744")
+            .sub("Kakao_2755574745")
             .build()
         );
     }
@@ -43,6 +43,18 @@ public class TestUtil {
             .point(0L)
             .build()
         );
+    }
+
+    public static Member getUSERMemberHasDesc() {
+        return Member.builder()
+            .id(1L)
+            .email("user@naver.com")
+            .role("ROLE_USER")
+            .sub("Kakao_2755574745")
+            .nickname("user")
+            .point(0L)
+            .description("test")
+            .build();
     }
 
     public static List<Tag> getTagList(int index) {
@@ -70,6 +82,10 @@ public class TestUtil {
 
     public static Resource getResource(){
         return new Resource(1L, "test.gif","path",true,"thumbnailpath");
+    }
+
+    public static Resource getMemberProfile(){
+        return new Resource(1L, "cat.jpeg","path",true,"thumbnailpath");
     }
 
     public static Set<Tag> getTagSet(int index) {
