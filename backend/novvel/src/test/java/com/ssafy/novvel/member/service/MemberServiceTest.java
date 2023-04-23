@@ -1,7 +1,5 @@
 package com.ssafy.novvel.member.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.ssafy.novvel.member.dto.MemberInfoRegistDto;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.member.repository.MemberRepository;

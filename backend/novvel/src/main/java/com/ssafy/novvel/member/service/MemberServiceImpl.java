@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
         Member fullInfoMember = new Member(member.getId(), resource,
             memberInfoRegistDto.getNickname(),
             member.getEmail(), member.getSub(), "ROLE_USER",
-            memberInfoRegistDto.getDescription(), member.getPoint());
+            memberInfoRegistDto.getDescription(), member.getRefreshToken(), member.getPoint());
 
         return memberRepository.save(fullInfoMember);
     }
