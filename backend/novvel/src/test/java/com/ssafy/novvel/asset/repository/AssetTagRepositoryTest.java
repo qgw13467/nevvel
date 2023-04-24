@@ -43,7 +43,7 @@ public class AssetTagRepositoryTest {
         assetTagRepository.save(assetTag);
 
         Pageable pageable = PageRequest.of(0, 5);
-        Page<Asset> result = assetTagRepository.findByTagIn(List.of(savedTag), pageable);
+        Page<Asset> result = assetTagRepository.findPageByTagIn(List.of(savedTag), pageable);
 
 
         Assertions.assertThat(result.getContent().get(0).getDescription()).isEqualTo("descr");
