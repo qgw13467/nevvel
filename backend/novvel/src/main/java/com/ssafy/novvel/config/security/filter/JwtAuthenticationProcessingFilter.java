@@ -53,11 +53,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 if (refreshToken != null) {
                     memberRepository.findByRefreshToken(refreshToken).ifPresentOrElse(member -> {
                         if (this.checkRefreshToken(member.getRefreshToken())) {
-                            Cookie newAccessToken = new Cookie("accessToken",
-                                jwtProvider.createAccessToken(member.getSub()));
-                            newAccessToken.setHttpOnly(true);
-                            newAccessToken.setPath("/");
-                            response.addCookie(newAccessToken);
+                            response.addCookie(jwtProvider.createAccessToken(member.getSub()));
                             response.setStatus(HttpStatus.CREATED.value());
                         } else {
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
