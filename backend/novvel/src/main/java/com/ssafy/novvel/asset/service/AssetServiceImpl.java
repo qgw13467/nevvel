@@ -34,6 +34,7 @@ public class AssetServiceImpl implements AssetService {
     private final TagRepository tagRepository;
     private final ResourceService resourceService;
 
+
     @Override
     @Transactional
     public Asset addAsset(MultipartFile multipartFile, Member member, AssetRegistDto assetRegistDto) throws IOException {
@@ -59,15 +60,29 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable) {
 
-        Slice<AssetTag> assetSearchDtoSlice = assetTagRepository.findSliceByTagIn(
+        Slice<Asset> assetSlice = assetTagRepository.findByTagIn(
                 tagRepository.findByTagNameIn(tags), pageable);
 
-        Slice<AssetSearchDto> result = new SliceImpl<>(
-                assetSearchDtoSlice.stream().map(assetTag -> new AssetSearchDto(assetTag.getAsset(),assetTag.getAsset().getTagList())).collect(Collectors.toList()),
+        List<Asset> assets = assetSlice.getContent();
+        List<AssetSearchDto> assetSearchDtos = assets.stream()
+                .map(AssetSearchDto::new)
+                .collect(Collectors.toList());
+
+        List<AssetTag> assetTags = assetTagRepository.findByAssetIn(assets);
+
+        for (AssetTag assetTag : assetTags) {
+            for (AssetSearchDto assetSearchDto : assetSearchDtos) {
+                if(assetSearchDto.getId().equals(assetTag.getAsset().getId())){
+                    assetSearchDto.addTags(assetTag.getTag());
+                }
+            }
+        }
+
+        return new SliceImpl<>(
+                assetSearchDtos,
                 pageable,
-                assetSearchDtoSlice.hasNext()
+                assetSlice.hasNext()
         );
-        return null;
     }
 
 

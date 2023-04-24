@@ -19,8 +19,11 @@ public interface AssetTagRepository extends JpaRepository<AssetTag, Long> {
     @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag in (:tags)")
     Page<Asset> findPageByTagIn(@Param(value = "tags") List<Tag> tags, Pageable pageable);
 
-    @Query("SELECT at  FROM AssetTag at LEFT JOIN FETCH at.asset LEFT JOIN FETCH at.tag WHERE at.tag in (:tags)")
-    Slice<AssetTag> findSliceByTagIn(@Param(value = "tags") List<Tag> tags, Pageable pageable);
+    @Query("SELECT DISTINCT at.asset  FROM AssetTag at  WHERE at.tag in (:tags)")
+    Slice<Asset> findByTagIn(@Param(value = "tags") List<Tag> tags, Pageable pageable);
+
+    List<AssetTag> findByAssetIn(List<Asset> assets);
+
     @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag in (:tags)")
     List<Asset> findByTagIn(@Param(value = "tags") List<Tag> tags);
 //    @Query("SELECT DISTINCT at.asset FROM AssetTag at WHERE at.tag.id IN (:tags)")
