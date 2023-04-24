@@ -4,13 +4,11 @@ import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,8 +32,7 @@ public class Asset {
     private String description;
     @PositiveOrZero
     private Long point;
-    @OneToMany(fetch = FetchType.LAZY)
-    List<Tag> tagList = new ArrayList<>();
+
 
     public Asset(AssetRegistDto assetRegistDto, Resource resource, Member member) {
         this.title = assetRegistDto.getTitle();
@@ -44,6 +41,13 @@ public class Asset {
         this.type = assetRegistDto.getType();
         this.resource = resource;
         this.member = member;
+    }
+
+    public Asset(String title, AssetType type, String description, Long point) {
+        this.title = title;
+        this.type = type;
+        this.description = description;
+        this.point = point;
     }
 
 
