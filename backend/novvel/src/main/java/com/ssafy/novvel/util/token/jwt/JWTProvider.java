@@ -1,6 +1,7 @@
 package com.ssafy.novvel.util.token.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JWTProvider {
+
     private final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     private static final String ACCESS_TOKEN = "accessToken";
@@ -37,11 +39,10 @@ public class JWTProvider {
     }
 
     /**
-     *
      * @param token 쿠키로 받은 토큰
      * @return clientSub
      */
-    public String validateToken(String token) throws ExpiredJwtException {
+    public String validateToken(String token) throws RuntimeException {
         // TODO ExpiredJwtException Advice 만들기
         return Jwts.parserBuilder()
             .setSigningKey(KEY)

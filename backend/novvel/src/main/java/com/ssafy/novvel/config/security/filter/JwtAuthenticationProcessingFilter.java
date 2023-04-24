@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -63,6 +62,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 }
                 return;
+            } catch (RuntimeException e) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return;
             }
         }
 
@@ -81,6 +83,12 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private boolean checkRefreshToken(String refreshToken) {
-        return false;
+        try {
+            jwtProvider.validateToken(refreshToken);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+
     }
 }
