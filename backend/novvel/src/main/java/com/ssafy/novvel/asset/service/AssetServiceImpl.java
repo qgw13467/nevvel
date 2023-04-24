@@ -12,16 +12,18 @@ import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +57,19 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public Page<AssetSearchDto> searchAssetByTag(List<Tag> tags) {
+    public Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable) {
+
+        Slice<AssetTag> assetSearchDtoSlice = assetTagRepository.findSliceByTagIn(
+                tagRepository.findByTagNameIn(tags), pageable);
+
+        Slice<AssetSearchDto> result = new SliceImpl<>(
+                assetSearchDtoSlice.stream().map(assetTag -> new AssetSearchDto(assetTag.getAsset(),assetTag.getAsset().getTagList())).collect(Collectors.toList()),
+                pageable,
+                assetSearchDtoSlice.hasNext()
+        );
         return null;
     }
+
 
     //저장되지 않은 태그는 저장
     private Set<Tag> savedTags(List<String> tags) {
