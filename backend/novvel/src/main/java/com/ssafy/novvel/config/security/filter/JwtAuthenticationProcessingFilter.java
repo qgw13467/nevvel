@@ -1,5 +1,6 @@
 package com.ssafy.novvel.config.security.filter;
 
+import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.member.repository.MemberRepository;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import com.ssafy.novvel.util.token.jwt.JWTProvider;
@@ -34,33 +35,56 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
         String accessToken = null;
         String refreshToken = null;
-        for(Cookie cookie : request.getCookies()) {
-            if(cookie.getName().equals("accessToken")) {
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("accessToken")) {
                 accessToken = cookie.getValue();
-            } else if(cookie.getName().equals("refreshToken")) {
+            } else if (cookie.getName().equals("refreshToken")) {
                 refreshToken = cookie.getValue();
             }
         }
 
-        if(accessToken != null ) {
+        if (accessToken != null) {
             try {
                 String clientSub = jwtProvider.validateToken(accessToken);
-                memberRepository.findBySub(clientSub).ifPresentOrElse(member -> {
-                    UserDetails userDetailsUser = CustomUserDetails.builder()
-                        .member(member)
-                        .build();
-
-                    Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(userDetailsUser, null,
-                            userDetailsUser.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }, () -> response.setStatus(HttpStatus.UNAUTHORIZED.value()));
+                memberRepository.findBySub(clientSub).ifPresentOrElse(this::setAuthentication,
+                    () -> response.setStatus(HttpStatus.UNAUTHORIZED.value()));
+                filterChain.doFilter(request, response);
             } catch (ExpiredJwtException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                if (refreshToken != null) {
+                    memberRepository.findByRefreshToken(refreshToken).ifPresentOrElse(member -> {
+                        if (this.checkRefreshToken(member.getRefreshToken())) {
+                            Cookie newAccessToken = new Cookie("accessToken",
+                                jwtProvider.createAccessToken(member.getSub()));
+                            newAccessToken.setHttpOnly(true);
+                            newAccessToken.setPath("/");
+                            response.addCookie(newAccessToken);
+                            response.setStatus(HttpStatus.CREATED.value());
+                        } else {
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                        }
+                    }, () -> response.setStatus(HttpStatus.UNAUTHORIZED.value()));
+                } else {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                }
                 return;
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(Member member) {
+
+        UserDetails userDetailsUser = CustomUserDetails.builder()
+            .member(member)
+            .build();
+
+        SecurityContextHolder.getContext()
+            .setAuthentication(new UsernamePasswordAuthenticationToken(userDetailsUser, null,
+                userDetailsUser.getAuthorities()));
+    }
+
+    private boolean checkRefreshToken(String refreshToken) {
+        return false;
     }
 }
