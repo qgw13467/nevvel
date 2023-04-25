@@ -1,6 +1,7 @@
 package com.ssafy.novvel.asset.service;
 
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
+import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;
 import com.ssafy.novvel.asset.entity.AssetTag;
 import com.ssafy.novvel.asset.entity.AssetType;
@@ -19,6 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,7 +92,7 @@ public class AssetServiceTest {
         Mockito.doReturn(newTags).when(tagRepository).saveAll(Mockito.any());
         Mockito.doReturn(assetTags).when(assetTagRepository).saveAll(Mockito.any());
 
-        Asset result = assetService.addAsset(multipartFile,member,assetRegistDto);
+        Asset result = assetService.addAsset(multipartFile, member, assetRegistDto);
 
         //then
         Mockito.verify(tagRepository, Mockito.times(1)).saveAll(Mockito.any());
@@ -97,6 +102,50 @@ public class AssetServiceTest {
         Assertions.assertThat(result.getTitle()).isEqualTo(assetRegistDto.getTitle());
         Assertions.assertThat(result.getPoint()).isEqualTo(assetRegistDto.getPoint());
         Assertions.assertThat(result.getType()).isEqualTo(assetRegistDto.getType());
+    }
+
+    @Test
+    void searchAssetByTagTest() {
+
+        Asset asset1 = new Asset(1L, "title1", AssetType.IMAGE, "desc1", 100L);
+        Asset asset2 = new Asset(2L, "title2", AssetType.IMAGE, "desc1", 100L);
+        Asset asset3 = new Asset(3L, "title3", AssetType.IMAGE, "desc1", 100L);
+
+        Tag tag1 = new Tag(1L, "tag1");
+        Tag tag2 = new Tag(2L, "tag2");
+        Tag tag3 = new Tag(3L, "tag3");
+
+        List<AssetTag> findByAssetInResult = List.of(
+                new AssetTag(asset1, tag1),
+                new AssetTag(asset1, tag2),
+                new AssetTag(asset2, tag2),
+                new AssetTag(asset3, tag3)
+        );
+
+        List<Tag> findByTagNameInResult = List.of(tag1, tag2);
+        Pageable pageable = PageRequest.of(0, 5);
+        Slice<Asset> findByTagInResult = new SliceImpl<>(
+                List.of(asset1, asset2),
+                pageable,
+                false
+        );
+
+        List<String> findTageNames = List.of("tag1", "tag2");
+
+        //when
+        Mockito.doReturn(findByTagNameInResult).when(tagRepository).findByTagNameIn(findTageNames);
+        Mockito.doReturn(findByTagInResult).when(assetTagRepository).findByTagIn(findByTagNameInResult, pageable);
+        Mockito.doReturn(findByAssetInResult).when(assetTagRepository).findByAssetIn(findByTagInResult.getContent());
+
+        Slice<AssetSearchDto> assetSearchDtos = assetService.searchAssetByTag(findTageNames, pageable);
+
+        //then
+        Mockito.verify(tagRepository, Mockito.times(1)).findByTagNameIn(findTageNames);
+        Mockito.verify(assetTagRepository, Mockito.times(1)).findByTagIn(findByTagNameInResult, pageable);
+        Mockito.verify(assetTagRepository, Mockito.times(1)).findByAssetIn(findByTagInResult.getContent());
+        Assertions.assertThat(assetSearchDtos.getContent().size()).isEqualTo(2);
+
+
     }
 
 
