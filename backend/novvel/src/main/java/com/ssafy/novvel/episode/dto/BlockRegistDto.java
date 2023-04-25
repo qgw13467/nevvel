@@ -5,17 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EpisodeRegistDto {
+public class BlockRegistDto {
 
- @NotNull
- private Long coverId;
+    private Long episodeId;
 
- @NotNull
- private Long point;
+    private Long idx;
+
+    private String context;
 }

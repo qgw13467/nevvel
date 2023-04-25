@@ -1,10 +1,9 @@
 package com.ssafy.novvel.episode.controller;
 
-import com.ssafy.novvel.episode.entity.Episode;
+import com.ssafy.novvel.episode.dto.EpisodeInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,25 +11,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EpisodeController {
 
+
     @PostMapping
     public String createEpisode() {
 
         return null;
     }
 
-    @GetMapping("/{episodeID}")
-    public ResponseEntity<?> getEpisode() {
+    @GetMapping("/{episodeId}")
+    public ResponseEntity<EpisodeInfoDto> getEpisode(@PathVariable("episodeId") String episodeId) {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{episodeID}")
+    @DeleteMapping("/{episodeId}")
     public String deleteEpisode() {
 
         return null;
     }
 
-    @PutMapping("/{episodeID}")
+    @PutMapping("/{episodeId}")
     public String editEpisode() {
 
         return null;
