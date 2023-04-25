@@ -8,6 +8,8 @@ import com.ssafy.novvel.asset.entity.Tag;
 import com.ssafy.novvel.asset.repository.AssetRepository;
 import com.ssafy.novvel.asset.repository.AssetTagRepository;
 import com.ssafy.novvel.asset.repository.TagRepository;
+import com.ssafy.novvel.memberasset.entity.MemberAsset;
+import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
 import com.ssafy.novvel.member.entity.Member;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +36,7 @@ public class AssetServiceImpl implements AssetService {
     private final AssetTagRepository assetTagRepository;
     private final TagRepository tagRepository;
     private final ResourceService resourceService;
-
+    private final MemberAssetRepository memberAssetRepository;
 
     @Override
     @Transactional
@@ -58,7 +61,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable) {
+    public Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable, Member member) {
 
         Slice<Asset> assetSlice = assetTagRepository.findByTagIn(
                 tagRepository.findByTagNameIn(tags), pageable);
@@ -68,15 +71,29 @@ public class AssetServiceImpl implements AssetService {
                 .map(AssetSearchDto::new)
                 .collect(Collectors.toList());
 
+        //각 에셋에 태그목록을 추가
         List<AssetTag> assetTags = assetTagRepository.findByAssetIn(assets);
-
         for (AssetTag assetTag : assetTags) {
             for (AssetSearchDto assetSearchDto : assetSearchDtos) {
-                if(assetSearchDto.getId().equals(assetTag.getAsset().getId())){
+                if (assetSearchDto.getId().equals(assetTag.getAsset().getId())) {
                     assetSearchDto.addTags(assetTag.getTag());
                 }
             }
         }
+
+        //로그인된 사용자면 구매했는지 표시
+        if (member != null) {
+            List<MemberAsset> memberAssets =
+                    memberAssetRepository.findByMemberAndAssetIn(member, assetSlice.getContent());
+            for (AssetSearchDto assetSearchDto : assetSearchDtos) {
+                for (MemberAsset memberAsset : memberAssets) {
+                    if (assetSearchDto.getId().equals(memberAsset.getAsset().getId())) {
+                        assetSearchDto.setIsAvailable(true);
+                    }
+                }
+            }
+        }
+
 
         return new SliceImpl<>(
                 assetSearchDtos,

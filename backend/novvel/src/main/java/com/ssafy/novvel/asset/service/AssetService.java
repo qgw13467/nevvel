@@ -14,7 +14,7 @@ import java.util.List;
 public interface AssetService {
 
     Asset addAsset(MultipartFile file, Member member, AssetRegistDto assetRegistDto) throws IOException;
-    Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable);
+    Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable, Member member);
 
 
 

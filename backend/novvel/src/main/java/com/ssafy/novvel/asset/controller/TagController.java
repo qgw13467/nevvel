@@ -2,6 +2,7 @@ package com.ssafy.novvel.asset.controller;
 
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.service.AssetService;
+import com.ssafy.novvel.util.token.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -24,14 +25,13 @@ public class TagController {
 
     private final AssetService assetService;
 
-    //todo 유저정보를 통해 구매한 에셋인지 보내는 코드 자겅
     @GetMapping
-    public ResponseEntity<?> findAssetsByTags(@RequestParam("keyword") List<String> keywords,
-                                              @AuthenticationPrincipal OidcUser oidcUser,
+    public ResponseEntity<Slice<AssetSearchDto>> findAssetsByTags(@RequestParam("keyword") List<String> keywords,
+                                              @AuthenticationPrincipal CustomUserDetails customUserDetails,
                                               Pageable pageable) {
 
-        Slice<AssetSearchDto> result = assetService.searchAssetByTag(keywords, pageable);
+        Slice<AssetSearchDto> result = assetService.searchAssetByTag(keywords, pageable, customUserDetails.getMember());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 }
