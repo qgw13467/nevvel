@@ -19,7 +19,7 @@ public class EpisodeController {
     }
 
     @GetMapping("/{episodeId}")
-    public ResponseEntity<EpisodeInfoDto> getEpisode(@PathVariable("episodeId") String episodeId) {
+    public ResponseEntity<EpisodeInfoDto> getEpisode(@PathVariable("episodeId") Long episodeId) {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
