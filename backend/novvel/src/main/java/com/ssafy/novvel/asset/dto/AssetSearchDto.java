@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 public class AssetSearchDto {
     private Long id;
+    private String title;
     private AssetType type;
     private String thumbnail;
     private Long price;
@@ -21,12 +22,13 @@ public class AssetSearchDto {
 
     public AssetSearchDto(Asset asset) {
         this.id = asset.getId();
+        this.title = asset.getTitle();
         this.type = asset.getType();
-        this.thumbnail = (asset.getResource().getThumbnailUrl() == null) ? "" : asset.getResource().getThumbnailUrl();
+        this.thumbnail = (asset.getResource() != null && asset.getResource().getThumbnailUrl() != null) ? asset.getResource().getThumbnailUrl() : "";
         this.price = asset.getPoint();
     }
 
-    public void addTags(Tag tag){
+    public void addTags(Tag tag) {
         tags.add(tag);
     }
 
