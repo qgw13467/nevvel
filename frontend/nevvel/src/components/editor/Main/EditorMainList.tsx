@@ -11,16 +11,25 @@ interface TextBlock {
 
 type EditorMainListProps = {
   textBlocks: TextBlock[];
+  setTextBlocks: React.Dispatch<React.SetStateAction<TextBlock[]>>;
 };
 
-function EditorMainList({ textBlocks }: EditorMainListProps) {
+function EditorMainList({ textBlocks,setTextBlocks }: EditorMainListProps) {
+
+
+
   return (
     <ListWrapper>
       {textBlocks.map((block, index) => (
-        <EditorMainListItem
-          key={index}
-          block={block}
-        />
+        <BlockContainer key={index}>
+          {block.id}
+          <EditorMainListItem
+            block={block}
+            textBlocks={textBlocks}
+            setTextBlocks={setTextBlocks}
+          />
+        </BlockContainer>
+
       ))}
     </ListWrapper>
   );
@@ -33,5 +42,13 @@ const ListWrapper = styled.div`
     flex-direction: column;
     overflow:scroll;
   `;
+
+const BlockContainer = styled.div`
+  width: 100%;
+  display: inline-flex;
+`
+const RemoveButton = styled.button`
+  width: 10%;
+`;
 
 export default EditorMainList;
