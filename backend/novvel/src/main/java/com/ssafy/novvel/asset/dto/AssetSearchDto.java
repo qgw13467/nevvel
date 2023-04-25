@@ -6,6 +6,8 @@ import com.ssafy.novvel.asset.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,8 @@ public class AssetSearchDto {
     private AssetType type;
     private String thumbnail;
     private Long price;
+    @Setter
+    private Boolean isAvailable = false;
     private List<Tag> tags = new ArrayList<>();
 
     public AssetSearchDto(Asset asset) {
