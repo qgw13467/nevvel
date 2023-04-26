@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface TextBlock {
@@ -14,8 +14,51 @@ type EditorMainListItemProps = {
   setTextBlocks: React.Dispatch<React.SetStateAction<TextBlock[]>>;
 };
 
-function EditorMainListItem({ block,textBlocks,setTextBlocks}: EditorMainListItemProps) {
+function EditorMainListItem({
+  block,
+  textBlocks,
+  setTextBlocks,
+}: EditorMainListItemProps) {
   const [plus, setPlus] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [isComposing, setIsComposing] = useState(false);
+
+  useEffect(() => {
+    console.log(textBlocks);
+  }, [textBlocks]);
+
+  const RemoveHandler = (block: TextBlock) => {
+    const id = block.id;
+    setTextBlocks(textBlocks.filter((el) => el.id !== id));
+  };
+
+  const handleChange = (event: React.FormEvent<HTMLDivElement>) => {
+    if (isComposing) {
+      return;
+    }
+    const newBlocks = [...textBlocks];
+    const index = newBlocks.findIndex((el) => el.id === block.id);
+    newBlocks[index].text = event.currentTarget.textContent ?? "";
+    setTextBlocks(newBlocks);
+
+    if (textRef.current) {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(textRef.current);
+      range.collapse(false);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  };
+
+  const handleCompositionStart = () => {
+    setIsComposing(true);
+  };
+
+  const handleCompositionEnd = (event: React.FormEvent<HTMLDivElement>) => {
+    setIsComposing(false);
+    handleChange(event);
+  };
 
   return (
     <BlockContainer>
@@ -28,8 +71,18 @@ function EditorMainListItem({ block,textBlocks,setTextBlocks}: EditorMainListIte
       ) : (
         <AssetButton onClick={() => setPlus(!plus)}>+</AssetButton>
       )}
-      <TextBlock>{block.text}</TextBlock>
-      <RemoveButton onClick={()=>setTextBlocks(textBlocks.filter((block)=>block.id !== block.id))}>X</RemoveButton>
+      <TextBlock
+        key={block.id}
+        contentEditable="true"
+        suppressContentEditableWarning
+        onInput={handleChange}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
+        ref={textRef}
+      >
+        {block.text}
+      </TextBlock>
+      <RemoveButton onClick={() => RemoveHandler(block)}>X</RemoveButton>
     </BlockContainer>
   );
 }
