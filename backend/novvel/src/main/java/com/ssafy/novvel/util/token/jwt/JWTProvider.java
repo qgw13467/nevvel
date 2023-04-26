@@ -18,7 +18,7 @@ public class JWTProvider {
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String PATH = "/";
-    
+
 
     public Cookie createAccessToken(String clientSub) {
 
@@ -27,7 +27,7 @@ public class JWTProvider {
 
         return makeCookie(ACCESS_TOKEN, Jwts.builder()
             .setSubject(clientSub)
-            .setExpiration(new Date(System.currentTimeMillis() + 1000))
+            .setExpiration(new Date(System.currentTimeMillis() + expiredTime))
             .signWith(KEY).compact(), expiredSecond);
     }
 
@@ -37,7 +37,7 @@ public class JWTProvider {
         int expiredTime = expiredSecond * 1000;
 
         return makeCookie(REFRESH_TOKEN, Jwts.builder()
-            .setExpiration(new Date(System.currentTimeMillis() + 10000))
+            .setExpiration(new Date(System.currentTimeMillis() + expiredTime))
             .signWith(KEY).compact(), expiredSecond);
     }
 
