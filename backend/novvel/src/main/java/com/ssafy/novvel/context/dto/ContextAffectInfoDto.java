@@ -1,6 +1,13 @@
-package com.ssafy.novvel.episode.dto;
+package com.ssafy.novvel.context.dto;
 
-public class EpisodeAffectInfo {
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.List;
+
+@Builder
+@Getter
+public class ContextAffectInfoDto {
     /**
      * {
      *       "myAssetId": "integer",
@@ -14,4 +21,5 @@ public class EpisodeAffectInfo {
     private String type;
 
     private String effect;
+
 }

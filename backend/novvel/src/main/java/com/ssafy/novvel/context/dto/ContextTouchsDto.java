@@ -1,20 +1,14 @@
-package com.ssafy.novvel.episode.dto;
+package com.ssafy.novvel.context.dto;
 
-import com.ssafy.novvel.context.dto.ContextTouchsDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class EpisodeContextDto {
+public class ContextTouchsDto {
     /**
-     *
      *   "contents": [
      *     {
      *       "idx": "integer",
@@ -23,13 +17,19 @@ public class EpisodeContextDto {
      *       "event": [
      *         {
      *           "myAssetId": "integer",
-     *           "type": "string"
+     *           "type": "string",
+     *           "effect": "string",
      *         },
      *       ]
      *     },
      *   ]
      */
-    private Long episodeId;
+    private Long idx;
 
-    private List<ContextTouchsDto> contents;
+    private String context;
+
+    private Boolean isEvent;
+
+    private List<ContextAffectInfoDto> event;
+
 }

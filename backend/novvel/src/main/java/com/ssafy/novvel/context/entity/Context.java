@@ -1,10 +1,9 @@
-package com.ssafy.novvel.episode.entity;
+package com.ssafy.novvel.context.entity;
 
-import com.ssafy.novvel.episode.dto.EpisodeContextDto;
+import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
@@ -14,9 +13,14 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class EpisodeContext {
-    @MongoId
-    private ObjectId id;
+public class Context {
 
-    private List<EpisodeContextDto> content;
+    @Id
+    private String id;
+
+    private List<ContextTouchsDto> contents;
+
+    public Context(List<ContextTouchsDto> contents) {
+        this.contents = contents;
+    }
 }

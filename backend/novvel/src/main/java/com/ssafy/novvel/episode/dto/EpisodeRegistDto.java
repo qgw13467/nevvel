@@ -18,4 +18,9 @@ public class EpisodeRegistDto {
 
  @NotNull
  private Long point;
+
+ @NotNull
+ private String statusType;
+
+ private EpisodeContextDto contents;
 }

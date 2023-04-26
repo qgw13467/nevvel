@@ -1,7 +1,7 @@
 package com.ssafy.novvel.episode.entity;
 
+import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.cover.entity.Cover;
-import com.ssafy.novvel.transactionhistory.entity.PointChangeType;
 import com.ssafy.novvel.util.BaseEntity;
 import lombok.*;
 
@@ -27,7 +27,7 @@ public class Episode extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Setter
     @NotNull
-    private EpisodeStatusType status;
+    private EpisodeStatusType statusType;
 
     @Setter
     @NotNull
@@ -41,7 +41,7 @@ public class Episode extends BaseEntity {
 
     @Transient
     @Setter
-    private EpisodeContext episodeContext;
+    private Context context;
 
     @Setter
     private String contextId;

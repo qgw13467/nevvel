@@ -1,9 +1,10 @@
 package com.ssafy.novvel.episode.service;
 
-import com.ssafy.novvel.episode.dto.EpisodeInfoDto;
-
-import java.io.IOException;
+import com.ssafy.novvel.episode.dto.EpisodeContextDto;
+import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
+import com.ssafy.novvel.util.token.CustomUserDetails;
 
 public interface EpisodeService {
-    EpisodeInfoDto getEpisodeInfo(Long episodeId);
+    EpisodeContextDto getEpisodeInfo(Long episodeId, CustomUserDetails customUserDetails);
+    Long createEpisode(EpisodeRegistDto episodeRegistDto, CustomUserDetails customUserDetails);
 }
