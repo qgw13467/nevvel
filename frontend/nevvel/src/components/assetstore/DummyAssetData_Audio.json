@@ -1,0 +1,125 @@
+{
+  "content": [
+    {
+      "id": "0",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "1",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-9.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/Zombie.mp3",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "https://rpg.hamsterrepublic.com/wiki-images/7/72/Metal_Hit.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "https://rpg.hamsterrepublic.com/wiki-images/d/d7/Oddbounce.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "type": "AUDIO",
+      "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
+      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/theygotcha.ogg",
+      "tags": [
+        {
+          "id": "integer",
+          "name": "string"
+        }
+      ]
+    }
+  ],
+  "pageable": "..."
+}
