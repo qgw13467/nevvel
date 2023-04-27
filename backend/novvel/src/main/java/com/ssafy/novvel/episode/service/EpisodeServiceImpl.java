@@ -12,8 +12,10 @@ import com.ssafy.novvel.episode.repository.EpisodeRepository;
 import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -26,8 +28,11 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final ContextService contextService;
 
     @Override
+    @Transactional
     public Long createEpisode(EpisodeRegistDto episodeRegistDto, Member member) {
-        String contextId = contextService.createContext(episodeRegistDto.getContents());
+        ObjectId contextId = contextService.createContext(episodeRegistDto.getContents());
+
+
         Cover cover = checkCoverOptional(coverRepository.findById(episodeRegistDto.getCoverId()));
 
         //현재 로그인 유저가 cover 작성자인지 확인
@@ -37,6 +42,8 @@ public class EpisodeServiceImpl implements EpisodeService{
         }
 
         Episode episode = new Episode(cover, episodeRegistDto, contextId);
+//        Episode episode = new Episode(episodeRegistDto, contextId);
+        episode = episodeRepository.save(episode);
         return episode.getId();
     }
 
@@ -71,7 +78,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     public String updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Member member) {
         Episode episode = checkEpisodeOptional(episodeRepository.findById(episodeId));
         Cover cover = checkCoverOptional(coverRepository.findById(episodeRegistDto.getCoverId()));
-        String contextId = episode.getContextId();
+        ObjectId contextId = episode.getContextId();
 
 //        커버 작성자와 현재 작성자 같은지 확인
         if (!cover.getMember().equals(member)) {

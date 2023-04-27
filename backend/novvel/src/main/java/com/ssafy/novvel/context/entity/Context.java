@@ -2,6 +2,7 @@ package com.ssafy.novvel.context.entity;
 
 import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -16,7 +17,7 @@ import java.util.List;
 public class Context {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Setter
     private List<ContextTouchsDto> contents;

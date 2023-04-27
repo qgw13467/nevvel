@@ -5,9 +5,10 @@ import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.context.repository.ContextRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -17,7 +18,8 @@ public class ContextServiceImpl implements ContextService{
     private final ContextRepository contextRepository;
 
     @Override
-    public String createContext(List<ContextTouchsDto> contextList) {
+    @Transactional
+    public ObjectId createContext(List<ContextTouchsDto> contextList) {
 
         Context context = new Context(contextList);
 

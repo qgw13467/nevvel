@@ -6,6 +6,7 @@ import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.util.BaseEntity;
 import lombok.*;
+import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -46,9 +47,10 @@ public class Episode extends BaseEntity {
     private Context context;
 
     @Setter
-    private String contextId;
+    private ObjectId contextId;
 
-    public Episode(Cover cover, EpisodeRegistDto episodeRegistDto, String contextId) {
+    public Episode(Cover cover, EpisodeRegistDto episodeRegistDto, ObjectId contextId) {
+//    public Episode(EpisodeRegistDto episodeRegistDto, ObjectId contextId) {
         this.cover = cover;
         this.statusType = episodeRegistDto.getStatusType();
         this.point = episodeRegistDto.getPoint();
