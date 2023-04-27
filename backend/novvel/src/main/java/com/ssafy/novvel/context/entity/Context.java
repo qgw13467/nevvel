@@ -18,6 +18,7 @@ public class Context {
     @Id
     private String id;
 
+    @Setter
     private List<ContextTouchsDto> contents;
 
     public Context(List<ContextTouchsDto> contents) {

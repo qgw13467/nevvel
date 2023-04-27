@@ -1,13 +1,16 @@
 package com.ssafy.novvel.episode.entity;
 
+import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.cover.entity.Cover;
+import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.util.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,11 +43,17 @@ public class Episode extends BaseEntity {
     private Long viewCount;
 
     @Transient
-    @Setter
     private Context context;
 
     @Setter
     private String contextId;
 
+    public Episode(Cover cover, EpisodeRegistDto episodeRegistDto, String contextId) {
+        this.cover = cover;
+        this.statusType = episodeRegistDto.getStatusType();
+        this.point = episodeRegistDto.getPoint();
+        this.viewCount = 0L;
+        this.contextId = contextId;
+    }
 
 }
