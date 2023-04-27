@@ -1,13 +1,15 @@
 package com.ssafy.novvel.genre.controller;
 
-import com.ssafy.novvel.genre.dto.GenreGetAllDto;
+import com.ssafy.novvel.genre.dto.GenreDto;
 import com.ssafy.novvel.genre.service.GenreService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 @RequestMapping("/genre")
 public class GenreController {
 
@@ -18,7 +20,7 @@ public class GenreController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<GenreGetAllDto>> getGenre() {
+    public ResponseEntity<List<GenreDto>> getGenre() {
 
         return new ResponseEntity<>(genreService.getAllGenre(), HttpStatus.OK);
     }
