@@ -1,122 +1,132 @@
 {
   "content": [
     {
-      "id": "0",
+      "id": 0,
+      "title": "Sound1",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a",
+      "url": "http://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 0,
+          "name": "장르0"
         }
       ]
     },
     {
-      "id": "1",
+      "id": 1,
+      "title": "Sound2",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg",
+      "url": "http://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 1,
+          "name": "장르1"
         }
       ]
     },
     {
-      "id": "2",
+      "id": 2,
+      "title": "Sound3",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-9.ogg",
+      "url": "http://commondatastorage.googleapis.com/codeskulptor-demos/riceracer_assets/fx/engine-9.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 2,
+          "name": "장르2"
         }
       ]
     },
     {
-      "id": "3",
+      "id": 3,
+      "title": "Sound4",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.ogg",
+      "url": "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 3,
+          "name": "장르3"
         }
       ]
     },
     {
-      "id": "4",
+      "id": 4,
+      "title": "Sound5",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/Zombie.mp3",
+      "url": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/Zombie.mp3",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 4,
+          "name": "장르4"
         }
       ]
     },
     {
-      "id": "5",
+      "id": 5,
+      "title": "Sound6",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3",
+      "url": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/gotitem.mp3",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 5,
+          "name": "장르5"
         }
       ]
     },
     {
-      "id": "6",
+      "id": 6,
+      "title": "Sound7",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "https://rpg.hamsterrepublic.com/wiki-images/7/72/Metal_Hit.ogg",
+      "url": "https://rpg.hamsterrepublic.com/wiki-images/7/72/Metal_Hit.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 6,
+          "name": "장르6"
         }
       ]
     },
     {
-      "id": "7",
+      "id": 7,
+      "title": "Sound8",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "https://rpg.hamsterrepublic.com/wiki-images/d/d7/Oddbounce.ogg",
+      "url": "https://rpg.hamsterrepublic.com/wiki-images/d/d7/Oddbounce.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 7,
+          "name": "장르7"
         }
       ]
     },
     {
-      "id": "8",
+      "id": 8,
+      "title": "Sound9",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3",
+      "url": "http://codeskulptor-demos.commondatastorage.googleapis.com/descent/background%20music.mp3",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 8,
+          "name": "장르8"
         }
       ]
     },
     {
-      "id": "9",
+      "id": 9,
+      "title": "Sound10",
       "type": "AUDIO",
       "thumbnail": "https://static.vecteezy.com/system/resources/previews/003/611/805/original/sound-speaker-icon-on-white-background-free-vector.jpg",
-      "fullsource": "http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/theygotcha.ogg",
+      "url": "http://commondatastorage.googleapis.com/codeskulptor-demos/pyman_assets/theygotcha.ogg",
       "tags": [
         {
-          "id": "integer",
-          "name": "string"
+          "id": 9,
+          "name": "장르9"
         }
       ]
     }
