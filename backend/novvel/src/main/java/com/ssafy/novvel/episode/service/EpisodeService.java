@@ -6,8 +6,8 @@ import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 
 public interface EpisodeService {
-    EpisodeContextDto getEpisodeInfo(Long episodeId, Member member);
-    Long createEpisode(EpisodeRegistDto episodeRegistDto, Member member);
-    String deleteEpisode(Long episodeId, Member member);
-    String updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Member member);
+    EpisodeContextDto getEpisodeInfo(Long episodeId, Long memberId);
+    Long createEpisode(EpisodeRegistDto episodeRegistDto, Long memberId);
+    String deleteEpisode(Long episodeId, Long memberId);
+    String updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Long memberId);
 }

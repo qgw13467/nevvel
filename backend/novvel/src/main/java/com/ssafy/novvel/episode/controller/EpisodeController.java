@@ -17,28 +17,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EpisodeController {
 
-    private final EpisodeRepository episodeRepository;
-    private final ContextRepository episodeContextRepository;
     private final EpisodeService episodeService;
 
     @PostMapping
     public ResponseEntity<Long> registEpisode(@RequestBody EpisodeRegistDto episodeRegistDto,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long result = episodeService.createEpisode(episodeRegistDto, customUserDetails.getMember());
+        Long result = episodeService.createEpisode(episodeRegistDto, customUserDetails.getId());
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping("/{episodeId}")
     public ResponseEntity<EpisodeContextDto> getEpisode(@PathVariable Long episodeId,
                                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        EpisodeContextDto result = episodeService.getEpisodeInfo(episodeId, customUserDetails.getMember());
+        EpisodeContextDto result = episodeService.getEpisodeInfo(episodeId, customUserDetails.getId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/{episodeId}")
     public ResponseEntity<String> deleteEpisode(@PathVariable Long episodeId,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String result = episodeService.deleteEpisode(episodeId, customUserDetails.getMember());
+        String result = episodeService.deleteEpisode(episodeId, customUserDetails.getId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -46,7 +44,7 @@ public class EpisodeController {
     public ResponseEntity<String> editEpisode(@PathVariable Long episodeId,
                                               @RequestBody EpisodeRegistDto episodeRegistDto,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String result = episodeService.updateEpisode(episodeId, episodeRegistDto, customUserDetails.getMember());
+        String result = episodeService.updateEpisode(episodeId, episodeRegistDto, customUserDetails.getId());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
