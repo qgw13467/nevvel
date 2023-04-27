@@ -112,7 +112,7 @@ const BlockContainer = styled.div`
   margin-bottom: 0.5rem;
   width: 100%;
 `;
-const AssetButtonContainer = styled.button`
+const AssetButtonContainer = styled.div`
   width: 10rem;
   display: inline-flex;
   text-align: center;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import EditorMainListItem from "../EditorMainListItem";
+import EditorMainListItem from "./EditorMainListItem";
 import EditorMainAssetContainer from "../Asset/EditorMainAssetContainer";
 
 interface TextBlock {
