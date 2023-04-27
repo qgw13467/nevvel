@@ -55,7 +55,7 @@ public class EpisodeServiceImpl implements EpisodeService{
         Context context = checkContextOptional(contextRepository.findById(episode.getContextId()));
 
         // 현재 유저가 작성자가 아닐 때만 조회수 1 올리기
-        if (episode.getCover().getMember().getId().equals(memberId)) {
+        if (!episode.getCover().getMember().getId().equals(memberId)) {
             episode.setViewCount(episode.getViewCount() + 1);
         }
         return new EpisodeContextDto(episode.getId(), context.getContents());
