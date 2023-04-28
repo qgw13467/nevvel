@@ -145,6 +145,7 @@ public class AssetServiceTest {
         //when
         Mockito.doReturn(findByTagNameInResult).when(tagRepository).findByTagNameIn(findTageNames);
         Mockito.doReturn(findByTagInResult).when(assetTagRepository).findByTagIn(findByTagNameInResult, pageable);
+        Mockito.doReturn(findByTagInResult.getContent()).when(assetRepository).findJoinMemberByAssets(findByTagInResult.getContent());
         Mockito.doReturn(findByAssetInResult).when(assetTagRepository).findByAssetIn(findByTagInResult.getContent());
         Mockito.doReturn(memberAssets).when(memberAssetRepository)
                 .findByMemberAndAssetIn(members.get(0), List.of(assets.get(0), assets.get(1), assets.get(2)));
@@ -153,6 +154,7 @@ public class AssetServiceTest {
         //then
         Mockito.verify(tagRepository, Mockito.times(1)).findByTagNameIn(findTageNames);
         Mockito.verify(assetTagRepository, Mockito.times(1)).findByTagIn(findByTagNameInResult, pageable);
+        Mockito.verify(assetRepository, Mockito.times(1)).findJoinMemberByAssets(findByTagInResult.getContent());
         Mockito.verify(assetTagRepository, Mockito.times(1)).findByAssetIn(findByTagInResult.getContent());
         Mockito.verify(memberAssetRepository, Mockito.times(1))
                 .findByMemberAndAssetIn(members.get(0), List.of(assets.get(0), assets.get(1), assets.get(2)));
