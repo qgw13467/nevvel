@@ -136,8 +136,24 @@ public class EpisodeServiceImpl implements EpisodeService{
         // 에피소드 터치 단위 속 이펙트 속 사용 asset id만 꺼내와서 episodeAssetIdSet에 담기
         for (ContextTouchsDto context : contextList) {
             List<ContextAffectInfoDto> contextAffectList = context.getEvent();
+            boolean image = false;
+            boolean audio = false;
             for (ContextAffectInfoDto contextAffect : contextAffectList) {
-                episodeAssetIdSet.add(contextAffect.getAssetId());
+                if (contextAffect.getType().equals("IMAGE")) {
+                    if (!image) {
+                        image = true;
+                        episodeAssetIdSet.add(contextAffect.getAssetId());
+                    } else {
+                        throw new NotFoundException("이미 IMAGE를 1회 사용했습니다.");
+                    }
+                } else if (contextAffect.getType().equals("AUDIO")) {
+                    if (!audio) {
+                        audio = true;
+                        episodeAssetIdSet.add(contextAffect.getAssetId());
+                    } else {
+                        throw new NotFoundException("이미 AUDIO를 1회 사용했습니다.");
+                    }
+                }
             }
         }
 

@@ -10,7 +10,7 @@ import java.util.List;
 public class ContextAffectInfoDto {
     /**
      * {
-     *       "myAssetId": "integer",
+     *       "assetId": "integer",
      *       "type": "string",
      *       "effect": "string",
      *  },
