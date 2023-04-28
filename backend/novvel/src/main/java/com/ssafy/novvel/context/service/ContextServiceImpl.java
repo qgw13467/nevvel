@@ -21,9 +21,7 @@ public class ContextServiceImpl implements ContextService{
     @Transactional
     public ObjectId createContext(List<ContextTouchsDto> contextList) {
 
-        Context context = new Context(contextList);
-
-        context = contextRepository.save(context);
+        Context context = contextRepository.save(new Context(contextList));
 
         return context.getId();
     }

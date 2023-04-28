@@ -16,7 +16,7 @@ public class ContextAffectInfoDto {
      *  },
      *
      */
-    private Long myAssetId;
+    private Long assetId;
 
     private String type;
 

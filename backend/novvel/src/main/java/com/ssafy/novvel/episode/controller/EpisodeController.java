@@ -22,7 +22,7 @@ public class EpisodeController {
     @PostMapping
     public ResponseEntity<Long> registEpisode(@RequestBody EpisodeRegistDto episodeRegistDto,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long result = episodeService.createEpisode(episodeRegistDto, customUserDetails.getId());
+        Long result = episodeService.createEpisode(episodeRegistDto, customUserDetails.getMember());
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -34,17 +34,17 @@ public class EpisodeController {
     }
 
     @DeleteMapping("/{episodeId}")
-    public ResponseEntity<String> deleteEpisode(@PathVariable Long episodeId,
+    public ResponseEntity<?> deleteEpisode(@PathVariable Long episodeId,
                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String result = episodeService.deleteEpisode(episodeId, customUserDetails.getId());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        episodeService.deleteEpisode(episodeId, customUserDetails.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{episodeId}")
-    public ResponseEntity<String> editEpisode(@PathVariable Long episodeId,
+    public ResponseEntity<?> editEpisode(@PathVariable Long episodeId,
                                               @RequestBody EpisodeRegistDto episodeRegistDto,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String result = episodeService.updateEpisode(episodeId, episodeRegistDto, customUserDetails.getId());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        episodeService.updateEpisode(episodeId, episodeRegistDto, customUserDetails.getMember());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
