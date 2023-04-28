@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import AssetCard from "../common/AssetCard";
-import data from "./DummyAssetData_Image.json"
+import imgdata from "./DummyAssetData_Image.json"
+import sounddata from "./DummyAssetData_Audio.json"
 
 interface AssetTag {
   id : number,
   name : string,
+}
+
+interface AssetUploader {
+  id : number,
+  nickname : string,
+  profileImage : string,
 }
 
 interface Asset {
@@ -14,34 +21,38 @@ interface Asset {
   type: string,
   thumbnail : string,
   url: string,
+  price : number,
+  downloadCount : number,
   tags: Array<AssetTag>,
+  uploader : AssetUploader
 }
 
 function AssetstoreAssetList() {
 
-  const [imgAsset, setImgAsset] = useState<Array<Asset>>([]);
+  const [AssetData, setAssetData] = useState<Array<Asset>>([]);
 
   // axios로 데이터 get받아오기, 현재는 더미데이터
   useEffect(() => {
-    setImgAsset(data.content);
+    setAssetData(imgdata.content);
+    // setAssetData(sounddata.content);
   },[])
-  console.log('이건데', imgAsset)
+  console.log('이건데', AssetData)
 
 
 
   return(
     <Wrapper>
       {
-        imgAsset.map((imgAsset, index:number) => {
+        AssetData.map((AssetData, index:number) => {
           return (
             <AssetCard
               key={index}
-              id={imgAsset.id}
-              title={imgAsset.title}
-              type={imgAsset.type}
-              thumbnail={imgAsset.thumbnail}
-              url={imgAsset.url}
-              tags={imgAsset.tags}
+              id={AssetData.id}
+              title={AssetData.title}
+              type={AssetData.type}
+              thumbnail={AssetData.thumbnail}
+              url={AssetData.url}
+              tags={AssetData.tags}
             />
           )
         })

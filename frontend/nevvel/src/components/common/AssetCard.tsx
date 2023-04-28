@@ -36,9 +36,18 @@ function AssetCard({
   return(
     <Wrapper>
       {
-        hoverTrigger === 0?
-        <CardImg src={thumbnail} alt="썸네일" onMouseOver={Trigger1} />:
-        <CardImg src={url} alt="썸네일" onMouseLeave={Trigger2} />
+        type === "AUDIO"?
+        (
+          hoverTrigger === 0?
+          <CardImg src={thumbnail} alt="썸네일" onMouseOver={Trigger1} />:
+          <CardImg src={thumbnail} alt="썸네일" onMouseLeave={Trigger2} />
+        )
+        :
+        (
+          hoverTrigger === 0?
+          <CardImg src={thumbnail} alt="썸네일" onMouseOver={Trigger1} />:
+          <CardImg src={url} alt="썸네일" onMouseLeave={Trigger2} />
+        )
       }
       <br />
       {title}
