@@ -81,7 +81,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   /* flex-direction: column; */
   width: 100%;
-  height: 50vh;
+  height: 10vh;
   padding-top: 1%;
   padding-bottom: 1%;
   padding-left: 7%;

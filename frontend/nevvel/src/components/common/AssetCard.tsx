@@ -51,7 +51,7 @@ function AssetCard({
         type === "AUDIO"?
         (
           hoverTrigger === 0?
-          <CardImg src={thumbnail} alt="썸네일" onMouseOver={AudTriggerOn} />
+          <CardImg src="https://cdn4.iconfinder.com/data/icons/proglyphs-multimedia/512/Volume_Off-512.png" alt="썸네일" onMouseOver={AudTriggerOn} />
           :
           <CardImg src={thumbnail} alt="썸네일" onMouseLeave={AudTriggerOff} />
         )
