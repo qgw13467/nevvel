@@ -8,8 +8,9 @@ import com.ssafy.novvel.genre.repository.GenreRepository;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
-import com.ssafy.novvel.resource.service.S3Service;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
@@ -23,15 +24,12 @@ public class CoverServiceImpl implements CoverService {
     private final ResourceService resourceService;
     private final GenreRepository genreRepository;
     private final CoverRepository coverRepository;
-    private final S3Service S3Service;
 
     public CoverServiceImpl(ResourceService resourceService,
-        GenreRepository genreRepository, CoverRepository coverRepository,
-        com.ssafy.novvel.resource.service.S3Service s3Service) {
+        GenreRepository genreRepository, CoverRepository coverRepository) {
         this.resourceService = resourceService;
         this.genreRepository = genreRepository;
         this.coverRepository = coverRepository;
-        S3Service = s3Service;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class CoverServiceImpl implements CoverService {
 
     @Override
     @Transactional
-    public Cover updateCover(MultipartFile multipartFile, Long coverId,
+    public List<String> updateCover(MultipartFile multipartFile, Long coverId,
         CoverModifyDto coverModifyDto,
         Long userId) throws AuthenticationException, IOException {
 
@@ -58,19 +56,31 @@ public class CoverServiceImpl implements CoverService {
             throw new AuthenticationException();
         } else {
 
-            if(cover.getResource() != null) {
-                S3Service.deleteFile(cover.getResource().getUrl());
-                S3Service.deleteFile(cover.getResource().getThumbnailUrl());
-            }
-
             Resource resource = resourceService.saveFile(multipartFile);
 
-            return coverRepository.save(
+            Cover newCover = coverRepository.save(
                 new Cover(resource, coverId, cover.getPublishDate(), cover.getLikes(),
                     coverModifyDto, cover.getMember(),
                     genreRepository.getReferenceById(coverModifyDto.getGenreId())));
+
+            return findPreviousResourceInS3(newCover.getResource(), cover.getResource());
         }
 
+    }
+    
+    private List<String> findPreviousResourceInS3(Resource current, Resource previous) {
+
+        if(current == null || previous == null) return null;
+
+        List<String> urlAndThumbnail = new ArrayList<>();
+        if (!current.getUrl().equals(previous.getUrl())) {
+            urlAndThumbnail.add(previous.getUrl());
+        }
+        if (!current.getThumbnailUrl().equals(previous.getThumbnailUrl())) {
+            urlAndThumbnail.add(previous.getThumbnailUrl());
+        }
+
+        return urlAndThumbnail.isEmpty() ? null : urlAndThumbnail;
     }
 
 }
