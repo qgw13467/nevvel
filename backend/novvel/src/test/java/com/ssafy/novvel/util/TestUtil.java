@@ -73,6 +73,25 @@ public class TestUtil {
                 .build();
     }
 
+    public static List<Member> getUSERMembers(int num) {
+        List<Member> result = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            result.add(Member.builder()
+                    .id((long) i)
+                    .email(i + "@naver.com")
+                    .role("ROLE_USER")
+                    .sub(String.valueOf(i))
+                    .nickname(String.valueOf(i))
+                    .point(0L)
+                    .description("test")
+                    .refreshToken("testToken")
+                    .profile(getMemberProfile())
+                    .build()
+            );
+        }
+        return result;
+    }
+
     public static List<Tag> getTagList(int index) {
         List<Tag> result = new ArrayList<>();
         for (int i = 0; i < index; i++) {
@@ -82,7 +101,7 @@ public class TestUtil {
         return result;
     }
 
-    public static List<Asset> getAssetList(int index) {
+    public static List<Asset> getAssetList(int index, List<Member> members) {
         List<Asset> result = new ArrayList<>();
         for (int i = 0; i < index; i++) {
             Asset asset = Asset.builder()
@@ -90,6 +109,7 @@ public class TestUtil {
                     .type(AssetType.IMAGE)
                     .description(String.valueOf(i))
                     .point(100L)
+                    .member(members.get(i))
                     .build();
             result.add(asset);
         }
