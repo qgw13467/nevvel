@@ -1,5 +1,6 @@
 package com.ssafy.novvel.episode.service;
 
+import com.ssafy.novvel.asset.entity.AssetType;
 import com.ssafy.novvel.context.dto.ContextAffectInfoDto;
 import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import com.ssafy.novvel.context.service.ContextService;
@@ -139,14 +140,14 @@ public class EpisodeServiceImpl implements EpisodeService{
             boolean image = false;
             boolean audio = false;
             for (ContextAffectInfoDto contextAffect : contextAffectList) {
-                if (contextAffect.getType().equals("IMAGE")) {
+                if (contextAffect.getType().equals(AssetType.IMAGE)) {
                     if (!image) {
                         image = true;
                         episodeAssetIdSet.add(contextAffect.getAssetId());
                     } else {
                         throw new NotFoundException("이미 IMAGE를 1회 사용했습니다.");
                     }
-                } else if (contextAffect.getType().equals("AUDIO")) {
+                } else if (contextAffect.getType().equals(AssetType.AUDIO)) {
                     if (!audio) {
                         audio = true;
                         episodeAssetIdSet.add(contextAffect.getAssetId());
