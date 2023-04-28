@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 interface AssetTag {
@@ -24,29 +24,42 @@ function AssetCard({
   tags,
 } : Asset) {
 
+  const audioRef = useRef<any>(null)
+
+
   const [hoverTrigger, setHoverTrigger] = useState(0)
 
-  const Trigger1 = () => {
+  const ImgTriggerOn = () => {
     setHoverTrigger(1)
   }
-  const Trigger2 = () => {
+  const ImgTriggerOff = () => {
     setHoverTrigger(0)
+  }
+  const AudTriggerOn = () => {
+    setHoverTrigger(1)
+    audioRef.current.play()    
+  }
+  const AudTriggerOff = () => {
+    setHoverTrigger(0)
+    audioRef.current.pause() 
   }
 
   return(
     <Wrapper>
+      <audio ref={audioRef} src={`${url}`} />
       {
         type === "AUDIO"?
         (
           hoverTrigger === 0?
-          <CardImg src={thumbnail} alt="썸네일" onMouseOver={Trigger1} />:
-          <CardImg src={thumbnail} alt="썸네일" onMouseLeave={Trigger2} />
+          <CardImg src={thumbnail} alt="썸네일" onMouseOver={AudTriggerOn} />
+          :
+          <CardImg src={thumbnail} alt="썸네일" onMouseLeave={AudTriggerOff} />
         )
         :
         (
           hoverTrigger === 0?
-          <CardImg src={thumbnail} alt="썸네일" onMouseOver={Trigger1} />:
-          <CardImg src={url} alt="썸네일" onMouseLeave={Trigger2} />
+          <CardImg src={thumbnail} alt="썸네일" onMouseOver={ImgTriggerOn} />:
+          <CardImg src={url} alt="썸네일" onMouseLeave={ImgTriggerOff} />
         )
       }
       <br />

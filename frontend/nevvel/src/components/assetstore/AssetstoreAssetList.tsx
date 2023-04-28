@@ -33,31 +33,43 @@ function AssetstoreAssetList() {
 
   // axios로 데이터 get받아오기, 현재는 더미데이터
   useEffect(() => {
+    // setAssetData(imgdata.content);
     setAssetData(imgdata.content);
-    // setAssetData(sounddata.content);
   },[])
-  console.log('이건데', AssetData)
+  // console.log('이건데', AssetData)
 
+  const changeImg = () => {
+    setAssetData(imgdata.content)
+  }
+  const changeSound = () => {
+    setAssetData(sounddata.content)
+  }
 
 
   return(
-    <Wrapper>
-      {
-        AssetData.map((AssetData, index:number) => {
-          return (
-            <AssetCard
-              key={index}
-              id={AssetData.id}
-              title={AssetData.title}
-              type={AssetData.type}
-              thumbnail={AssetData.thumbnail}
-              url={AssetData.url}
-              tags={AssetData.tags}
-            />
-          )
-        })
-      }
-    </Wrapper>
+    <div>
+      <div>
+        <button onClick={changeImg}>이미지</button>
+        <button onClick={changeSound}>사운드</button>
+      </div>
+      <Wrapper>
+        {
+          AssetData.map((AssetData, index:number) => {
+            return (
+              <AssetCard
+                key={index}
+                id={AssetData.id}
+                title={AssetData.title}
+                type={AssetData.type}
+                thumbnail={AssetData.thumbnail}
+                url={AssetData.url}
+                tags={AssetData.tags}
+              />
+            )
+          })
+        }
+      </Wrapper>
+    </div>
   )
 }
 
@@ -69,7 +81,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   /* flex-direction: column; */
   width: 100%;
-  height: 100vh;
+  height: 50vh;
   padding-top: 1%;
   padding-bottom: 1%;
   padding-left: 7%;
