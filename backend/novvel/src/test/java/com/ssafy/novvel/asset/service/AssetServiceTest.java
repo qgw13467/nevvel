@@ -28,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class AssetServiceTest {
 
     @InjectMocks
@@ -81,7 +83,7 @@ public class AssetServiceTest {
                 .type(assetRegistDto.getType())
                 .build();
         List<Tag> savedTagList = TestUtil.getTagList(2);
-        Set<Tag> savedTagSet = Set.of(savedTagList.get(0));
+        List<Tag> findTags = List.of(savedTagList.get(0));
         List<Tag> newTags = List.of(new Tag(3L, "호러"));
         Set<Tag> resultTagSet = Set.of(savedTagList.get(0), newTags.get(0));
         List<AssetTag> assetTags = new ArrayList<>();
@@ -92,7 +94,7 @@ public class AssetServiceTest {
         //when
         Mockito.doReturn(resource).when(resourceService).saveFile(multipartFile);
         Mockito.doReturn(asset).when(assetRepository).save(Mockito.any());
-        Mockito.doReturn(savedTagSet).when(tagRepository).findSetByTagNameIn(assetRegistDto.getTags());
+        Mockito.doReturn(findTags).when(tagRepository).findByTagNameIn(assetRegistDto.getTags());
         Mockito.doReturn(newTags).when(tagRepository).saveAll(Mockito.any());
         Mockito.doReturn(assetTags).when(assetTagRepository).saveAll(Mockito.any());
 
@@ -100,7 +102,7 @@ public class AssetServiceTest {
 
         //then
         Mockito.verify(tagRepository, Mockito.times(1)).saveAll(Mockito.any());
-        Mockito.verify(tagRepository, Mockito.times(1)).findSetByTagNameIn(Mockito.any());
+        Mockito.verify(tagRepository, Mockito.times(1)).findByTagNameIn(Mockito.any());
         Mockito.verify(assetTagRepository, Mockito.times(1)).saveAll(Mockito.any());
         Assertions.assertThat(result.getDescription()).isEqualTo(assetRegistDto.getDescription());
         Assertions.assertThat(result.getTitle()).isEqualTo(assetRegistDto.getTitle());
@@ -111,8 +113,8 @@ public class AssetServiceTest {
     @Test
     void searchAssetByTagTest() {
 
-        Member member = TestUtil.getUSERMember().get();
-        List<Asset> assets = TestUtil.getAssetList(4);
+        List<Member> members = TestUtil.getUSERMembers(4);
+        List<Asset> assets = TestUtil.getAssetList(4, members);
 
         Tag tag1 = new Tag(1L, "tag1");
         Tag tag2 = new Tag(2L, "tag2");
@@ -136,8 +138,8 @@ public class AssetServiceTest {
 
         List<String> findTageNames = List.of("tag1", "tag2");
 
-        MemberAsset memberAsset1 = new MemberAsset(1L, member, assets.get(0), DealType.BUY);
-        MemberAsset memberAsset2 = new MemberAsset(2L, member, assets.get(1), DealType.SELL);
+        MemberAsset memberAsset1 = new MemberAsset(1L, members.get(0), assets.get(0), DealType.BUY);
+        MemberAsset memberAsset2 = new MemberAsset(2L, members.get(0), assets.get(1), DealType.SELL);
         List<MemberAsset> memberAssets = List.of(memberAsset1, memberAsset2);
 
         //when
@@ -145,15 +147,15 @@ public class AssetServiceTest {
         Mockito.doReturn(findByTagInResult).when(assetTagRepository).findByTagIn(findByTagNameInResult, pageable);
         Mockito.doReturn(findByAssetInResult).when(assetTagRepository).findByAssetIn(findByTagInResult.getContent());
         Mockito.doReturn(memberAssets).when(memberAssetRepository)
-                .findByMemberAndAssetIn(member, List.of(assets.get(0), assets.get(1), assets.get(2)));
-        Slice<AssetSearchDto> assetSearchDtos = assetService.searchAssetByTag(findTageNames, pageable, member);
+                .findByMemberAndAssetIn(members.get(0), List.of(assets.get(0), assets.get(1), assets.get(2)));
+        Slice<AssetSearchDto> assetSearchDtos = assetService.searchAssetByTag(findTageNames, pageable, members.get(0));
 
         //then
         Mockito.verify(tagRepository, Mockito.times(1)).findByTagNameIn(findTageNames);
         Mockito.verify(assetTagRepository, Mockito.times(1)).findByTagIn(findByTagNameInResult, pageable);
         Mockito.verify(assetTagRepository, Mockito.times(1)).findByAssetIn(findByTagInResult.getContent());
         Mockito.verify(memberAssetRepository, Mockito.times(1))
-                .findByMemberAndAssetIn(member, List.of(assets.get(0), assets.get(1), assets.get(2)));
+                .findByMemberAndAssetIn(members.get(0), List.of(assets.get(0), assets.get(1), assets.get(2)));
         Assertions.assertThat(assetSearchDtos.getContent().size()).isEqualTo(3);
         Assertions.assertThat(assetSearchDtos.getContent().get(0).getIsAvailable()).isEqualTo(true);
         Assertions.assertThat(assetSearchDtos.getContent().get(1).getIsAvailable()).isEqualTo(true);
