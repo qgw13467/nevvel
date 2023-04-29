@@ -5,17 +5,9 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { AiOutlineSound } from "react-icons/ai";
 import EditorMainMenu from "./EditorMainMenu";
 import { mobile } from "@/src/util/Mixin";
+import { content } from "editor";
 
-interface content {
-  idx: number;
-  context: string;
-  event: event[];
-}
 
-interface event {
-  assetId: number;
-  type: string;
-}
 type EditorMainListItemProps = {
   content: content;
   contents: content[];
@@ -40,15 +32,9 @@ function EditorMainListItem({
   });
 
   useEffect(() => {
-    // console.log(content);
-    // console.log(text)
+    console.log(text)
     // 텍스트에 style 적용한 경우
-    setContents(
-      contents.map((con: content) => {
-        // console.log("con",con)
-        return con.idx === content.idx ? { ...content, context: text } : con;
-      })
-    );
+
   }, [text]);
 
   const RemoveHandler = (content: content) => {

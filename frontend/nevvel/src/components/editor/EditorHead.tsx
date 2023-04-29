@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { episode } from "editor";
 
-function EditorHead() {
+type EditorHeadProps ={
+  setEpisode:React.Dispatch<React.SetStateAction<episode>>
+  episode:episode
+}
+
+function EditorHead({episode, setEpisode}:EditorHeadProps) {
   return (
     <Wrapper>
       <ButtonWrapper>
