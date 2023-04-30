@@ -1,5 +1,6 @@
 package com.ssafy.novvel.asset.service;
 
+import com.ssafy.novvel.asset.dto.AssetPurchaseType;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;
@@ -8,11 +9,15 @@ import com.ssafy.novvel.asset.entity.Tag;
 import com.ssafy.novvel.asset.repository.AssetRepository;
 import com.ssafy.novvel.asset.repository.AssetTagRepository;
 import com.ssafy.novvel.asset.repository.TagRepository;
+import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.memberasset.entity.MemberAsset;
 import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.transactionhistory.entity.PointChangeType;
+import com.ssafy.novvel.transactionhistory.entity.TransactionHistory;
+import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,6 +44,7 @@ public class AssetServiceImpl implements AssetService {
     private final TagRepository tagRepository;
     private final ResourceService resourceService;
     private final MemberAssetRepository memberAssetRepository;
+    private final TransactionHistoryRepository historyRepository;
 
     @Override
     @Transactional
@@ -105,6 +112,27 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
+    @Transactional
+    public AssetPurchaseType purchaseAsset(Long assetId, Member member) {
+        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new NotFoundException("에셋을 찾을 수 없습니다"));
+        Optional<MemberAsset> memberAsset = memberAssetRepository.findByAssetAndMember(asset, member);
+        if (memberAsset.isEmpty()) {
+            return AssetPurchaseType.DUPLICATED;
+        }
+
+        if (asset.getPoint() > member.getPoint()) {
+            return AssetPurchaseType.NEED_POINT;
+        }
+
+        member.setPoint(member.getPoint() - asset.getPoint());
+        TransactionHistory buyTransactionHistory = new TransactionHistory(member, asset, PointChangeType.BUY_ASSET, asset.getPoint());
+        TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.BUY_ASSET, asset.getPoint());
+        historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
+
+        return AssetPurchaseType.PUCHASE;
+    }
+
+    @Override
     public Page<Tag> findPageTags(Pageable pageable) {
 
         return tagRepository.findByOrderByUseCountDesc(pageable);
@@ -124,7 +152,7 @@ public class AssetServiceImpl implements AssetService {
                     break;
                 }
             }
-            if (!check){
+            if (!check) {
                 newTags.add(new Tag(tag));
             }
         }
