@@ -75,13 +75,14 @@ export default AssetCard
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background};
   /* flex-direction: column; */
-  width:30%;
-  height: 50%;
+  width: 20%;
+  height: 100%;
   margin-top: 1%;
-  margin-bottom: 1%;
+  margin-bottom: 5%;
 `;
 
 const CardImg = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 15vw;
+  height: 30vh;
+  border-radius: 5%;
 `
