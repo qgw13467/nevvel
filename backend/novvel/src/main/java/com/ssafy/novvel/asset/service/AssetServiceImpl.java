@@ -116,7 +116,7 @@ public class AssetServiceImpl implements AssetService {
     public AssetPurchaseType purchaseAsset(Long assetId, Member member) {
         Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new NotFoundException("에셋을 찾을 수 없습니다"));
         Optional<MemberAsset> memberAsset = memberAssetRepository.findByAssetAndMember(asset, member);
-        if (memberAsset.isEmpty()) {
+        if (!memberAsset.isEmpty()) {
             return AssetPurchaseType.DUPLICATED;
         }
 
