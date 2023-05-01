@@ -66,7 +66,16 @@ function AssetCard({
         }
       </CardImgDiv>
       <CardInfo1>{title}</CardInfo1>
-      <CardInfo2>{tags[0].name}</CardInfo2>
+      <CardInfo2>
+        {
+          tags.slice(0,3).map((tag, index:number) => {
+            return (
+              <CardInfo2Div>#{tag.name}</CardInfo2Div>
+            )
+          })
+        }
+        {/* {tags[0].name} */}
+      </CardInfo2>
     </Wrapper>
   )
 }
@@ -115,9 +124,23 @@ const CardInfo2 = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-top: 5%;
-  font-size: 120%;
+  font-size: 100%;
   display: flex;
   justify-content: left;
-  margin-left: 10%;
-  
+  /* margin-left: 10%; */
+`
+
+const CardInfo2Div = styled.div`
+  background-color: white;
+  color: black;
+  width: 4rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  /* box-shadow: 0.5rem 0.5rem 0.2rem; */
+  border: 0.15rem inset black;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.75rem;
 `

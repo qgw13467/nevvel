@@ -79,5 +79,5 @@ const WriteBtn = styled.button`
   height: 4rem;
   border-radius: 1rem;
   font-size: 1.5rem;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `
