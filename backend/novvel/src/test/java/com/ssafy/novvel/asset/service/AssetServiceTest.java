@@ -1,5 +1,6 @@
 package com.ssafy.novvel.asset.service;
 
+import com.ssafy.novvel.asset.dto.AssetPurchaseType;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;
@@ -16,6 +17,8 @@ import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.transactionhistory.entity.TransactionHistory;
+import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryRepository;
 import com.ssafy.novvel.util.TestUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -54,6 +57,8 @@ public class AssetServiceTest {
     private ResourceService resourceService;
     @Mock
     private MemberAssetRepository memberAssetRepository;
+    @Mock
+    private TransactionHistoryRepository historyRepository;
 
     @Test
     void addAssetTest() throws IOException {
@@ -165,19 +170,61 @@ public class AssetServiceTest {
     }
 
     @Test
-    void purchaseAssetDuplicateTest() {
+    void purchaseAssetNotFoundExcTest() {
         Member member = TestUtil.getUSERMember().get();
         List<Asset> assets = TestUtil.getAssetList(1);
-        Optional<MemberAsset> memberAssetOptional = Optional.ofNullable(null);
-//        Optional<MemberAsset> memberAssetOptional = Optional.of(new MemberAsset(1L, member, assets.get(0), DealType.BUY));
 
-        Mockito.lenient().doReturn(memberAssetOptional).when(assetRepository).findById(assets.get(0).getId());
+        Mockito.lenient().doReturn(Optional.ofNullable(null)).when(assetRepository).findById(assets.get(0).getId());
 
         Assertions.assertThatThrownBy(() -> {
             throw new NotFoundException("에셋을 찾을 수 없습니다");
         }).isInstanceOf(NotFoundException.class).hasMessageContaining("에셋을 찾을 수 없습니다");
 
     }
+    @Test
+    void purchaseAssetDuplicateTest() {
+        Member member = TestUtil.getUSERMember().get();
+        List<Asset> assets = TestUtil.getAssetList(1);
+        Optional<MemberAsset> memberAssetOptional = Optional.of(new MemberAsset(1L, member, assets.get(0), DealType.BUY));
+
+        Mockito.doReturn(Optional.of(assets.get(0))).when(assetRepository).findById(assets.get(0).getId());
+        Mockito.doReturn(memberAssetOptional).when(memberAssetRepository).findByAssetAndMember(assets.get(0), member);
+
+        AssetPurchaseType assetPurchaseType = assetService.purchaseAsset(assets.get(0).getId(), member);
+
+        Assertions.assertThat(assetPurchaseType).isEqualTo(AssetPurchaseType.DUPLICATED);
+
+    }
+
+    @Test
+    void purchaseAssetNEED_POINTTest() {
+        Member member = TestUtil.getUSERMember().get();
+        List<Asset> assets = TestUtil.getAssetList(1);
+        Optional<MemberAsset> memberAssetOptional = Optional.ofNullable(null);
+
+        Mockito.doReturn(Optional.of(assets.get(0))).when(assetRepository).findById(assets.get(0).getId());
+        Mockito.doReturn(memberAssetOptional).when(memberAssetRepository).findByAssetAndMember(assets.get(0), member);
+
+        AssetPurchaseType assetPurchaseType = assetService.purchaseAsset(assets.get(0).getId(), member);
+
+        Assertions.assertThat(assetPurchaseType).isEqualTo(AssetPurchaseType.NEED_POINT);
+    }
+    @Test
+    void purchaseAssetPurchaseTest() {
+        Member member = TestUtil.getUSERMember().get();
+        member.setPoint(1000l);
+        List<Asset> assets = TestUtil.getAssetList(1);
+        Optional<MemberAsset> memberAssetOptional = Optional.ofNullable(null);
+
+        Mockito.doReturn(Optional.of(assets.get(0))).when(assetRepository).findById(assets.get(0).getId());
+        Mockito.doReturn(memberAssetOptional).when(memberAssetRepository).findByAssetAndMember(assets.get(0), member);
+        Mockito.doReturn(new ArrayList<TransactionHistory>()).when(historyRepository).saveAll(Mockito.anyIterable());
+
+        AssetPurchaseType assetPurchaseType = assetService.purchaseAsset(assets.get(0).getId(), member);
+
+        Assertions.assertThat(assetPurchaseType).isEqualTo(AssetPurchaseType.PUCHASE);
+    }
+
 
 
 }
