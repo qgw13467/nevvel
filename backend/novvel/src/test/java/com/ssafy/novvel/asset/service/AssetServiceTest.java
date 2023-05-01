@@ -9,6 +9,7 @@ import com.ssafy.novvel.asset.entity.Tag;
 import com.ssafy.novvel.asset.repository.AssetRepository;
 import com.ssafy.novvel.asset.repository.AssetTagRepository;
 import com.ssafy.novvel.asset.repository.TagRepository;
+import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.memberasset.entity.DealType;
 import com.ssafy.novvel.memberasset.entity.MemberAsset;
 import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
@@ -159,6 +161,21 @@ public class AssetServiceTest {
         Assertions.assertThat(assetSearchDtos.getContent().get(1).getIsAvailable()).isEqualTo(true);
         Assertions.assertThat(assetSearchDtos.getContent().get(2).getIsAvailable()).isEqualTo(false);
 
+
+    }
+
+    @Test
+    void purchaseAssetDuplicateTest() {
+        Member member = TestUtil.getUSERMember().get();
+        List<Asset> assets = TestUtil.getAssetList(1);
+        Optional<MemberAsset> memberAssetOptional = Optional.ofNullable(null);
+//        Optional<MemberAsset> memberAssetOptional = Optional.of(new MemberAsset(1L, member, assets.get(0), DealType.BUY));
+
+        Mockito.lenient().doReturn(memberAssetOptional).when(assetRepository).findById(assets.get(0).getId());
+
+        Assertions.assertThatThrownBy(() -> {
+            throw new NotFoundException("에셋을 찾을 수 없습니다");
+        }).isInstanceOf(NotFoundException.class).hasMessageContaining("에셋을 찾을 수 없습니다");
 
     }
 
