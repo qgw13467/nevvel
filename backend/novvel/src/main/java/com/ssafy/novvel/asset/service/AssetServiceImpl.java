@@ -140,15 +140,15 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     @Transactional
-    public AssetPurchaseType purchaseAsset(Long assetId, Member member) {
+    public Integer purchaseAsset(Long assetId, Member member) {
         Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new NotFoundException("에셋을 찾을 수 없습니다"));
         Optional<MemberAsset> memberAsset = memberAssetRepository.findByAssetAndMember(asset, member);
         if (!memberAsset.isEmpty()) {
-            return AssetPurchaseType.DUPLICATED;
+            return 204;
         }
 
         if (asset.getPoint() > member.getPoint()) {
-            return AssetPurchaseType.NEED_POINT;
+            return 200;
         }
 
         Member seller = asset.getMember();
@@ -159,7 +159,7 @@ public class AssetServiceImpl implements AssetService {
         TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.SELL_ASSET, asset.getPoint());
         historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
 
-        return AssetPurchaseType.PUCHASE;
+        return 201;
     }
 
     //사용자가 해당 에셋을 보유하였는지 확인하고, dto에 표시

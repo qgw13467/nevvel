@@ -20,7 +20,7 @@ public interface AssetService {
 
     Slice<AssetSearchDto> searchAssetByTag(List<String> tags, Pageable pageable, Member member);
 
-    AssetPurchaseType purchaseAsset(Long assetId, Member member);
+    Integer purchaseAsset(Long assetId, Member member);
 
     Page<AssetSearchDto> searchAssetByUploader(Long uploaderId,Member member, Pageable pageable);
     Page<Tag> findPageTags(Pageable pageable);

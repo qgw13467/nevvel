@@ -50,18 +50,10 @@ public class AssetController {
     @GetMapping("/purchasing/{assetId}")
     public ResponseEntity<?> searchByMemberId(@PathVariable("assetId") Long assetId,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        AssetPurchaseType assetPurchaseType = assetService.purchaseAsset(assetId, customUserDetails.getMember());
-        switch (assetPurchaseType){
-            case DUPLICATED:
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            case NEED_POINT:
-                return new ResponseEntity<>(HttpStatus.OK);
-            case PUCHASE:
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            default:
-                throw new IllegalArgumentException();
-        }
 
+        Integer statusCode = assetService.purchaseAsset(assetId, customUserDetails.getMember());
+
+        return new ResponseEntity<>(HttpStatus.valueOf(statusCode));
     }
 
 
