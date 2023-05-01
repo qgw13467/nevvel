@@ -7,6 +7,8 @@ import com.ssafy.novvel.context.service.ContextService;
 import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.cover.repository.CoverRepository;
 import com.ssafy.novvel.episode.dto.EpisodeContextDto;
+import com.ssafy.novvel.episode.dto.EpisodeIdsDto;
+import com.ssafy.novvel.episode.dto.EpisodePerchasing;
 import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.episode.entity.Episode;
 import com.ssafy.novvel.context.entity.Context;
@@ -14,8 +16,12 @@ import com.ssafy.novvel.context.repository.ContextRepository;
 import com.ssafy.novvel.episode.repository.EpisodeRepository;
 import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.member.repository.MemberRepository;
 import com.ssafy.novvel.memberasset.entity.MemberAsset;
 import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
+import com.ssafy.novvel.transactionhistory.entity.PointChangeType;
+import com.ssafy.novvel.transactionhistory.entity.TransactionHistory;
+import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -32,6 +38,8 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final CoverRepository coverRepository;
     private final ContextService contextService;
     private final MemberAssetRepository memberAssetRepository;
+    private final MemberRepository memberRepository;
+    private final TransactionHistoryRepository historyRepository;
 
     @Override
     @Transactional
@@ -119,6 +127,48 @@ public class EpisodeServiceImpl implements EpisodeService{
 
         // episode의 ContextId를 새로 만든(수경결과) Context의 Id로 변경
         episode.setContextId(newContextId);
+    }
+
+    @Override
+    @Transactional
+    public Integer perchaseEpisode(EpisodePerchasing episodePerchasing, Member member) {
+        Cover cover = coverRepository.findById(episodePerchasing.getCoverId()).orElseThrow(
+                () -> new NotFoundException("시리즈가 없습니다."));
+
+        Member seller = cover.getMember();
+
+        List<EpisodeIdsDto> episodeIdsDtoList = episodePerchasing.getEpisodes();
+        List<Long> episodeIds = new ArrayList<>();
+
+        for (EpisodeIdsDto episodeId : episodeIdsDtoList) {
+            episodeIds.add(episodeId.getId());
+        }
+
+        List<Episode> episodes = episodeRepository.findByIdInIds(episodeIds);
+        Long sumPoint = 0L;
+
+        for (Episode episode : episodes) {
+            if (!episode.getCover().getId().equals(cover.getId())){
+                throw new NotFoundException("해당 시리즈의 에피소드가 아닙니다.");
+            } else sumPoint += episode.getPoint();
+        }
+
+        if (sumPoint > member.getPoint()) {
+            return 200;
+        }
+
+        for (Episode episode : episodes) {
+            Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
+            if (transactionHistory.isEmpty()) {
+                TransactionHistory buyTransactionHistory = new TransactionHistory(member, episode, PointChangeType.BUY_EPISODE, episode.getPoint());
+                TransactionHistory sellTransactionHistory = new TransactionHistory(seller, episode, PointChangeType.SELL_EPISODE, episode.getPoint());
+                member.setPoint(member.getPoint() - episode.getPoint());
+                seller.setPoint(seller.getPoint() + episode.getPoint());
+                historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
+            }
+        }
+
+        return 201;
     }
 
     // episodeRegistDto(수정 or 새로 생성 시 사용) 넣으면 context 돌며 effect 돌며 모든 myAssetId 받아와

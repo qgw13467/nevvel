@@ -1,6 +1,7 @@
 package com.ssafy.novvel.episode.controller;
 
 import com.ssafy.novvel.episode.dto.EpisodeContextDto;
+import com.ssafy.novvel.episode.dto.EpisodePerchasing;
 import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.context.repository.ContextRepository;
 import com.ssafy.novvel.episode.repository.EpisodeRepository;
@@ -35,16 +36,23 @@ public class EpisodeController {
 
     @DeleteMapping("/{episodeId}")
     public ResponseEntity<?> deleteEpisode(@PathVariable Long episodeId,
-                                                @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         episodeService.deleteEpisode(episodeId, customUserDetails.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{episodeId}")
     public ResponseEntity<?> editEpisode(@PathVariable Long episodeId,
-                                              @RequestBody EpisodeRegistDto episodeRegistDto,
-                                              @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                                         @RequestBody EpisodeRegistDto episodeRegistDto,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         episodeService.updateEpisode(episodeId, episodeRegistDto, customUserDetails.getMember());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/perchasing")
+    public ResponseEntity<?> purchaseEpisode(@RequestBody EpisodePerchasing episodePerchasing,
+                                             @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        episodeService.perchaseEpisode(episodePerchasing, customUserDetails.getMember());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
