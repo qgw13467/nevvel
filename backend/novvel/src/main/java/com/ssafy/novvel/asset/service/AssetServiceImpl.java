@@ -156,7 +156,7 @@ public class AssetServiceImpl implements AssetService {
         seller.setPoint(seller.getPoint() + asset.getPoint());
 
         TransactionHistory buyTransactionHistory = new TransactionHistory(member, asset, PointChangeType.BUY_ASSET, asset.getPoint());
-        TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.BUY_ASSET, asset.getPoint());
+        TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.SELL_ASSET, asset.getPoint());
         historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
 
         return AssetPurchaseType.PUCHASE;
