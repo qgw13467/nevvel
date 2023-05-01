@@ -1,7 +1,9 @@
 package com.ssafy.novvel.asset.controller;
 
+import com.ssafy.novvel.asset.dto.AssetPurchaseType;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.service.AssetService;
+import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +38,18 @@ public class AssetController {
     @GetMapping("/purchasing/{assetId}")
     public ResponseEntity<?> searchByMemberId(@PathVariable("assetId") Long assetId,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        assetService.purchaseAsset(assetId, customUserDetails.getMember());
+        AssetPurchaseType assetPurchaseType = assetService.purchaseAsset(assetId, customUserDetails.getMember());
+        switch (assetPurchaseType){
+            case DUPLICATED:
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            case NEED_POINT:
+                return new ResponseEntity<>(HttpStatus.OK);
+            case PUCHASE:
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            default:
+                throw new IllegalArgumentException();
+        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
