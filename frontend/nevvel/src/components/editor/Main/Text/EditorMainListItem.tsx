@@ -30,12 +30,13 @@ function EditorMainListItem({
     x: 0,
     y: 0,
   });
+  const [style, setStyle] = useState(false)
 
   useEffect(() => {
     console.log(text)
     // 텍스트에 style 적용한 경우
 
-  }, [text]);
+  }, [style]);
 
   const RemoveHandler = (content: content) => {
     const idx = content.idx;
@@ -80,7 +81,7 @@ function EditorMainListItem({
   return (
     <div onMouseLeave={() => setMenuBlock(false)}>
       {menuBlock ? (
-        <EditorMainMenu x={tooltipPos.x} y={tooltipPos.y} setText={setText} />
+        <EditorMainMenu x={tooltipPos.x} y={tooltipPos.y} setText={setText} style={style} setStyle={setStyle}/>
       ) : null}
       <BlockContainer>
         {plus ? (

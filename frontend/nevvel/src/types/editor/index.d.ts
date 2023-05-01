@@ -3,6 +3,7 @@ declare module "editor" {
         coverId: number;
         statusType: string;
         point: number;
+        title: string;
         contents: content[];
     };
 

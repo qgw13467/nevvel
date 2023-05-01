@@ -8,6 +8,7 @@ function editor() {
     coverId:1,
     statusType:"PUBLISHED",
     point:0,
+    title:"",
     contents:[]
   })
 

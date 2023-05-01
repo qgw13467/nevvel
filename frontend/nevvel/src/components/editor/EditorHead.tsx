@@ -8,12 +8,18 @@ type EditorHeadProps ={
 }
 
 function EditorHead({episode, setEpisode}:EditorHeadProps) {
+  const Titlehandler = (e:any) => {
+    setEpisode({
+      ...episode,
+      [e.target.name]:e.target.value
+    })
+  }
+
   return (
     <Wrapper>
       <ButtonWrapper>
         <NovelButtonContainer>
           <NovelButton>소설선택</NovelButton>
-          <NovelButton>새 소설 생성</NovelButton>
         </NovelButtonContainer>
         <WriteButtonContainer>
           <WriteButton>미리보기</WriteButton>
@@ -22,8 +28,11 @@ function EditorHead({episode, setEpisode}:EditorHeadProps) {
         </WriteButtonContainer>
       </ButtonWrapper>
       <InputWrapper>
-        <TitleInput placeholder="에피소드 명을 입력하세요" />
-        <TagInput placeholder="태그를 입력하세요" />
+        <TitleInput 
+          value={episode.title}
+          onChange={Titlehandler}
+          name="title"
+         placeholder="에피소드 명을 입력하세요" />
       </InputWrapper>
     </Wrapper>
   );
