@@ -86,10 +86,16 @@ export default AssetCard
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background};
   /* flex-direction: column; */
-  width: 20%;
+  width: 18%;
   height: 100%;
   margin-top: 1%;
   margin-bottom: 5%;
+  margin-right: 1%;
+  margin-left: 1%;
+  border-radius: 1rem;
+  /* background-color: #C1C2FF; */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 `;
 
 const CardImgDiv = styled.div`
@@ -101,7 +107,7 @@ const CardImgDiv = styled.div`
 
 const CardImg = styled.img`
   width: 100%;
-  height: 35vh;
+  height: 30vh;
   border-radius: 5%;
 `
 const CardInfo1 = styled.p`
@@ -142,5 +148,5 @@ const CardInfo2Div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.75rem;
+  margin-left: 0.5rem;
 `
