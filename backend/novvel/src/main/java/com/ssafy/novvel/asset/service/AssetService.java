@@ -22,6 +22,7 @@ public interface AssetService {
 
     AssetPurchaseType purchaseAsset(Long assetId, Member member);
 
+    Page<AssetSearchDto> searchAssetByUploader(Long uploaderId,Member member, Pageable pageable);
     Page<Tag> findPageTags(Pageable pageable);
 
 

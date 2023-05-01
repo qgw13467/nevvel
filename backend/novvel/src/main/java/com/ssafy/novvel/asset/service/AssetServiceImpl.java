@@ -10,6 +10,7 @@ import com.ssafy.novvel.asset.repository.AssetRepository;
 import com.ssafy.novvel.asset.repository.AssetTagRepository;
 import com.ssafy.novvel.asset.repository.TagRepository;
 import com.ssafy.novvel.exception.NotFoundException;
+import com.ssafy.novvel.member.repository.MemberRepository;
 import com.ssafy.novvel.memberasset.entity.MemberAsset;
 import com.ssafy.novvel.memberasset.repository.MemberAssetRepository;
 import com.ssafy.novvel.resource.entity.Resource;
@@ -20,14 +21,10 @@ import com.ssafy.novvel.transactionhistory.entity.TransactionHistory;
 import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +41,7 @@ public class AssetServiceImpl implements AssetService {
     private final TagRepository tagRepository;
     private final ResourceService resourceService;
     private final MemberAssetRepository memberAssetRepository;
+    private final MemberRepository memberRepository;
     private final TransactionHistoryRepository historyRepository;
 
     @Override
@@ -76,11 +74,56 @@ public class AssetServiceImpl implements AssetService {
                 tagRepository.findByTagNameIn(tags), pageable);
 
         List<Asset> assets = assetSlice.getContent();
+        //todo 에셋의 작성자를 찾는쿼리 (assetTagRespository에서 객체안 객체로 패치조인 어려움
+        assets = assetRepository.findJoinMemberByAssets(assets);
+
+
         List<AssetSearchDto> assetSearchDtos = assets.stream()
                 .map(AssetSearchDto::new)
                 .collect(Collectors.toList());
 
-        //각 에셋에 태그목록을 추가
+        //각 에셋에 태그목록 추가
+        assetSearchDtos = findTags(assets, assetSearchDtos);
+
+        //로그인된 사용자면 구매했는지 표시
+        if (member != null) {
+            assetSearchDtos = isAvailable(assets, assetSearchDtos, member);
+        }
+
+        return new SliceImpl<>(
+                assetSearchDtos,
+                pageable,
+                assetSlice.hasNext()
+        );
+    }
+
+    @Override
+    public Page<AssetSearchDto> searchAssetByUploader(Long uploaderId, Member member, Pageable pageable) {
+        Member uploader = memberRepository.findById(uploaderId).orElseThrow(() -> new NotFoundException("uploader not found"));
+
+        Page<Asset> assetPage = assetRepository.findByMember(uploader, pageable);
+        List<AssetSearchDto> assetSearchDtos = assetPage.getContent().stream()
+                .map(asset -> new AssetSearchDto(asset))
+                .collect(Collectors.toList());
+
+        assetSearchDtos = findTags(assetPage.getContent(), assetSearchDtos);
+        assetSearchDtos = isAvailable(assetPage.getContent(), assetSearchDtos, member);
+
+        return new PageImpl<>(
+                assetSearchDtos,
+                pageable,
+                assetPage.getTotalPages()
+        );
+    }
+
+    @Override
+    public Page<Tag> findPageTags(Pageable pageable) {
+
+        return tagRepository.findByOrderByUseCountDesc(pageable);
+    }
+
+    //각 에셋에 태그목록을 추가
+    private List<AssetSearchDto> findTags(List<Asset> assets, List<AssetSearchDto> assetSearchDtos) {
         List<AssetTag> assetTags = assetTagRepository.findByAssetIn(assets);
         for (AssetTag assetTag : assetTags) {
             for (AssetSearchDto assetSearchDto : assetSearchDtos) {
@@ -90,25 +133,8 @@ public class AssetServiceImpl implements AssetService {
             }
         }
 
-        //로그인된 사용자면 구매했는지 표시
-        if (member != null) {
-            List<MemberAsset> memberAssets =
-                    memberAssetRepository.findByMemberAndAssetIn(member, assetSlice.getContent());
-            for (AssetSearchDto assetSearchDto : assetSearchDtos) {
-                for (MemberAsset memberAsset : memberAssets) {
-                    if (assetSearchDto.getId().equals(memberAsset.getAsset().getId())) {
-                        assetSearchDto.setIsAvailable(true);
-                    }
-                }
-            }
-        }
 
-
-        return new SliceImpl<>(
-                assetSearchDtos,
-                pageable,
-                assetSlice.hasNext()
-        );
+        return assetSearchDtos;
     }
 
     @Override
@@ -132,12 +158,19 @@ public class AssetServiceImpl implements AssetService {
         return AssetPurchaseType.PUCHASE;
     }
 
-    @Override
-    public Page<Tag> findPageTags(Pageable pageable) {
-
-        return tagRepository.findByOrderByUseCountDesc(pageable);
+    //사용자가 해당 에셋을 보유하였는지 확인하고, dto에 표시
+    private List<AssetSearchDto> isAvailable(List<Asset> assets, List<AssetSearchDto> assetSearchDtos, Member member) {
+        List<MemberAsset> memberAssets =
+                memberAssetRepository.findByMemberAndAssetIn(member, assets);
+        for (AssetSearchDto assetSearchDto : assetSearchDtos) {
+            for (MemberAsset memberAsset : memberAssets) {
+                if (assetSearchDto.getId().equals(memberAsset.getAsset().getId())) {
+                    assetSearchDto.setIsAvailable(true);
+                }
+            }
+        }
+        return assetSearchDtos;
     }
-
 
     //저장되지 않은 태그는 저장
     private List<Tag> savedTags(List<String> tags) {
