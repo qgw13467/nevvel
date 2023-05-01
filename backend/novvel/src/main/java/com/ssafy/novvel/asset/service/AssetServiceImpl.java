@@ -25,6 +25,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +151,10 @@ public class AssetServiceImpl implements AssetService {
             return AssetPurchaseType.NEED_POINT;
         }
 
+        Member seller = asset.getMember();
         member.setPoint(member.getPoint() - asset.getPoint());
+        seller.setPoint(seller.getPoint() + asset.getPoint());
+
         TransactionHistory buyTransactionHistory = new TransactionHistory(member, asset, PointChangeType.BUY_ASSET, asset.getPoint());
         TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.BUY_ASSET, asset.getPoint());
         historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
