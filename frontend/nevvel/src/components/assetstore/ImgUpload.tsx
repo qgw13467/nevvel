@@ -10,6 +10,19 @@ type assetstoreProps = {
 
 function ImgUpload(props:assetstoreProps) {
 
+  const [image, setImage] = useState<File | null>(null);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setImage(files[0]);
+    }
+  };
+
+  const DeleteImg = () => {
+    setImage(null)
+  }
+
   const [submitBtnTrigger, setSubmitBtnTrigger] = useState(0)
 
   const CloseAssetUpload = () => {
@@ -29,6 +42,18 @@ function ImgUpload(props:assetstoreProps) {
   return(
     <div>
       <p>이미지 에셋 업로드</p>
+      <input type="file" onChange={handleImageChange} />
+      {image && (
+        <div>
+          <p>Selected image: {image.name}</p>
+          <img src={URL.createObjectURL(image)} alt="Selected image" />
+        </div>
+      )}
+      {
+        image?
+        <ImgDelBtn onClick={DeleteImg}>X</ImgDelBtn>:
+        null
+      }
       {
         submitBtnTrigger === 0?
         <ModalSubmitBtn_Un onClick={UnsubmitAsset}>등록</ModalSubmitBtn_Un>:
@@ -41,6 +66,13 @@ function ImgUpload(props:assetstoreProps) {
 
 export default ImgUpload
 
+const ImgDelBtn = styled.button`
+  border: 0.1rem solid black;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+`
 
 const ModalCloseBtn = styled.button`
   background-color: ${({ theme }) => theme.color.button};
