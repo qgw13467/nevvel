@@ -10,7 +10,7 @@ import com.ssafy.novvel.util.token.CustomUserDetails;
 import java.util.List;
 
 public interface EpisodeService {
-    EpisodeContextDto getEpisodeInfo(Long episodeId, Long memberId) ;
+    EpisodeContextDto getEpisodeInfo(Long episodeId, Member member) ;
     Long createEpisode(EpisodeRegistDto episodeRegistDto, Member member);
     void deleteEpisode(Long episodeId, Long memberId);
     void updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Member member);

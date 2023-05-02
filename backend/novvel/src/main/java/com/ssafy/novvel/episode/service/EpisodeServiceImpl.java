@@ -13,7 +13,10 @@ import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.episode.entity.Episode;
 import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.context.repository.ContextRepository;
+import com.ssafy.novvel.episode.entity.EpisodeStatusType;
+import com.ssafy.novvel.episode.entity.ReadEpisode;
 import com.ssafy.novvel.episode.repository.EpisodeRepository;
+import com.ssafy.novvel.episode.repository.ReadEpisodeRepository;
 import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.member.repository.MemberRepository;
@@ -40,6 +43,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final MemberAssetRepository memberAssetRepository;
     private final MemberRepository memberRepository;
     private final TransactionHistoryRepository historyRepository;
+    private final ReadEpisodeRepository readEpisodeRepository;
 
     @Override
     @Transactional
@@ -62,20 +66,47 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Transactional
-    public EpisodeContextDto getEpisodeInfo(Long episodeId, Long memberId) {
+    public EpisodeContextDto getEpisodeInfo(Long episodeId, Member member) {
         Episode episode = episodeRepository.findById(episodeId).orElseThrow(
                 () -> new NotFoundException("Episode가 없습니다."));
 
-        // 결제 관련 활성화 시 현재 유저가 에피소드를 구매한 유저가 맞는지 확인하는 로직 필요
+        // 현재 유저가 에피소드의 작성자인지 -> 아니라면 구매자인지 확인
+        if (!episode.getCover().getMember().getId().equals(member.getId())) {
+            // 발행 상태거나 삭제되었어도 구매한 것일 땐 볼 수 있음.
+            if (!episode.getStatusType().equals(EpisodeStatusType.TEMPORARY)) {
+                Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
+                // 거래 내역이 없을 때
+                if (transactionHistory.isEmpty()) {
+                    // 삭제된 에피소드면 못봄
+                    if (episode.getStatusType().equals(EpisodeStatusType.DELETED)) {
+                        throw new NotFoundException("삭제된 episode입니다.");
+                    }
+                    // 유료 에피소드면 못봄
+                    if (episode.getPoint() > 0) {
+                        throw new NotFoundException("구매하지 않은 episode입니다.");
+                    }
+                }
+            } else {
+                throw new NotFoundException("발행되지 않은 episode입니다.");
+            }
+        } else {
+            // 본인 거면 삭제했을 때만 접근 불가
+            if (episode.getStatusType().equals(EpisodeStatusType.DELETED)) {
+                throw new NotFoundException("삭제된 episode입니다.");
+            }
+        }
 
         // 에러 뜨면 MongoDB 연결 확인
         Context context = contextRepository.findById(episode.getContextId()).orElseThrow(
                 () -> new NotFoundException("Context가 없습니다(MongoDB 로직 수정 필요)."));
 
         // 현재 유저가 작성자가 아닐 때만 조회수 1 올리기
-        if (!episode.getCover().getMember().getId().equals(memberId)) {
+        if (!episode.getCover().getMember().getId().equals(member.getId())) {
             episode.setViewCount(episode.getViewCount() + 1);
         }
+
+        readEpisodeRepository.save(new ReadEpisode(episode, member));
+
         return new EpisodeContextDto(episode.getTitle(), episode.getId(), context.getContents());
     }
 
@@ -83,7 +114,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     @Transactional
     public void deleteEpisode(Long episodeId, Long memberId) {
         Episode episode = episodeRepository.findById(episodeId).orElseThrow(
-                () -> new NotFoundException("Episode가 없습니다."));
+                () -> new NotFoundException("episode가 없습니다."));
 
         // 현재 유저가 에피소드 작성자인지 확인하는 작업 필요
         if (!episode.getCover().getMember().getId().equals(memberId)) {
@@ -99,7 +130,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     @Transactional
     public void updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Member member) {
         Episode episode = episodeRepository.findById(episodeId).orElseThrow(
-                () -> new NotFoundException("Episode가 없습니다."));
+                () -> new NotFoundException("episode가 없습니다."));
         Cover cover = coverRepository.findById(episodeRegistDto.getCoverId()).orElseThrow(
                 () -> new NotFoundException("시리즈가 없습니다."));
         ObjectId contextId = episode.getContextId();
@@ -109,10 +140,18 @@ public class EpisodeServiceImpl implements EpisodeService{
             throw new NotFoundException("현재 사용자가 시리즈(Cover) 작성자와 다른 사람입니다.");
         }
 
+        if (episode.getStatusType().equals(EpisodeStatusType.DELETED)) {
+            throw new NotFoundException("삭제된 episode는 수정할 수 없습니다.");
+        }
+
         myAssetCheck(episodeRegistDto, member);
 
         episode.setTitle(episodeRegistDto.getTitle());
         episode.setPoint(episodeRegistDto.getPoint());
+        // 수정중인 글을 임시저장 할 경우 새로운 임시저장 글이 생길 뿐 기존 발행 or 삭제한 게시글이 임시저장 상태가 되어선 안됨
+        if (episode.getStatusType().equals(EpisodeStatusType.PUBLISHED) && episodeRegistDto.getStatusType().equals(EpisodeStatusType.TEMPORARY)) {
+            throw new NotFoundException("이미 발행된 episode는 임시저장 상태로 전환할 수 없습니다.");
+        }
         episode.setStatusType(episodeRegistDto.getStatusType());
 
         // 에러 뜨면 MongoDB 연결 확인
@@ -136,36 +175,56 @@ public class EpisodeServiceImpl implements EpisodeService{
                 () -> new NotFoundException("시리즈가 없습니다."));
 
         Member seller = cover.getMember();
+        member = memberRepository.save(member);
 
         List<EpisodeIdsDto> episodeIdsDtoList = episodePerchasing.getEpisodes();
         List<Long> episodeIds = new ArrayList<>();
 
+        // 구매하려는 에피소드 목록의 id 리스트
         for (EpisodeIdsDto episodeId : episodeIdsDtoList) {
+            if (episodeIds.contains(episodeId.getId())) {
+                throw new NotFoundException("중복된 episode를 선택하였습니다.");
+            }
             episodeIds.add(episodeId.getId());
         }
 
+        // id 리스트를 통해 episode 목록을 받아오기
         List<Episode> episodes = episodeRepository.findByIdInIds(episodeIds);
-        Long sumPoint = 0L;
 
-        for (Episode episode : episodes) {
-            if (!episode.getCover().getId().equals(cover.getId())){
-                throw new NotFoundException("해당 시리즈의 에피소드가 아닙니다.");
-            } else sumPoint += episode.getPoint();
+        // id가 where in인 episode를 모은 리스트의 사이즈가 id만 있는 리스트의 사이즈보다 작다면 없는 에피소드가 값으로 들어온 것이므로
+        // 진행 불가
+        if (episodeIds.size() != episodes.size()) {
+            throw new NotFoundException("존재하지 않는 episode가 포함되어 있습니다.");
         }
 
+        // 에피소드들의 가격 총 합을 저장할 변수
+        Long sumPoint = 0L;
+
+        // 하나씩 돌며 cover에 속하지 않은 episode나 이미 구입한 episode가 포함되었는지 검사하며 겸사겸사 query 대신 point 직접 합산
+        for (Episode episode : episodes) {
+            Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
+            if (!transactionHistory.isEmpty()) {
+                return 204;
+            }
+            if (!episode.getCover().getId().equals(cover.getId())){
+                throw new NotFoundException(episode.getTitle() + "은(는) 해당 시리즈의 episode가 아닙니다.");
+            } else sumPoint += episode.getPoint();
+            if (!episode.getStatusType().equals(EpisodeStatusType.PUBLISHED)) {
+                throw new NotFoundException("구매할 수 없는 episode가 포함되어 있습니다.");
+            }
+        }
+
+        // 구매자의 point 합이 구매하려는 에피소드의 가격 합보다 작으면 구매 불가
         if (sumPoint > member.getPoint()) {
             return 200;
         }
 
         for (Episode episode : episodes) {
-            Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
-            if (transactionHistory.isEmpty()) {
-                TransactionHistory buyTransactionHistory = new TransactionHistory(member, episode, PointChangeType.BUY_EPISODE, episode.getPoint());
-                TransactionHistory sellTransactionHistory = new TransactionHistory(seller, episode, PointChangeType.SELL_EPISODE, episode.getPoint());
-                member.setPoint(member.getPoint() - episode.getPoint());
-                seller.setPoint(seller.getPoint() + episode.getPoint());
-                historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
-            }
+            TransactionHistory buyTransactionHistory = new TransactionHistory(member, episode, PointChangeType.BUY_EPISODE, episode.getPoint());
+            TransactionHistory sellTransactionHistory = new TransactionHistory(seller, episode, PointChangeType.SELL_EPISODE, episode.getPoint());
+            member.setPoint(member.getPoint() - episode.getPoint());
+            seller.setPoint(seller.getPoint() + episode.getPoint());
+            historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
         }
 
         return 201;

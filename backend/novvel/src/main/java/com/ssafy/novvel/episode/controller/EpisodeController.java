@@ -30,7 +30,7 @@ public class EpisodeController {
     @GetMapping("/{episodeId}")
     public ResponseEntity<EpisodeContextDto> getEpisode(@PathVariable Long episodeId,
                                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        EpisodeContextDto result = episodeService.getEpisodeInfo(episodeId, customUserDetails.getId());
+        EpisodeContextDto result = episodeService.getEpisodeInfo(episodeId, customUserDetails.getMember());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -52,7 +52,7 @@ public class EpisodeController {
     @PostMapping("/perchasing")
     public ResponseEntity<?> purchaseEpisode(@RequestBody EpisodePerchasing episodePerchasing,
                                              @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        episodeService.perchaseEpisode(episodePerchasing, customUserDetails.getMember());
-        return new ResponseEntity<>(HttpStatus.OK);
+        Integer statusCode = episodeService.perchaseEpisode(episodePerchasing, customUserDetails.getMember());
+        return new ResponseEntity<>(HttpStatus.valueOf(statusCode));
     }
 }

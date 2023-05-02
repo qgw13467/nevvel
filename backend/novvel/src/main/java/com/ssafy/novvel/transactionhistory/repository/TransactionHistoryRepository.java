@@ -13,6 +13,4 @@ import java.util.Optional;
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
     Optional<TransactionHistory> findByMemberAndEpisode(Member member, Episode episode);
 
-//    @Query("SELECT tme FROM TransactionHistory tme WHERE tme.member = :member  tme.episode in :ids)
-//    List<TransactionHistory> findByMemberAndEpisodeIds(@Param("member") Member member, @Param("ids") List<Long> ids);
 }
