@@ -1,32 +1,37 @@
 import React from "react";
-import { episode } from "editor";
+import { EpisodeView } from "viewer";
 import styled from "styled-components";
+import ViewerTextBlock from "./ViewerTextBlock";
+import { event } from "viewer";
 
 type viwerMainProps = {
   tabNumber:number
-  EpisodeData: episode;
+  EpisodeData: EpisodeView;
+  setEventCatch: React.Dispatch<React.SetStateAction<boolean>>;
 };
-function ViewerMain({ EpisodeData,tabNumber }: viwerMainProps) {
+function ViewerMain({ EpisodeData,tabNumber,setEventCatch }: viwerMainProps) {
   const contents = EpisodeData.contents;
 
-  console.log(contents);
   return (<>
     <Container>
       {contents.map((content, index) => (
-        <TextBlock key={index}>{content.idx <= tabNumber ? <>{content.context}</> : null}</TextBlock>
+       <ViewerTextBlock
+        key={index}
+        content={content}
+        tabNumber={tabNumber}
+        setEventCatch={setEventCatch}
+       />
       ))}
     </Container>
   </>
   );
 }
+{/* <ViewerTextBlock key={index}>{content.idx <= tabNumber ? <>{content.context}</> : null}</ViewerTextBlock> */}
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y:scroll;
-  ::-webkit-scrollbar {
-  display: none;
-}
+
   `
 const TextBlock = styled.div`
   padding: 0.5rem;

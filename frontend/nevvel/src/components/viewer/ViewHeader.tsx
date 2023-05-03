@@ -1,27 +1,50 @@
 import React from "react";
+import { EpisodeView } from "viewer";
+import { AiFillCaretLeft, AiFillCaretRight, AiOutlineHome } from "react-icons/ai";
 import styled from "styled-components";
-import { episode } from "editor";
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 type ViewHeaderProps = {
-  EpisodeData: episode;
+  EpisodeData: EpisodeView;
 };
 
 function ViewHeader({ EpisodeData }: ViewHeaderProps) {
   return (
-    <HeaderContainer>
-        <AiFillCaretLeft />
-      <EpisodeTitle>ViewHeader</EpisodeTitle>
-      <AiFillCaretRight />
-    </HeaderContainer>
+    <>
+      <HeaderTopContainer>
+        <AiFillCaretLeft  size={24}/>
+        <EpisodeTitle>
+          <EpisodeTitle>
+            <EpisodeHome>
+              <AiOutlineHome size={24} />
+            </EpisodeHome>
+            <>{EpisodeData.title}</>
+          </EpisodeTitle>
+        </EpisodeTitle>
+        <AiFillCaretRight size={24} />
+      </HeaderTopContainer>
+      <ProgressBar />
+    </>
   );
 }
-const HeaderContainer = styled.div`
-  width: 80%;
+const HeaderTopContainer = styled.div`
+  width: 60%;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   text-align: center;
   align-items: center;
 `;
-const EpisodeTitle = styled.div``;
+
+const ProgressBar = styled.div``;
+const EpisodeTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: center
+`;
+const EpisodeHome = styled.button`
+  margin-right: 1rem;
+  color: ${({ theme })=> theme.color.text1};
+`;
 
 export default ViewHeader;
