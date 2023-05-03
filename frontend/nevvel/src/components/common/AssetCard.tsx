@@ -71,7 +71,7 @@ function AssetCard({
             hoverTrigger === 0?
             // hovertrigger에 따라 트리거가 이미지 스위치(썸네일 <-> 원본)
             <CardImg src={thumbnail} alt="썸네일" onMouseOver={ImgTriggerOn} />:
-            <CardImg src={url} alt="썸네일" onMouseLeave={ImgTriggerOff} />
+            <img src={url} alt="썸네일" onMouseLeave={ImgTriggerOff} />
           )
         }
       </CardImgDiv>
