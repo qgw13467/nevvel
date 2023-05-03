@@ -77,7 +77,7 @@ function ImgUpload(props:assetstoreProps) {
           </ImgUploadLabel>
           {image && (
             <div>
-              <p>{image.name}</p>
+              <ImageUploadTitle>{image.name}</ImageUploadTitle>
             </div>
           )}
           {/* 이미지 파일 삭제 버튼 */}
@@ -135,6 +135,10 @@ const ImgUploadLabel = styled.label`
   width: 15rem;
   height: 15rem;
   margin: 1rem;
+  /* border: 0.15rem solid #4D4D4D;
+  border-radius: 1.5rem; */
+  display: flex;
+  align-items: center;
   &:hover{
     cursor: pointer;
   }
@@ -148,12 +152,20 @@ const ImgUploadInput = styled.input`
 const ImgUploadBtn = styled.img`
   width: 15rem;
   height: 15rem;
+  object-fit: contain;
   border: 0.15rem solid #4D4D4D;
   border-radius: 1.5rem;
   /* float: left; */
   &:hover {
     box-shadow: 0.1rem 0.1rem 0.5rem;
   }
+`
+
+const ImageUploadTitle = styled.p`
+  width: 15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const AssetInfoInput1 = styled.input`
@@ -176,6 +188,7 @@ const ImgDelBtn = styled.button`
   height: 2rem;
   font-size: 1.5rem;
   border-radius: 1rem;
+  margin-top: 0.5rem;
   &:hover {
     box-shadow: 0.1rem 0.1rem 0.5rem;
   }
