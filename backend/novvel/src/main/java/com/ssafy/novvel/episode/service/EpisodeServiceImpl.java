@@ -209,15 +209,15 @@ public class EpisodeServiceImpl implements EpisodeService{
 
         // 하나씩 돌며 cover에 속하지 않은 episode나 이미 구입한 episode가 포함되었는지 검사하며 겸사겸사 query 대신 point 직접 합산
         for (Episode episode : episodes) {
-            Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
-            if (!transactionHistory.isEmpty()) {
-                return 204;
-            }
             if (!episode.getCover().getId().equals(cover.getId())){
                 throw new NotFoundException(episode.getTitle() + "은(는) 해당 시리즈의 episode가 아닙니다.");
             } else sumPoint += episode.getPoint();
             if (!episode.getStatusType().equals(EpisodeStatusType.PUBLISHED)) {
                 throw new NotFoundException("구매할 수 없는 episode가 포함되어 있습니다.");
+            }
+            Optional<TransactionHistory> transactionHistory = historyRepository.findByMemberAndEpisode(member, episode);
+            if (transactionHistory.isPresent()) {
+                return 204;
             }
         }
 
