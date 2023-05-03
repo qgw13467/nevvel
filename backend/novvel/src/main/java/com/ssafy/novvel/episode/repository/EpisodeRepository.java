@@ -14,6 +14,4 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
     @Query("SELECT ep FROM Episode ep LEFT JOIN fetch ep.cover WHERE ep.id in :ids")
     List<Episode> findByIdInIds(@Param("ids") List<Long> ids);
 
-    @Query("SELECT count(ep.point) FROM Episode ep WHERE ep.id in :ids")
-    Long countByIds(@Param("ids") List<Long> ids);
 }

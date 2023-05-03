@@ -5,7 +5,9 @@ import com.ssafy.novvel.context.dto.ContextAffectInfoDto;
 import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import com.ssafy.novvel.context.service.ContextService;
 import com.ssafy.novvel.cover.entity.Cover;
+import com.ssafy.novvel.cover.entity.PurchasedCover;
 import com.ssafy.novvel.cover.repository.CoverRepository;
+import com.ssafy.novvel.cover.repository.PerchasedCoverRepository;
 import com.ssafy.novvel.episode.dto.EpisodeContextDto;
 import com.ssafy.novvel.episode.dto.EpisodeIdsDto;
 import com.ssafy.novvel.episode.dto.EpisodePerchasing;
@@ -44,6 +46,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final MemberRepository memberRepository;
     private final TransactionHistoryRepository historyRepository;
     private final ReadEpisodeRepository readEpisodeRepository;
+    private final PerchasedCoverRepository perchasedCoverRepository;
 
     @Override
     @Transactional
@@ -105,6 +108,7 @@ public class EpisodeServiceImpl implements EpisodeService{
             episode.setViewCount(episode.getViewCount() + 1);
         }
 
+        // 읽은 소설 처리하기
         readEpisodeRepository.save(new ReadEpisode(episode, member));
 
         return new EpisodeContextDto(episode.getTitle(), episode.getId(), context.getContents());
@@ -226,6 +230,8 @@ public class EpisodeServiceImpl implements EpisodeService{
             seller.setPoint(seller.getPoint() + episode.getPoint());
             historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
         }
+
+        perchasedCoverRepository.save(new PurchasedCover(cover, member));
 
         return 201;
     }
