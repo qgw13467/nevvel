@@ -1,5 +1,6 @@
 package com.ssafy.novvel.cover.service;
 
+import com.ssafy.novvel.cover.dto.CoverInfoAndEpisodesDto;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
 import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.member.entity.Member;
@@ -10,4 +11,6 @@ public interface CoverService {
 
     Cover registerCover(MultipartFile multipartFile, CoverRegisterDto coverRegisterDto,
         Member member) throws IOException;
+
+    CoverInfoAndEpisodesDto getAllEpisodes(Long coverId, Long memberId);
 }

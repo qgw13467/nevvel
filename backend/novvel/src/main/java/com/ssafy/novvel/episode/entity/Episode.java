@@ -1,6 +1,11 @@
 package com.ssafy.novvel.episode.entity;
 
+import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.util.BaseEntity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -20,6 +25,16 @@ public class Episode extends BaseEntity {
     private Long id;
 
     @Setter
-    @NotNull
+    @PositiveOrZero
     private Long point;
+
+    @Lob
+    @NotNull
+    private Byte[] contextId;
+
+    @PositiveOrZero
+    private Long viewCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    Cover cover;
 }

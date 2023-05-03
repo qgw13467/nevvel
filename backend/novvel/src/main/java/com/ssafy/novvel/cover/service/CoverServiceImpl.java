@@ -1,5 +1,6 @@
 package com.ssafy.novvel.cover.service;
 
+import com.ssafy.novvel.cover.dto.CoverInfoAndEpisodesDto;
 import com.ssafy.novvel.cover.repository.CoverRepository;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
 import com.ssafy.novvel.cover.entity.Cover;
@@ -38,5 +39,20 @@ public class CoverServiceImpl implements CoverService {
 
         return coverRepository.save(new Cover(resource, coverRegisterDto, member, genre));
 
+    }
+
+    @Override
+    public CoverInfoAndEpisodesDto getAllEpisodes(Long coverId, Long memberId) {
+
+        Cover cover = coverRepository.findById(coverId).orElseThrow(NullPointerException::new);
+        CoverInfoAndEpisodesDto coverInfoAndEpisodesDto = new CoverInfoAndEpisodesDto();
+        coverInfoAndEpisodesDto.setTitle(cover.getTitle());
+        coverInfoAndEpisodesDto.setDescription(cover.getDescription());
+        coverInfoAndEpisodesDto.setGenreName(cover.getGenre().getName());
+
+
+        coverInfoAndEpisodesDto.setEpisodes(coverRepository.findEpisodesInfoDto(coverId, memberId));
+
+        return coverInfoAndEpisodesDto;
     }
 }
