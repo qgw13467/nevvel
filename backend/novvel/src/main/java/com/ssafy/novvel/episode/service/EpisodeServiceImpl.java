@@ -7,11 +7,8 @@ import com.ssafy.novvel.context.service.ContextService;
 import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.cover.entity.PurchasedCover;
 import com.ssafy.novvel.cover.repository.CoverRepository;
-import com.ssafy.novvel.cover.repository.PerchasedCoverRepository;
-import com.ssafy.novvel.episode.dto.EpisodeContextDto;
-import com.ssafy.novvel.episode.dto.EpisodeIdsDto;
-import com.ssafy.novvel.episode.dto.EpisodePerchasing;
-import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
+import com.ssafy.novvel.cover.repository.PurchasedCoverRepository;
+import com.ssafy.novvel.episode.dto.*;
 import com.ssafy.novvel.episode.entity.Episode;
 import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.context.repository.ContextRepository;
@@ -29,6 +26,8 @@ import com.ssafy.novvel.transactionhistory.entity.TransactionHistory;
 import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -46,7 +45,7 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final MemberRepository memberRepository;
     private final TransactionHistoryRepository historyRepository;
     private final ReadEpisodeRepository readEpisodeRepository;
-    private final PerchasedCoverRepository perchasedCoverRepository;
+    private final PurchasedCoverRepository purchasedCoverRepository;
 
     @Override
     @Transactional
@@ -177,14 +176,14 @@ public class EpisodeServiceImpl implements EpisodeService{
 
     @Override
     @Transactional
-    public Integer perchaseEpisode(EpisodePerchasing episodePerchasing, Member member) {
-        Cover cover = coverRepository.findById(episodePerchasing.getCoverId()).orElseThrow(
+    public Integer purchaseEpisode(EpisodePurchasing episodePurchasing, Member member) {
+        Cover cover = coverRepository.findById(episodePurchasing.getCoverId()).orElseThrow(
                 () -> new NotFoundException("시리즈가 없습니다."));
 
         Member seller = cover.getMember();
         member = memberRepository.save(member);
 
-        List<EpisodeIdsDto> episodeIdsDtoList = episodePerchasing.getEpisodes();
+        List<EpisodeIdsDto> episodeIdsDtoList = episodePurchasing.getEpisodes();
         List<Long> episodeIds = new ArrayList<>();
 
         // 구매하려는 에피소드 목록의 id 리스트
@@ -234,9 +233,16 @@ public class EpisodeServiceImpl implements EpisodeService{
             historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
         }
 
-        perchasedCoverRepository.save(new PurchasedCover(cover, member));
+        purchasedCoverRepository.save(new PurchasedCover(cover, member));
 
         return 201;
+    }
+
+    @Override
+    public Page<EpisodePurchasedOn> getPurchasedOnEp(Member member, Pageable pageable) {
+
+
+        return null;
     }
 
     // episodeRegistDto(수정 or 새로 생성 시 사용) 넣으면 context 돌며 effect 돌며 모든 myAssetId 받아와

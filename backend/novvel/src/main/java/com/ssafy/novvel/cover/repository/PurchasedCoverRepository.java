@@ -4,5 +4,5 @@ import com.ssafy.novvel.cover.entity.CoverMemberID;
 import com.ssafy.novvel.cover.entity.PurchasedCover;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PerchasedCoverRepository extends JpaRepository<PurchasedCover, CoverMemberID> {
+public interface PurchasedCoverRepository extends JpaRepository<PurchasedCover, CoverMemberID> {
 }
