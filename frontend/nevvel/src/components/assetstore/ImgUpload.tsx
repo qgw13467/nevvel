@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import styled from "styled-components";
+import TagSearchBar from "./TagSearchBar";
 
 
 type assetstoreProps = {
@@ -99,7 +100,7 @@ function ImgUpload(props:assetstoreProps) {
           <AssetInfoInput1 placeholder="에셋 가격을 입력해주세요." />
 
           <p>태그</p>
-          <AssetInfoInput1 placeholder="에셋 태그를 선택해주세요." />
+          <TagSearchBar />
         </ColDiv>
       </RowDiv>
       
