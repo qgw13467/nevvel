@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class EpisodePurchasing {
+public class EpisodePurchasingDto {
     /**
      * {
      *   "coverId": "integer",

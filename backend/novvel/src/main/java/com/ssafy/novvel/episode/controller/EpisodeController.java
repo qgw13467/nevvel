@@ -1,8 +1,8 @@
 package com.ssafy.novvel.episode.controller;
 
 import com.ssafy.novvel.episode.dto.EpisodeContextDto;
-import com.ssafy.novvel.episode.dto.EpisodePurchasedOn;
-import com.ssafy.novvel.episode.dto.EpisodePurchasing;
+import com.ssafy.novvel.episode.dto.EpisodePurchasedOnDto;
+import com.ssafy.novvel.episode.dto.EpisodePurchasingDto;
 import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
 import com.ssafy.novvel.episode.service.EpisodeService;
 import com.ssafy.novvel.util.token.CustomUserDetails;
@@ -51,16 +51,16 @@ public class EpisodeController {
     }
 
     @PostMapping("/purchasing")
-    public ResponseEntity<?> purchaseEpisode(@RequestBody EpisodePurchasing episodePurchasing,
+    public ResponseEntity<?> purchaseEpisode(@RequestBody EpisodePurchasingDto episodePurchasingDto,
                                              @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        Integer statusCode = episodeService.purchaseEpisode(episodePurchasing, customUserDetails.getMember());
+        Integer statusCode = episodeService.purchaseEpisode(episodePurchasingDto, customUserDetails.getMember());
         return new ResponseEntity<>(HttpStatus.valueOf(statusCode));
     }
 
     @GetMapping("/purchased-on")
-    public ResponseEntity<Page<EpisodePurchasedOn>> getPurchasedEp(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                   Pageable pageable) {
-        Page<EpisodePurchasedOn> episodePurchasedOnPage = episodeService.getPurchasedOnEp(customUserDetails
+    public ResponseEntity<Page<EpisodePurchasedOnDto>> getPurchasedEp(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                      Pageable pageable) {
+        Page<EpisodePurchasedOnDto> episodePurchasedOnPage = episodeService.getPurchasedOnEp(customUserDetails
                 .getMember(), pageable);
 
         return new ResponseEntity<>(episodePurchasedOnPage, HttpStatus.OK);

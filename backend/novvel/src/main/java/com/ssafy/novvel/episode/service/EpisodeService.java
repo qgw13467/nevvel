@@ -10,6 +10,6 @@ public interface EpisodeService {
     Long createEpisode(EpisodeRegistDto episodeRegistDto, Member member);
     void deleteEpisode(Long episodeId, Long memberId);
     void updateEpisode(Long episodeId, EpisodeRegistDto episodeRegistDto, Member member);
-    Integer purchaseEpisode(EpisodePurchasing episodePurchasing, Member member);
-    Page<EpisodePurchasedOn> getPurchasedOnEp(Member member, Pageable pageable);
+    Integer purchaseEpisode(EpisodePurchasingDto episodePurchasingDto, Member member);
+    Page<EpisodePurchasedOnDto> getPurchasedOnEp(Member member, Pageable pageable);
 }

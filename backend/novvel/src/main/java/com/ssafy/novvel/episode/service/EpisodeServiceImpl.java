@@ -27,6 +27,7 @@ import com.ssafy.novvel.transactionhistory.repository.TransactionHistoryReposito
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -176,14 +177,14 @@ public class EpisodeServiceImpl implements EpisodeService{
 
     @Override
     @Transactional
-    public Integer purchaseEpisode(EpisodePurchasing episodePurchasing, Member member) {
-        Cover cover = coverRepository.findById(episodePurchasing.getCoverId()).orElseThrow(
+    public Integer purchaseEpisode(EpisodePurchasingDto episodePurchasingDto, Member member) {
+        Cover cover = coverRepository.findById(episodePurchasingDto.getCoverId()).orElseThrow(
                 () -> new NotFoundException("시리즈가 없습니다."));
 
         Member seller = cover.getMember();
         member = memberRepository.save(member);
 
-        List<EpisodeIdsDto> episodeIdsDtoList = episodePurchasing.getEpisodes();
+        List<EpisodeIdsDto> episodeIdsDtoList = episodePurchasingDto.getEpisodes();
         List<Long> episodeIds = new ArrayList<>();
 
         // 구매하려는 에피소드 목록의 id 리스트
@@ -239,10 +240,21 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Override
-    public Page<EpisodePurchasedOn> getPurchasedOnEp(Member member, Pageable pageable) {
+    public Page<EpisodePurchasedOnDto> getPurchasedOnEp(Member member, Pageable pageable) {
+        Page<Episode> episodes = historyRepository.findByMemberAndEpisodeNotNull(member, pageable);
+        List<EpisodePurchasedOnDto> episodePurchasedOnDtoList = new ArrayList<>();
 
+        for (Episode episode : episodes) {
+            EpisodePurchasedOnDto episodePurchasedOn = new EpisodePurchasedOnDto(
+                    episode.getCover().getId(),
+                    episode.getCover().getTitle(),
+                    episode.getId(),
+                    episode.getTitle(),
+                    episode.getPoint());
+            episodePurchasedOnDtoList.add(episodePurchasedOn);
+        }
 
-        return null;
+        return new PageImpl<>(episodePurchasedOnDtoList, pageable, episodes.getTotalElements());
     }
 
     // episodeRegistDto(수정 or 새로 생성 시 사용) 넣으면 context 돌며 effect 돌며 모든 myAssetId 받아와
