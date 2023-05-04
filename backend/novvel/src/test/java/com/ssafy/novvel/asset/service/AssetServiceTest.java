@@ -281,5 +281,25 @@ public class AssetServiceTest {
         Assertions.assertThat(result).isEqualTo(201);
     }
 
+    @Test
+    void searchMyAssetsTest(){
+        Member owner = TestUtil.getMember();
+        List<Member> members = TestUtil.getUSERMembers(4);
+        List<Resource> resources = TestUtil.getResources(4);
+        List<Asset> assets = TestUtil.getAssetList(4, members, resources);
+        List<MemberAsset> memberAssets = TestUtil.getMemberAssets(owner, assets);
+        Pageable pageable = PageRequest.of(0, 5);
+
+        Mockito.doReturn(new PageImpl<>(memberAssets, pageable, pageable.getPageNumber()))
+                .when(memberAssetRepository).findPageByMember(owner, pageable);
+        Mockito.doReturn(assets).when(assetRepository).findJoinMemberByAssets(Mockito.any(List.class));
+
+        Page<AssetSearchDto> assetSearchDtos = assetService.searchMyAssets(owner, pageable);
+
+        Assertions.assertThat(assetSearchDtos.getContent().size()).isEqualTo(4);
+
+    }
+
+
 
 }

@@ -69,5 +69,14 @@ public class AssetController {
         return new ResponseEntity<>(HttpStatus.valueOf(statusCode));
     }
 
+    @GetMapping("/purchased-on")
+    public ResponseEntity<Page<AssetSearchDto>> myAssets(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      Pageable pageable){
+
+        Page<AssetSearchDto> result = assetService.searchMyAssets(customUserDetails.getMember(), pageable);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 }
