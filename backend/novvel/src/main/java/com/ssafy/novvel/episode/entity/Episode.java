@@ -1,13 +1,10 @@
 package com.ssafy.novvel.episode.entity;
 
-import com.ssafy.novvel.context.dto.ContextTouchsDto;
 import com.ssafy.novvel.context.entity.Context;
 import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.episode.dto.EpisodeRegistDto;
-import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.util.BaseEntity;
 import javax.persistence.FetchType;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.*;
@@ -15,8 +12,6 @@ import org.bson.types.ObjectId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Entity
 @Getter

@@ -8,16 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CoverRepository extends JpaRepository<Cover, Long> {
-    // AND (th.pointChangeType = com.ssafy.novvel.transactionhistory.entity.PointChangeType.BUY_EPISODE AND e.)
-@Query(
-    "SELECT new com.ssafy.novvel.cover.dto.EpisodeInfoDto(e.id, e.point, e.viewCount, e.localDateTime, th.pointChangeType, (me.member.id IS NOT NULL)) "
-        +
-        "FROM Episode as e " +
-        "LEFT JOIN ReadEpisode me ON me.episode.id = e.id AND me.member.id = :memberId " +
-        "LEFT JOIN TransactionHistory th ON th.episode.id = e.id AND th.member.id = :memberId "
-        +
-        "WHERE e.cover.id = :coverId "
-)
+
+    @Query(
+        "SELECT new com.ssafy.novvel.cover.dto.EpisodeInfoDto(e.id, e.point, e.viewCount, e.localDateTime, th.pointChangeType, (me.member.id IS NOT NULL)) "
+            +
+            "FROM Episode as e " +
+            "LEFT JOIN ReadEpisode me ON me.episode = e AND me.member.id = :memberId " +
+            "LEFT JOIN TransactionHistory th "
+            + "ON th.episode = e AND th.member.id = :memberId "
+            +
+            "WHERE e.cover.id = :coverId AND e.statusType <> 'TEMPORARY' "
+            + "AND (case when ((th.id IS NULL OR th.pointChangeType <> 'BUY_EPISODE') AND e.statusType = 'DELETED') then TRUE else FALSE END) = false")
     List<EpisodeInfoDto> findEpisodesInfoDto(@Param("coverId") Long coverId,
         @Param("memberId") Long memberId);
 }
