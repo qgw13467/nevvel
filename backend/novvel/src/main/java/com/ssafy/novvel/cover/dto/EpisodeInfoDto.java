@@ -4,7 +4,14 @@ import com.ssafy.novvel.transactionhistory.entity.PointChangeType;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@Builder
+@AllArgsConstructor
 public class EpisodeInfoDto {
 
     @NotNull
