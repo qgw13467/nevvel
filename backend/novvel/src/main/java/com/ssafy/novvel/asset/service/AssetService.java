@@ -1,6 +1,6 @@
 package com.ssafy.novvel.asset.service;
 
-import com.ssafy.novvel.asset.dto.AssetPurchaseType;
+import com.ssafy.novvel.asset.dto.AssetFilterDto;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;

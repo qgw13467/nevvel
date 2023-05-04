@@ -185,11 +185,10 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Page<AssetSearchDto> searchAsset(AssetFilterDto assetFilterDto, Member member, Pageable pageable) {
-
         Page<AssetSearchDto> assetSearchDtoPage = assetRepository.searchAsset(assetFilterDto, member, pageable);
         List<AssetSearchDto> assetSearchDtos = assetSearchDtoPage.getContent();
 
-        log.info("assetSearchDtos: " +assetSearchDtos.toString());
+        log.info("assetSearchDtos: " + assetSearchDtos.toString());
 
         //각 에셋의 태그 조회
         List<AssetTag> assetTags = assetTagRepository.findByAssetIdIn(
@@ -205,13 +204,14 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
-        log.info("assetSearchDtos: " +assetSearchDtos.toString());
+        log.info("assetSearchDtos: " + assetSearchDtos.toString());
 
         return new PageImpl<>(
                 assetSearchDtos,
                 pageable,
                 assetSearchDtoPage.getTotalPages()
         );
+
     }
 
     //사용자가 해당 에셋을 보유하였는지 확인하고, dto에 표시
