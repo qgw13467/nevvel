@@ -34,7 +34,7 @@ public class EpisodeInfoDto {
         this.point = point;
         this.viewCount = viewCount;
         this.uploadedDateTime = localDateTime;
-        this.isPurchased = pointChangeType.equals(PointChangeType.BUY_EPISODE);
+        this.isPurchased = PointChangeType.BUY_EPISODE.equals(pointChangeType);
         this.isRead = isRead;
     }
 }

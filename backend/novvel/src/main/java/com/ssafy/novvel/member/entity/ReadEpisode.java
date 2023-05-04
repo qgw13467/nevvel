@@ -1,7 +1,6 @@
 package com.ssafy.novvel.member.entity;
 
 import com.ssafy.novvel.episode.entity.Episode;
-import com.ssafy.novvel.util.BaseEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,10 +16,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@IdClass(MemberEpisode.MemberEpisodeID.class)
+@IdClass(ReadEpisode.MemberEpisodeID.class)
 @AllArgsConstructor
 @Builder
-public class MemberEpisode {
+public class ReadEpisode {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
