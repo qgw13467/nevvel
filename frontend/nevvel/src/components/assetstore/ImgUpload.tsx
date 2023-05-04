@@ -25,7 +25,7 @@ function ImgUpload(props:assetstoreProps) {
 
 
   useEffect(() => {
-    console.log(image)
+    console.log('이미지 들어옴', image)
     // console.log('ref',fileInputRef)
   },[image])
 
@@ -124,7 +124,7 @@ const RowDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin-top: 2rem;
+  margin-top: 4rem;
 `
 const ColDiv = styled.div`
   display: flex;
@@ -178,7 +178,7 @@ const AssetInfoInput1 = styled.input`
 
 const AssetInfoInput2 = styled.input`
   width: 15rem;
-  height: 8rem;
+  height: 7.5rem;
   border: 0.15rem solid #4D4D4D;
   border-radius: 0.8rem;
 `

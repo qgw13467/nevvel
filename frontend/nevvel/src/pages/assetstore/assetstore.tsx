@@ -59,7 +59,7 @@ function assetstore() {
           modal={modalOpen}
           setModal={setModalOpen}
           width="600"
-          height="600"
+          height="700"
           element={
             (
               modalChange === 0?
