@@ -29,8 +29,8 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
     setPostEpisode(episode)
     if (postEpisode){
       router.push({
-        pathname: "/viewer",
-        query:{episode:JSON.stringify(postEpisode)}
+        pathname: "/viewer/[id]",
+        query:{id:1}
       });
     }
   }

@@ -16,10 +16,9 @@ function index() {
   )
 }
 const SeriesWrapper = styled.div`
-  width: 100;
-  height: 100vh;
   margin-left: 20%;
   margin-right: 20%;
+  background-color: ${({ theme })=> theme.color.background};
 `
 
 export default index

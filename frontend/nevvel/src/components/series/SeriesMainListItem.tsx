@@ -1,20 +1,36 @@
 import React, { useState } from 'react'
 import { episode } from 'series'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
+import { AiOutlineEye } from 'react-icons/ai'
 
 type SeriesMainListItemProps = {
     episode: episode
 }
 
 function SeriesMainListItem({ episode }: SeriesMainListItemProps) {
+    const router = useRouter();
     const [purchased, setPurchased] = useState(episode.isPurchased)
     const [IsRead, setIsRead] = useState(episode.isRead)
+
+    const clickHandler = () => {
+        router.push({
+            pathname: '/viewer/[id]',
+            query: { id: 1 }
+        })
+    }
+
     return (
-        <ItemContainer IsRead={IsRead}>
+        <ItemContainer onClick={clickHandler} IsRead={IsRead}>
             <div>{episode.title}</div>
             <ItemBottom>
-                <div>{episode.views}</div>
-                <div>{episode.uploadedDateTime}</div>
+                <Box>
+                    <AiOutlineEye />
+                    <BoxText>
+                     {episode.views}
+                    </BoxText>
+                </Box>
+                <Box>{episode.uploadedDateTime}</Box>
             </ItemBottom>
         </ItemContainer>
     )
@@ -29,7 +45,7 @@ const ItemContainer = styled.div< { IsRead: boolean } >`
     justify-content: space-around;
     padding-top: 1rem;
     /* padding-bottom: 0.5rem; */
-    border-bottom: 1px solid ${({theme})=>theme.color.text3};
+    border-bottom: 1px solid ${({ theme }) => theme.color.text3};
 `
 const ItemBottom = styled.div`
     display: flex;
@@ -37,6 +53,15 @@ const ItemBottom = styled.div`
     text-align: end;
     align-items: flex-end;
 
+`
+const Box = styled.div`
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    
+`
+const BoxText = styled.div`
+    margin-left:0.3rem;
 `
 
 export default SeriesMainListItem
