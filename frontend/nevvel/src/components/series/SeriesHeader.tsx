@@ -1,19 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { cover } from 'series'
-import NovelCard from '../common/NovelCard'
 import Image from "next/image";
 import unupload from "../../../public/UnUploadImgBtn.png";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { AiOutlineEye } from 'react-icons/ai'
 import { mobile } from '@/src/util/Mixin';
+import { useRouter } from 'next/router';
+import { Modal } from '../common/Modal';
 
 type SeriesHeaderProps = {
     SeriesData: cover
 }
 
 function SeriesHeader({ SeriesData }: SeriesHeaderProps) {
+    const router = useRouter();
     const Info = SeriesData
+    const [ModalOpen, setModalOpen] = useState(false);
+
+    const clickHandler = (e: string) => {
+        if (e === "first") {
+            router.push({
+                pathname: '/viewer/[id]',
+                query: { id: 1 }
+            })
+        }
+    }
 
     return (
         <HeaderContainer>
@@ -36,13 +48,19 @@ function SeriesHeader({ SeriesData }: SeriesHeaderProps) {
                     <SeriesText className='description'>{Info.description}</SeriesText>
                     <SeriesText className='genre'>{Info.genre}</SeriesText>
                     <SeriesBtnContainer>
-                        <SeriesBtn className='first'>첫화보기</SeriesBtn>
-                        <SeriesBtn className='choice'>선택구매</SeriesBtn>
+                        <SeriesBtn className='first' onClick={() => clickHandler("first")}>첫화보기</SeriesBtn>
+                        <SeriesBtn className='choice'onClick={()=>setModalOpen(true)}>선택구매</SeriesBtn>
                     </SeriesBtnContainer>
-
                 </SeriesEx>
             </SeriesInfo>
-
+            {ModalOpen &&
+                <Modal
+                    modal={ModalOpen}
+                    setModal={setModalOpen}
+                    width="300"
+                    height="600"
+                    element={<div>발행이 완료 되었습니다.</div>}
+                />}
         </HeaderContainer>
     )
 }
