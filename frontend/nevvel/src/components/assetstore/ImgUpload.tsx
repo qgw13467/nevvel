@@ -38,6 +38,41 @@ function ImgUpload(props:assetstoreProps) {
     // console.log(image)
   }
 
+  // 제목 저장
+  const [title, setTitle] = useState<string>("")
+
+  const onChangeTitle = (e: React.FormEvent<HTMLInputElement>) => {
+    setTitle(e.currentTarget.value.trim())
+  }
+
+  // 설명 저장
+  const [description, setdecription] = useState<string>("")
+
+  const onChangeDescription = (e: React.FormEvent<HTMLInputElement>) => {
+    setdecription(e.currentTarget.value.trim())
+  }
+
+  // 가격저장
+  const [price, setPrice] = useState<number>(0)
+
+  const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pricevalue = parseInt(e.target.value);
+    setPrice(isNaN(pricevalue) ? 0 : pricevalue);
+  }
+
+  // 태그 저장
+  const [selectTag, setSelectTag] = useState<string[]>([])
+
+  const AddTag = (newSelectTag:string) => {
+    setSelectTag([...selectTag, newSelectTag])
+  }
+
+  // 태그 삭제
+  const DelTag = (index : number) => {
+    setSelectTag(selectTag.filter((_, i) => i !== index))
+  }
+
+
   // 제출버튼 트리거
   const [submitBtnTrigger, setSubmitBtnTrigger] = useState(0)
 
@@ -49,6 +84,7 @@ function ImgUpload(props:assetstoreProps) {
   // 제출버튼
   const SubmitAsset = () => {
     // axios통신하기
+    console.log(image, title, description, price, selectTag)
   }
 
   // 제출버튼 비활성화
@@ -91,25 +127,46 @@ function ImgUpload(props:assetstoreProps) {
 
         <ColDiv>
           <p>제목</p>
-          <AssetInfoInput1 placeholder="에셋 제목을 입력해주세요." />
+          <AssetInfoInput1
+            placeholder="에셋 제목을 입력해주세요."
+            onChange={onChangeTitle}
+          />
 
           <p>설명</p>
-          <AssetInfoInput2 placeholder="에셋 설명을 입력해주세요." />
+          <AssetInfoInput2
+            placeholder="에셋 설명을 입력해주세요."
+            onChange={onChangeDescription}
+          />
 
           <p>가격</p>
-          <AssetInfoInput1 placeholder="에셋 가격을 입력해주세요." />
+          <AssetInfoInput1
+            placeholder="에셋 가격을 입력해주세요."
+            onChange={onChangePrice}
+          />
 
           <p>태그</p>
-          <TagSearchBar />
+          <TagSearchBar
+            selectTag={selectTag}
+            AddTag={AddTag}
+          />
+          <TagRowDiv>
+            {
+              selectTag.map((tags, index) => (
+                <CardInfo2Div onClick={() => DelTag(index)}>
+                  <p>{tags}</p>
+                </CardInfo2Div>
+              ))
+            }
+          </TagRowDiv>
         </ColDiv>
       </RowDiv>
       
       <RowDiv>
         {/* 제출버튼 */}
         {
-          submitBtnTrigger === 0?
-          <ModalSubmitBtn_Un onClick={UnsubmitAsset}>등록</ModalSubmitBtn_Un>:
-          <ModalSubmitBtn onClick={SubmitAsset}>등록</ModalSubmitBtn>
+          (image&&title&&description&&price&&selectTag[0])?
+          <ModalSubmitBtn onClick={SubmitAsset}>등록</ModalSubmitBtn>:
+          <ModalSubmitBtn_Un onClick={UnsubmitAsset}>등록</ModalSubmitBtn_Un>
         }
         {/* 닫기버튼 */}
         <ModalCloseBtn onClick={CloseAssetUpload}>닫기</ModalCloseBtn>
@@ -193,6 +250,31 @@ const ImgDelBtn = styled.button`
   &:hover {
     box-shadow: 0.1rem 0.1rem 0.5rem;
   }
+`
+
+const TagRowDiv = styled.div`
+  width: 15rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  margin-top: 0.5rem;
+`
+
+// 에셋카드 재활용
+const CardInfo2Div = styled.div`
+  background-color: white;
+  color: black;
+  width: 4rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  /* box-shadow: 0.5rem 0.5rem 0.2rem; */
+  border: 0.15rem inset black;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  font-size: 1rem;
 `
 
 const ModalCloseBtn = styled.button`
