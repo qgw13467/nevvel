@@ -36,4 +36,10 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         return new ResponseEntity<>(new ExceptionDto("관련 정보를 찾을 수 없습니다.", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NotYourAuthorizationException.class)
+    public ResponseEntity<?> notYourAuthorizationException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ExceptionDto("권한이 없습니다.", e.getMessage()), HttpStatus.FORBIDDEN);
+    }
 }

@@ -22,18 +22,23 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    @Setter
     private String title;
     @OneToOne(fetch = FetchType.LAZY)
     private Resource resource;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
     @Enumerated(EnumType.STRING)
+    @Setter
     private AssetType type;
     @Size(max = 500)
+    @Setter
     private String description;
     @PositiveOrZero
+    @Setter
     private Long point = 0L;
     @PositiveOrZero
+    @Setter
     private Long downloadCount = 0L;
 
     public Asset(AssetRegistDto assetRegistDto, Resource resource, Member member) {
