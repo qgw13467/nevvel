@@ -9,15 +9,12 @@ type EditorMainListProps = {
 };
 
 function EditorMainList({ contents, setContents }: EditorMainListProps) {
-  const [assetOpen, setAssetOpen] = useState<number>(0);
-  
 
   return (
     <MainContainer>
       <ListWrapper>
         {contents.map((content, index) => (
           <EditorMainListItem
-            setAssetOpen={setAssetOpen}
             key={index}
             content={content}
             contents={contents}
@@ -25,9 +22,6 @@ function EditorMainList({ contents, setContents }: EditorMainListProps) {
           />
         ))}
       </ListWrapper>
-      {assetOpen ? <EditorMainAssetContainer
-      assetOpen={assetOpen}
-      /> : <></>}
     </MainContainer>
   );
 }
@@ -35,8 +29,10 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  background-color: ${({ theme })=> theme.color.background};
-`
+  background-color: ${({ theme }) => theme.color.background};
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px gray;
+`;
 
 const ListWrapper = styled.div`
   /* border: 2px solid ${({ theme }) => theme.color.hover}; */
@@ -46,13 +42,11 @@ const ListWrapper = styled.div`
   overflow: scroll;
   width: 100%;
   ::-webkit-scrollbar {
-  display: none;
-}
+    display: none;
+  }
 `;
 
 const AssetWrapper = styled.div``;
 
-const ItemContainer = styled.div`
-  
-`
+const ItemContainer = styled.div``;
 export default EditorMainList;

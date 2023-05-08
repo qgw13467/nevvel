@@ -4,7 +4,7 @@ import { episode } from "editor";
 import { useRouter } from "next/router";
 import { Modal } from "../common/Modal";
 import EditorPreview from "./Head/EditorPreview";
-import {AiFillCheckCircle } from "react-icons/ai"
+import { AiFillCheckCircle } from "react-icons/ai";
 
 type EditorHeadProps = {
   setEpisode: React.Dispatch<React.SetStateAction<episode>>;
@@ -20,14 +20,11 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
     console.log(episode);
   }, [episode]);
 
-  useEffect(()=>{
-    if(saveToast){
-      setTimeout(()=>
-      setSaveToast(false),2000
-      )
-
+  useEffect(() => {
+    if (saveToast) {
+      setTimeout(() => setSaveToast(false), 2000);
     }
-  },[saveToast])
+  }, [saveToast]);
 
   const Titlehandler = (e: any) => {
     setEpisode({
@@ -48,7 +45,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
 
   const saveHandler = () => {
     // 임시저장 axios 연결하면 제대로 해보기..
-    setSaveToast(true)
+    setSaveToast(true);
   };
 
   return (
@@ -56,9 +53,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
       <ButtonWrapper>
         <WriteButtonContainer>
           <WriteButton onClick={() => setModalOpen(true)}>미리보기</WriteButton>
-          <WriteButton onClick={saveHandler}>
-            임시저장
-          </WriteButton>
+          <WriteButton onClick={saveHandler}>임시저장</WriteButton>
           <WriteButton onClick={PublishHandler}>발행하기</WriteButton>
         </WriteButtonContainer>
       </ButtonWrapper>
@@ -70,6 +65,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           placeholder="에피소드 명을 입력하세요"
         />
       </InputWrapper>
+      <BackGroundAssetContainer>전체 에셋</BackGroundAssetContainer>
       {modalOpen && (
         <Modal
           modal={modalOpen}
@@ -78,18 +74,17 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           height="600"
           element={
             <div>
-              {episode.contents ? (
-                <EditorPreview postEpisode={episode} />
-              ) : (
-                <>없다</>
-              )}
+              <EditorPreview postEpisode={episode} />
             </div>
           }
         />
       )}
-      {saveToast && <ToastContainer>
-        <AiFillCheckCircle />
-        임시저장 되었습니다.</ToastContainer>}
+      {saveToast && (
+        <ToastContainer>
+          <AiFillCheckCircle />
+          임시저장 되었습니다.
+        </ToastContainer>
+      )}
     </Wrapper>
   );
 }
@@ -98,7 +93,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 3rem;
-  padding-bottom: 2rem;
 `;
 const ButtonWrapper = styled.div`
   display: flex;
@@ -108,12 +102,13 @@ const ButtonWrapper = styled.div`
 const WriteButtonContainer = styled.div``;
 
 const WriteButton = styled.button`
-  color: ${({ theme }) => theme.color.text1};
-  border: 2px solid ${({ theme }) => theme.color.point};
+  color: ${({ theme }) => theme.color.point};
+  border: 3px solid ${({ theme }) => theme.color.point};
   margin: 1px;
   border-radius: 10px;
   height: 2.75rem;
   width: 5rem;
+  font-weight: 700;
 `;
 const InputWrapper = styled.div`
   display: flex;
@@ -125,21 +120,28 @@ const TitleInput = styled.input`
   font-size: 1.5rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid gray;
   padding-left: 1rem;
-  background-color: ${({ theme }) => theme.color.background};
-
+  /* background-color: ${({ theme }) => theme.color.hover}; */
+  padding: 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+    box-shadow: 0px 0px 3px gray;
+  
   ::placeholder {
-    font-size: 1.75rem;
+    font-size: 1rem;
   }
 `;
+const BackGroundAssetContainer = styled.div`
+ box-shadow: 0px 0px 3px gray;
+ padding: 1rem;
+ margin-bottom: 1rem;
+ border-radius: 10px;
+`
 
 const ToastContainer = styled.div`
   position: fixed;
-  background-color: ${({ theme})=> theme.color.point};
+  background-color: ${({ theme }) => theme.color.point};
   width: 10rem;
   height: 2rem;
   color: white;
@@ -152,16 +154,15 @@ const ToastContainer = styled.div`
   animation: slidein--bottom 0.5s;
 
   @keyframes slidein--bottom {
-  0% {
-    opacity: 0;
-    transform: translateY(100%);
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 `;
 
 export default EditorHead;

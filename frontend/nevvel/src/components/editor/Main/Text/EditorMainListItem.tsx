@@ -6,20 +6,20 @@ import { AiOutlineSound } from "react-icons/ai";
 import EditorMainMenu from "./EditorMainMenu";
 import { mobile } from "@/src/util/Mixin";
 import { content } from "editor";
+import { atom,useAtom } from "jotai";
+import { assetOpenAtom } from "@/src/store/EditorAssetStore";
 
 
 type EditorMainListItemProps = {
   content: content;
   contents: content[];
   setContents: React.Dispatch<React.SetStateAction<content[]>>;
-  setAssetOpen: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function EditorMainListItem({
   content,
   contents,
   setContents,
-  setAssetOpen,
 }: EditorMainListItemProps) {
   const [plus, setPlus] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
@@ -31,6 +31,7 @@ function EditorMainListItem({
     y: 0,
   });
   const [style, setStyle] = useState(false)
+  const [assetOpen, setAssetOpen] =useAtom(assetOpenAtom)
 
   useEffect(() => {
     console.log(text)

@@ -40,5 +40,6 @@ const Wrapper = styled.div`
 background-color: ${({ theme })=> theme.color.background};
   /* border: 2px solid ${({ theme }) => theme.color.hover}; */
   border-radius: 10px;
+
 `;
 export default EditorMain;
