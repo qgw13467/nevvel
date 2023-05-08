@@ -81,7 +81,6 @@ public class AssetServiceImpl implements AssetService {
 
         //이전 태그목록 삭제
         List<AssetTag> assetTags = assetTagRepository.findJoinTagByAsset(asset);
-        assetTagRepository.deleteAll(assetTags);
         //사용횟수 수정
         List<Tag> tags = assetTags.stream()
                 .map(assetTag -> assetTag.getTag())
@@ -89,6 +88,7 @@ public class AssetServiceImpl implements AssetService {
         for (Tag tag : tags) {
             tag.setUseCount(tag.getUseCount() - 1);
         }
+        assetTagRepository.deleteAll(assetTags);
 
         //새로운 태그 저장
         List<AssetTag> newAssetTags = new ArrayList<>();
