@@ -42,4 +42,10 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         return new ResponseEntity<>(new ExceptionDto("권한이 없습니다.", e.getMessage()), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<?> authenticationException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ExceptionDto("권한이 없습니다.", e.getMessage()), HttpStatus.FORBIDDEN);
+    }
 }
