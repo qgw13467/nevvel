@@ -85,6 +85,7 @@ export default TagSearchBar
 const AssetInfoInputDiv = styled.div`
   width: 15rem;
   height: 2.5rem;
+  z-index: 999;
 `
 
 const AssetInfoInput1 = styled.input`
@@ -111,4 +112,7 @@ const ResultLi = styled.li`
   width: 15rem;
   height: 2rem;
   font-size: 1.5rem;
+  &:hover{
+    cursor: pointer;
+  }
 `

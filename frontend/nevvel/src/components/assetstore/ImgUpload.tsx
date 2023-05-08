@@ -126,25 +126,33 @@ function ImgUpload(props:assetstoreProps) {
         </ColDiv>
 
         <ColDiv>
-          <p>제목</p>
+          <AssetInfoTextDiv>
+            <p>제목</p>
+          </AssetInfoTextDiv>
           <AssetInfoInput1
             placeholder="에셋 제목을 입력해주세요."
             onChange={onChangeTitle}
           />
 
-          <p>설명</p>
+          <AssetInfoTextDiv>
+            <p>설명</p>
+          </AssetInfoTextDiv>
           <AssetInfoInput2
             placeholder="에셋 설명을 입력해주세요."
             onChange={onChangeDescription}
           />
 
-          <p>가격</p>
+          <AssetInfoTextDiv>
+            <p>가격</p>
+          </AssetInfoTextDiv>
           <AssetInfoInput1
             placeholder="에셋 가격을 입력해주세요."
             onChange={onChangePrice}
           />
 
-          <p>태그</p>
+          <AssetInfoTextDiv>
+            <p>태그</p>
+          </AssetInfoTextDiv>
           <TagSearchBar
             selectTag={selectTag}
             AddTag={AddTag}
@@ -210,6 +218,7 @@ const ImgUploadInput = styled.input`
 const ImgUploadBtn = styled.img`
   width: 15rem;
   height: 15rem;
+  margin-top: 2rem;
   object-fit: contain;
   border: 0.15rem solid #4D4D4D;
   border-radius: 1.5rem;
@@ -224,6 +233,16 @@ const ImageUploadTitle = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+const AssetInfoTextDiv =styled.div`
+  width: 14rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: left;
+  margin-top: 0.7rem;
+  margin-bottom: 0.3rem;
 `
 
 const AssetInfoInput1 = styled.input`
@@ -254,6 +273,7 @@ const ImgDelBtn = styled.button`
 
 const TagRowDiv = styled.div`
   width: 15rem;
+  height: 2.5rem;
   display: flex;
   flex-direction: row;
   justify-content: left;
