@@ -72,7 +72,7 @@ public class AssetController {
     }
 
     @PostMapping("/purchasing/{assetId}")
-    public ResponseEntity<?> searchByMemberId(@PathVariable("assetId") Long assetId,
+    public ResponseEntity<?> purchaseAsset(@PathVariable("assetId") Long assetId,
                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         Integer statusCode = assetService.purchaseAsset(assetId, customUserDetails.getMember());
