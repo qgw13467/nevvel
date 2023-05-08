@@ -19,6 +19,7 @@ const SeriesWrapper = styled.div`
   margin-left: 20%;
   margin-right: 20%;
   background-color: ${({ theme })=> theme.color.background};
+  height: 100%;
 `
 
 export default index

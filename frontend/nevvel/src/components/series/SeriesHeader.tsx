@@ -8,6 +8,7 @@ import { AiOutlineEye } from 'react-icons/ai'
 import { mobile } from '@/src/util/Mixin';
 import { useRouter } from 'next/router';
 import { Modal } from '../common/Modal';
+import SeriesSelected from './SeriesSelected';
 
 type SeriesHeaderProps = {
     SeriesData: cover
@@ -59,7 +60,8 @@ function SeriesHeader({ SeriesData }: SeriesHeaderProps) {
                     setModal={setModalOpen}
                     width="300"
                     height="600"
-                    element={<div>발행이 완료 되었습니다.</div>}
+                    element={<SeriesSelected
+                        Info={Info} />}
                 />}
         </HeaderContainer>
     )
@@ -70,9 +72,6 @@ const HeaderContainer = styled.div`
     flex-direction: column;
     width: 100%;
     justify-content: center;
-
-
-
 `
 
 const HeaderTitle = styled.div`
@@ -83,6 +82,7 @@ const HeaderTitle = styled.div`
     border-bottom: 1px solid ${({ theme }) => theme.color.text3} ;
     padding-bottom: 2rem;
     padding-top: 2rem;
+    font-weight: 700;
 `
 const SeriesInfo = styled.div`
     display: flex;
@@ -95,6 +95,7 @@ const SeriesInfo = styled.div`
         flex-direction: column;
         align-items: center;
     }
+    height: 30vh;
 `
 const SeriesEx = styled.div`
     display: flex;
@@ -113,12 +114,13 @@ const SeriesCover = styled.div`
     display: flex;
     width: 30%;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 `
 
 const SeriesBtnContainer = styled.div`
     display: flex;
+    align-items: center;
 `
 const SeriesBtn = styled.button`
     /* border: 1px solid ${({ theme }) => theme.color.text1}; */
@@ -142,8 +144,8 @@ const SeriesText = styled.div`
     text-align: center;
     align-items: center;
     &.title{
-        font-weight: 700;
-        font-size: 28px;
+        font-weight: 600;
+        font-size: 22px;
         color:${({ theme }) => theme.color.text1};
     }
     

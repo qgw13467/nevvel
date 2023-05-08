@@ -13,10 +13,10 @@ function SeriesMain({SeriesData}:SeriesMainProps) {
     <MainContainer>
       <MainHeader>
         <BtnContainer>
-          <SortBtn>
-            1화보기
+          <SortBtn className='firstStory'>
+            1화부터 
           </SortBtn>
-          <SortBtn>
+          <SortBtn className='newStory'>
             최신부터
           </SortBtn>
         </BtnContainer>
@@ -30,19 +30,30 @@ function SeriesMain({SeriesData}:SeriesMainProps) {
 const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
+    margin-top: 30%;
 `
 const MainHeader = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    border-bottom: 1px solid ${({ theme })=> theme.color.text1};
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 14px;
 `
 
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: row;
 `
-const SortBtn = styled.div`
-  
+const SortBtn = styled.button`
+  &.firstStory{
+    margin-right: 0.5rem;
+  }
+  &.newStory{
+    border-left: 1px solid ${({ theme })=>theme.color.text1};
+    padding-left: 0.5rem;
+  }
 `
 
 export default SeriesMain;
