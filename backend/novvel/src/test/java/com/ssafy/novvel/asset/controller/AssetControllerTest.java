@@ -17,7 +17,6 @@ import com.ssafy.novvel.resource.repository.ResourceRepository;
 import com.ssafy.novvel.util.TestUtil;
 import com.ssafy.novvel.util.WithMockCustomUser;
 import com.ssafy.novvel.util.token.CustomUserDetails;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -190,7 +189,77 @@ public class AssetControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
+    @Test
+    @DisplayName("purchaseAsset: 201")
+    @WithMockCustomUser
+    void purchaseAsset201Test() throws Exception {
+        //given
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = customUserDetails.getMember();
+        member.setNickname("buyer");
+        member.setPoint(100L);
+        member = memberRepository.save(member);
 
+        Member seller = TestUtil.getTestMember();
+        seller.setNickname("seller");
+        seller = memberRepository.save(seller);
+        Resource resource = TestUtil.getResource();
+        resource = resourceRepository.save(resource);
+        Asset asset = Asset.builder()
+                .title("title")
+                .description("desc")
+                .point(10L)
+                .type(AssetType.IMAGE)
+                .member(seller)
+                .resource(resource)
+                .downloadCount(0L)
+                .build();
+        assetRepository.save(asset);
+
+
+        //when
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.post("/assets/purchasing/"+asset.getId())
+                        .with(csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    @DisplayName("purchaseAsset: 200")
+    @WithMockCustomUser
+    void purchaseAsset200Test() throws Exception {
+        //given
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = customUserDetails.getMember();
+        member.setNickname("buyer");
+        member.setPoint(5L);
+        member = memberRepository.save(member);
+
+        Member seller = TestUtil.getTestMember();
+        seller.setNickname("seller");
+        seller = memberRepository.save(seller);
+        Resource resource = TestUtil.getResource();
+        resource = resourceRepository.save(resource);
+        Asset asset = Asset.builder()
+                .title("title")
+                .description("desc")
+                .point(10L)
+                .type(AssetType.IMAGE)
+                .member(seller)
+                .resource(resource)
+                .downloadCount(0L)
+                .build();
+        assetRepository.save(asset);
+
+
+        //when
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.post("/assets/purchasing/"+asset.getId())
+                        .with(csrf())
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 
 
 
