@@ -187,7 +187,8 @@ public class AssetServiceTest {
                 new AssetTag(assets.get(2), tag2),
                 new AssetTag(assets.get(3), tag3)
         );
-        List<MemberAsset> findByMemberAndAssetInResult = TestUtil.getMemberAssets(members.get(1), assets);
+        List<MemberAsset> findByMemberAndAssetInResult =
+                TestUtil.getMemberAssets(members.get(1), List.of(assets.get(0), assets.get(2)));
 
         Pageable pageable = PageRequest.of(0, 5);
         Page<Asset> findByMemberResult = new PageImpl<>(
@@ -201,7 +202,7 @@ public class AssetServiceTest {
         Mockito.doReturn(findByMemberResult).when(assetRepository).findByMember(members.get(0), pageable);
         Mockito.doReturn(findByAssetInResult).when(assetTagRepository).findByAssetIn(findByMemberResult.getContent());
         Mockito.doReturn(findByMemberAndAssetInResult).when(memberAssetRepository).findByMemberAndAssetIn(members.get(1), findByMemberResult.getContent());
-        Page<AssetSearchDto> assetSearchDtos = assetService.searchAssetByUploader(0L,members.get(1),pageable);
+        Page<AssetSearchDto> assetSearchDtos = assetService.searchAssetByUploader(0L, members.get(1), pageable);
 
         //then
         Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.any(Long.class));
@@ -233,6 +234,7 @@ public class AssetServiceTest {
         }).isInstanceOf(NotFoundException.class).hasMessageContaining("에셋을 찾을 수 없습니다");
 
     }
+
     @Test
     void purchaseAssetDuplicateTest() {
         Member member = TestUtil.getUSERMember().get();
@@ -243,7 +245,7 @@ public class AssetServiceTest {
         assetService.purchaseAsset(assets.get(0).getId(), member);
         Mockito.doReturn(memberAssetOptional).when(memberAssetRepository).findByAssetAndMember(assets.get(0), member);
 
-         Integer result = assetService.purchaseAsset(assets.get(0).getId(), member);
+        Integer result = assetService.purchaseAsset(assets.get(0).getId(), member);
 
         Assertions.assertThat(result).isEqualTo(204);
 
@@ -258,10 +260,11 @@ public class AssetServiceTest {
         Mockito.doReturn(Optional.of(assets.get(0))).when(assetRepository).findById(assets.get(0).getId());
         Mockito.doReturn(memberAssetOptional).when(memberAssetRepository).findByAssetAndMember(assets.get(0), member);
 
-        Integer result  = assetService.purchaseAsset(assets.get(0).getId(), member);
+        Integer result = assetService.purchaseAsset(assets.get(0).getId(), member);
 
         Assertions.assertThat(result).isEqualTo(200);
     }
+
     @Test
     void purchaseAssetPurchaseTest() {
         List<Member> members = TestUtil.getUSERMembers(2);
@@ -276,6 +279,25 @@ public class AssetServiceTest {
         Integer result = assetService.purchaseAsset(asset.getId(), members.get(0));
 
         Assertions.assertThat(result).isEqualTo(201);
+    }
+
+    @Test
+    void searchMyAssetsTest(){
+        Member owner = TestUtil.getMember();
+        List<Member> members = TestUtil.getUSERMembers(4);
+        List<Resource> resources = TestUtil.getResources(4);
+        List<Asset> assets = TestUtil.getAssetList(4, members, resources);
+        List<MemberAsset> memberAssets = TestUtil.getMemberAssets(owner, assets);
+        Pageable pageable = PageRequest.of(0, 5);
+
+        Mockito.doReturn(new PageImpl<>(memberAssets, pageable, pageable.getPageNumber()))
+                .when(memberAssetRepository).findPageByMember(owner, pageable);
+        Mockito.doReturn(assets).when(assetRepository).findJoinMemberByAssets(Mockito.any(List.class));
+
+        Page<AssetSearchDto> assetSearchDtos = assetService.searchMyAssets(owner, pageable);
+
+        Assertions.assertThat(assetSearchDtos.getContent().size()).isEqualTo(4);
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.ssafy.novvel.cover.entity;
 
+import com.ssafy.novvel.cover.dto.CoverModifyDto;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
 import com.ssafy.novvel.episode.entity.Episode;
 import com.ssafy.novvel.genre.entity.Genre;
@@ -51,10 +52,8 @@ public class Cover extends BaseEntity {
 
     @NotNull
     private Long likes;
-
-    @OneToMany(mappedBy = "cover", fetch = FetchType.LAZY)
-    private List<Episode> episodes;
-
+    
+    // 생성
     public Cover(Resource resource, CoverRegisterDto coverRegisterDto, Member member, Genre genre) {
 
         this.coverStatusType = CoverStatusType.SERIALIZED;
@@ -63,5 +62,23 @@ public class Cover extends BaseEntity {
         this.description = coverRegisterDto.getDescription();
         this.title = coverRegisterDto.getTitle();
         this.genre = genre;
+        this.likes = 0L;
+    }
+
+    // 수정
+    public Cover(Resource resource, Long coverId, LocalDate publishDate, Long likes,
+        CoverModifyDto coverModifyDto,
+        Member member, Genre genre) {
+
+        this.resource = resource;
+        this.likes = likes;
+        this.publishDate = publishDate;
+        this.id = coverId;
+        this.member = member;
+        this.coverStatusType = coverModifyDto.getCoverStatusType();
+        this.title = coverModifyDto.getTitle();
+        this.description = coverModifyDto.getDescription();
+        this.genre = genre;
+
     }
 }

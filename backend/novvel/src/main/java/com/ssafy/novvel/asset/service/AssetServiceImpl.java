@@ -1,6 +1,6 @@
 package com.ssafy.novvel.asset.service;
 
-import com.ssafy.novvel.asset.dto.AssetPurchaseType;
+import com.ssafy.novvel.asset.dto.AssetFilterDto;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.entity.Asset;
@@ -65,6 +65,8 @@ public class AssetServiceImpl implements AssetService {
         }
         assetTags = assetTagRepository.saveAll(assetTags);
 
+        //todo memberAssetRepository에 sell로 추가
+
         return asset;
     }
 
@@ -123,6 +125,23 @@ public class AssetServiceImpl implements AssetService {
         return tagRepository.findByOrderByUseCountDesc(pageable);
     }
 
+    @Override
+    public Page<AssetSearchDto> searchMyAssets(Member member, Pageable pageable) {
+        Page<MemberAsset> assetPage = memberAssetRepository.findPageByMember(member, pageable);
+        List<Asset> assets = assetPage.getContent().stream()
+                .map(MemberAsset::getAsset)
+                .collect(Collectors.toList());
+        assets = assetRepository.findJoinMemberByAssets(assets);
+
+        return new PageImpl<>(
+                assets.stream()
+                        .map(AssetSearchDto::new)
+                        .collect(Collectors.toList()),
+                pageable,
+                assetPage.getTotalPages()
+        );
+    }
+
     //각 에셋에 태그목록을 추가
     private List<AssetSearchDto> findTags(List<Asset> assets, List<AssetSearchDto> assetSearchDtos) {
         List<AssetTag> assetTags = assetTagRepository.findByAssetIn(assets);
@@ -159,7 +178,40 @@ public class AssetServiceImpl implements AssetService {
         TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.SELL_ASSET, asset.getPoint());
         historyRepository.saveAll(List.of(buyTransactionHistory, sellTransactionHistory));
 
+        //todo 에셋 구매시 memberAssetRepository에 추가
+
         return 201;
+    }
+
+    @Override
+    public Page<AssetSearchDto> searchAsset(AssetFilterDto assetFilterDto, Member member, Pageable pageable) {
+        Page<AssetSearchDto> assetSearchDtoPage = assetRepository.searchAsset(assetFilterDto, member, pageable);
+        List<AssetSearchDto> assetSearchDtos = assetSearchDtoPage.getContent();
+
+        log.info("assetSearchDtos: " + assetSearchDtos.toString());
+
+        //각 에셋의 태그 조회
+        List<AssetTag> assetTags = assetTagRepository.findByAssetIdIn(
+                assetSearchDtos.stream()
+                        .map(AssetSearchDto::getId)
+                        .collect(Collectors.toList())
+        );
+
+        for (AssetTag assetTag : assetTags) {
+            for (AssetSearchDto assetSearchDto : assetSearchDtos) {
+                if (assetSearchDto.getId().equals(assetTag.getAsset().getId())) {
+                    assetSearchDto.addTags(assetTag.getTag());
+                }
+            }
+        }
+        log.info("assetSearchDtos: " + assetSearchDtos.toString());
+
+        return new PageImpl<>(
+                assetSearchDtos,
+                pageable,
+                assetSearchDtoPage.getTotalPages()
+        );
+
     }
 
     //사용자가 해당 에셋을 보유하였는지 확인하고, dto에 표시
