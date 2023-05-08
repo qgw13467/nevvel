@@ -3,6 +3,7 @@ package com.ssafy.novvel.asset.controller;
 import com.ssafy.novvel.asset.dto.AssetFilterDto;
 import com.ssafy.novvel.asset.dto.AssetRegistDto;
 import com.ssafy.novvel.asset.dto.AssetSearchDto;
+import com.ssafy.novvel.asset.dto.AssetSearchReqKeywordTagDto;
 import com.ssafy.novvel.asset.service.AssetService;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.util.token.CustomUserDetails;
@@ -38,6 +39,14 @@ public class AssetController {
 
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page> searchAssetByKeywordAndTags(AssetSearchReqKeywordTagDto assetSearchReqKeywordTagDto,
+                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                            Pageable pageable) {
+        Page<AssetSearchDto> assetSearchDtos = assetService.searchAssetByKeywordAndTags(assetSearchReqKeywordTagDto, customUserDetails.getMember(), pageable);
+        return new ResponseEntity<>(assetSearchDtos, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> registAsset(@RequestPart(value = "file") MultipartFile file,
                                          @RequestPart("assetRegistDto") AssetRegistDto assetRegistDto,
@@ -71,7 +80,7 @@ public class AssetController {
 
     @GetMapping("/purchased-on")
     public ResponseEntity<Page<AssetSearchDto>> myAssets(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                      Pageable pageable){
+                                                         Pageable pageable) {
 
         Page<AssetSearchDto> result = assetService.searchMyAssets(customUserDetails.getMember(), pageable);
 
