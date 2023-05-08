@@ -1,6 +1,8 @@
 package com.ssafy.novvel.exception;
 
 import com.ssafy.novvel.exception.exceptiondto.ExceptionDto;
+
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
