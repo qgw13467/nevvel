@@ -114,7 +114,8 @@ public class EpisodeServiceImpl implements EpisodeService{
         // 읽은 소설 처리하기
         readEpisodeRepository.save(new ReadEpisode(episode, member));
 
-        return new EpisodeContextDto(cover.getId(), cover.getTitle(), episode.getTitle(), episode.getId(), context.getContents());
+        return new EpisodeContextDto(cover.getId(), cover.getTitle(), episode.getTitle(), episode.getId(), context.getContents(),
+                episodeRepository.findPrevEpisodeId(episodeId, cover), episodeRepository.findNextEpisodeId(episodeId, cover));
     }
 
     @Override
@@ -250,7 +251,8 @@ public class EpisodeServiceImpl implements EpisodeService{
                     episode.getCoverTitle(),
                     episode.getEpisodeId(),
                     episode.getEpisodeTitle(),
-                    episode.getEpisodePoint());
+                    episode.getEpisodePoint(),
+                    episode.getPurchaseDate());
             episodePurchasedOnDtoList.add(episodePurchasedOn);
         }
 
