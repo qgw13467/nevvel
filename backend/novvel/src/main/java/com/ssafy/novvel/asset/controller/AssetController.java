@@ -38,8 +38,8 @@ public class AssetController {
 
     @PutMapping("/{assetId}")
     public ResponseEntity<?> updateAsset(@PathVariable("assetId") Long id,
-                                         @RequestPart("assetRegistDto") AssetRegistDto assetRegistDto,
-                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
+                                         @RequestBody AssetRegistDto assetRegistDto,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         Member member = customUserDetails.getMember();
         assetService.updateAsset(id, member, assetRegistDto);
