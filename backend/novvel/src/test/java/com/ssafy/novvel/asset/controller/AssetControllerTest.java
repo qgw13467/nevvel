@@ -74,6 +74,8 @@ public class AssetControllerTest {
     void registAssetTest() throws Exception {
 
         //given
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = customUserDetails.getMember();
         member = memberRepository.save(member);
 
         AssetRegistDto requestDto =
@@ -115,6 +117,8 @@ public class AssetControllerTest {
     void searchByMemberIdTest() throws Exception {
 
         //given
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = customUserDetails.getMember();
         member = memberRepository.save(member);
 
         AssetRegistDto requestDto =
@@ -156,6 +160,8 @@ public class AssetControllerTest {
     void updateAssetTest() throws Exception {
 
         //given
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        member = customUserDetails.getMember();
         member = memberRepository.save(member);
         Resource resource = TestUtil.getResource();
         resource = resourceRepository.save(resource);
