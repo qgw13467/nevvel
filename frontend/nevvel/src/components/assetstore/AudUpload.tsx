@@ -13,16 +13,15 @@ function AudUpload(props:assetstoreProps) {
 
   // ---------------------------------------------------------
   // // 이미지 파일 업로딩
-  // const [image, setImage] = useState<File | null>(null);
-  // const fileInputRef = useRef<HTMLInputElement>(null);
+  const [audio, setAudio] = useState<File | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = event.target.files;
-  //   if (files && files.length > 0) {
-  //     setImage(files[0]);
-  //   }
-  //   // console.log(image)
-  // };
+  const handleAudioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setAudio(files[0]);
+    }
+  };
 
 
   // useEffect(() => {
@@ -30,14 +29,14 @@ function AudUpload(props:assetstoreProps) {
   //   // console.log('ref',fileInputRef)
   // },[image])
 
-  // // 이미지 파일 삭제
-  // const DeleteImg = () => {
-  //   setImage(null)
-  //   if (fileInputRef.current) {
-  //     fileInputRef.current.value = '';
-  //   }
-  //   // console.log(image)
-  // }
+  // // 사운드 파일 삭제
+  const DeleteAud = () => {
+    setAudio(null)
+    if (audioRef.current) {
+      audioRef.current.src = '';
+    }
+    // console.log(image)
+  }
   // ----------------------------------------------------------
 
   // 제목 저장
@@ -100,7 +99,7 @@ function AudUpload(props:assetstoreProps) {
   return(
     <ColDiv>
       <p>사운드 에셋 업로드</p>
-      {/* 이미지 파일 업로딩 */}
+      {/* 사운드 파일 업로딩 */}
       <RowDiv>
 
         {/* ------------------------------------------------------------------ */}
@@ -112,6 +111,36 @@ function AudUpload(props:assetstoreProps) {
           <AssetInfoTextDiv1>
             <p>음원 파일</p>
           </AssetInfoTextDiv1>
+            {
+              audio?
+              null
+              :
+            <AudUploadBtnDiv>
+              {
+                audio?
+                <AudUploadBtn onClick={DeleteAud}>삭제</AudUploadBtn>
+                :
+                <AudUploadBtn
+                >업로드</AudUploadBtn>
+              }
+            </AudUploadBtnDiv>
+            }
+          <AudUploadLabel>
+          <AudUploadInput
+            type="file"
+            accept="audio/*"
+            onChange={handleAudioChange}
+          />
+          {
+            audio?
+            <audio src={URL.createObjectURL(audio)} ref={audioRef} controls />
+            // <p>Selected audio: {audio.name}</p>
+            :
+          <AudUnloadDiv>
+            <p>20MB 이하의 16-Bit Stereo 44.1kHz 음원파일을 업로드 해주세요</p>
+          </AudUnloadDiv>
+          }
+          </AudUploadLabel>
           <AssetInfoTextDiv1>
             <p>제목</p>
           </AssetInfoTextDiv1>
@@ -164,7 +193,7 @@ function AudUpload(props:assetstoreProps) {
       <RowDiv>
         {/* 제출버튼 */}
         {
-          (title&&description&&price&&selectTag[0])?
+          (audio&&title&&description&&price&&selectTag[0])?
           <ModalSubmitBtn onClick={SubmitAsset}>등록</ModalSubmitBtn>:
           <ModalSubmitBtn_Un onClick={UnsubmitAsset}>등록</ModalSubmitBtn_Un>
         }
@@ -196,6 +225,52 @@ const ColDiv = styled.div`
   align-items: center;
 `
 
+const AudUploadLabel = styled.label`
+  width: 15rem;
+  height: 5rem;
+  margin-right: 1rem;
+  margin-left: 0.5rem;
+  border: 0.15rem dotted #4D4D4D;
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  &:hover{
+    cursor: pointer;
+  }
+`
+const AudUploadInput = styled.input`
+  display: none;
+`
+
+const AudUnloadDiv = styled.div`
+  width: 23rem;
+  height: 3rem;
+  border: 0.2rem dotted #4D4D4D;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const AudUploadBtnDiv = styled.div`
+  width: 30rem;
+  /* padding-left: 24rem; */
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const AudUploadBtn = styled.button`
+  background-color: ${({ theme }) => theme.color.button};
+  color: ${({ theme }) => theme.color.buttonText};
+  width: 6rem;
+  height: 2.5rem;
+  border: 0.1rem solid #4D4D4D;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+`
 
 const AssetInfoTextDiv1 =styled.div`
   width: 30rem;
