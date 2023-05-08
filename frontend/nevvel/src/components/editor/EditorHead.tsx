@@ -4,6 +4,7 @@ import { episode } from "editor";
 import { useRouter } from "next/router";
 import { Modal } from "../common/Modal";
 import EditorPreview from "./Head/EditorPreview";
+import {AiFillCheckCircle } from "react-icons/ai"
 
 type EditorHeadProps = {
   setEpisode: React.Dispatch<React.SetStateAction<episode>>;
@@ -13,11 +14,20 @@ type EditorHeadProps = {
 function EditorHead({ episode, setEpisode }: EditorHeadProps) {
   const router = useRouter();
   const [postEpisode, setPostEpisode] = useState<episode>();
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
+  const [saveToast, setSaveToast] = useState(false);
+  useEffect(() => {
+    console.log(episode);
+  }, [episode]);
 
   useEffect(()=>{
-    console.log(episode)
-  },[episode])
+    if(saveToast){
+      setTimeout(()=>
+      setSaveToast(false),2000
+      )
+
+    }
+  },[saveToast])
 
   const Titlehandler = (e: any) => {
     setEpisode({
@@ -26,22 +36,29 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
     });
   };
 
-  const PublishHandler =() => {
-    setPostEpisode(episode)
-    if (postEpisode){
+  const PublishHandler = () => {
+    setPostEpisode(episode);
+    if (postEpisode) {
       router.push({
         pathname: "/viewer/[id]",
-        query:{id:1}
+        query: { id: 1 },
       });
     }
-  }
+  };
+
+  const saveHandler = () => {
+    // 임시저장 axios 연결하면 제대로 해보기..
+    setSaveToast(true)
+  };
 
   return (
     <Wrapper>
       <ButtonWrapper>
         <WriteButtonContainer>
-          <WriteButton onClick={()=>setModalOpen(true)}>미리보기</WriteButton>
-          <WriteButton>임시저장</WriteButton>
+          <WriteButton onClick={() => setModalOpen(true)}>미리보기</WriteButton>
+          <WriteButton onClick={saveHandler}>
+            임시저장
+          </WriteButton>
           <WriteButton onClick={PublishHandler}>발행하기</WriteButton>
         </WriteButtonContainer>
       </ButtonWrapper>
@@ -53,22 +70,26 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           placeholder="에피소드 명을 입력하세요"
         />
       </InputWrapper>
-      {modalOpen &&
-                <Modal
-                    modal={modalOpen}
-                    setModal={setModalOpen}
-                    width="1200"
-                    height="600"
-                    element={<div>{
-                      episode.contents ?(
-                        <EditorPreview 
-                          postEpisode={episode}
-                        />
-                      ):(<>없다</>)
-                    }
-                    </div>
-                  }
-                    />}
+      {modalOpen && (
+        <Modal
+          modal={modalOpen}
+          setModal={setModalOpen}
+          width="1200"
+          height="600"
+          element={
+            <div>
+              {episode.contents ? (
+                <EditorPreview postEpisode={episode} />
+              ) : (
+                <>없다</>
+              )}
+            </div>
+          }
+        />
+      )}
+      {saveToast && <ToastContainer>
+        <AiFillCheckCircle />
+        임시저장 되었습니다.</ToastContainer>}
     </Wrapper>
   );
 }
@@ -114,6 +135,33 @@ const TitleInput = styled.input`
   ::placeholder {
     font-size: 1.75rem;
   }
+`;
+
+const ToastContainer = styled.div`
+  position: fixed;
+  background-color: ${({ theme})=> theme.color.point};
+  width: 10rem;
+  height: 2rem;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 0.5rem gray;
+  border-radius: 0.5rem;
+  transition: 0.1s ease-in;
+  animation: slidein--bottom 0.5s;
+
+  @keyframes slidein--bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 `;
 
 export default EditorHead;
