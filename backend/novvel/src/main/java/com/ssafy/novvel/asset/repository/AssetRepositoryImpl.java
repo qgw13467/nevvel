@@ -184,7 +184,7 @@ public class AssetRepositoryImpl implements AssetReposiotryCustom {
 
 
     private BooleanExpression searchByKeword(String keyword) {
-        return (keyword == null) ? null : asset.title.contains(keyword).or(asset.description.contains(keyword));
+        return (keyword == null) ? null : asset.title.contains(keyword);
     }
 
 
