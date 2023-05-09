@@ -50,9 +50,25 @@ function AssetstoreAssetList() {
   // 에셋 디테일 모달 오픈 트리거
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  // 에셋 디테일로 열리는 에셋의 key값
-  const[openModalKey, setOpenModalKey] = useState<number>(0)
-
+  // 에셋 디테일로 열리는 에셋의 데이터
+  const[openModalData, setOpenModalData] = useState<Asset>({
+    id: 0,
+    title: "",
+    type: "",
+    thumbnail : "",
+    url: "",
+    price : 0,
+    downloadCount : 0,
+    tags: [{
+      id : 0,
+      name : "",
+    }],
+    uploader : {
+      id : 0,
+      nickname : "",
+      profileImage : "",
+    }
+  })
 
   return(
     <div>
@@ -66,6 +82,7 @@ function AssetstoreAssetList() {
           AssetData.map((AssetData, index:number) => {
             return (
               <AssetCard
+                AssetData={AssetData}
                 key={index}
                 id={AssetData.id}
                 title={AssetData.title}
@@ -75,7 +92,7 @@ function AssetstoreAssetList() {
                 tags={AssetData.tags}
 
                 setModalOpen={setModalOpen}
-                setOpenModalKey={setOpenModalKey}
+                setOpenModalData={setOpenModalData}
                 price={AssetData.price}
                 uploader={AssetData.uploader}
               />
@@ -91,7 +108,7 @@ function AssetstoreAssetList() {
           width="800"
           height="700"
           element={
-            <p>{openModalKey}</p>
+            <p>{openModalData.title}</p>
           }
         />
       ) : null}

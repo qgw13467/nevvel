@@ -14,6 +14,18 @@ interface AssetUploader {
   profileImage: string
 }
 
+interface AssetData{
+  id: number,
+  title: string,
+  type: string,
+  thumbnail : string,
+  url: string,
+  price : number,
+  downloadCount : number,
+  tags: Array<AssetTag>,
+  uploader : AssetUploader
+}
+
 interface Asset {
   key: number
   id: number,
@@ -24,9 +36,10 @@ interface Asset {
   tags: Array<AssetTag>,
 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenModalKey: React.Dispatch<React.SetStateAction<number>>;
+  setOpenModalData: React.Dispatch<React.SetStateAction<AssetData>>;
   price: number,
   uploader: AssetUploader
+  AssetData: AssetData
 }
 
 function AssetCard({
@@ -39,9 +52,10 @@ function AssetCard({
   tags,
 
   setModalOpen,
-  setOpenModalKey,
+  setOpenModalData,
   price,
   uploader,
+  AssetData,
 } : Asset) {
 
   const audioRef = useRef<any>(null)
@@ -73,7 +87,7 @@ function AssetCard({
   // 에셋 디테일 모달 오픈
   const AssetDetail = () => {
     setModalOpen(true);
-    setOpenModalKey(id)
+    setOpenModalData(AssetData)
   };
 
   return(

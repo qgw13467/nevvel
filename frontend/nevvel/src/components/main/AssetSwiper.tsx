@@ -55,7 +55,24 @@ function AssetSwiper() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // 에셋 디테일로 열리는 에셋의 key값
-  const[openModalKey, setOpenModalKey] = useState<number>(0)
+  const[openModalData, setOpenModalData] = useState<Asset>({
+    id: 0,
+    title: "",
+    type: "",
+    thumbnail : "",
+    url: "",
+    price : 0,
+    downloadCount : 0,
+    tags: [{
+      id : 0,
+      name : "",
+    }],
+    uploader : {
+      id : 0,
+      nickname : "",
+      profileImage : "",
+    }
+  })
 
   return (
     <Wrapper>
@@ -89,6 +106,7 @@ function AssetSwiper() {
           return (
             <SwiperSlide>
               <AssetCard
+                AssetData={AssetData}
                 key={index}
                 id={AssetData.id}
                 title={AssetData.title}
@@ -98,7 +116,7 @@ function AssetSwiper() {
                 tags={AssetData.tags}
 
                 setModalOpen={setModalOpen}
-                setOpenModalKey={setOpenModalKey}
+                setOpenModalData={setOpenModalData}
                 price={AssetData.price}
                 uploader={AssetData.uploader}
               />
@@ -114,7 +132,7 @@ function AssetSwiper() {
           width="800"
           height="700"
           element={
-            <p>{openModalKey}</p>
+            <p>{openModalData.title}</p>
           }
         />
       ) : null}
