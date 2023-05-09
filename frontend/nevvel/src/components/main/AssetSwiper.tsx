@@ -4,11 +4,7 @@ import styled from "styled-components";
 
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-
-import { Modal } from "../common/Modal";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -18,6 +14,11 @@ import "swiper/css/scrollbar";
 import AssetCard from "../common/AssetCard";
 import imgdata from "../assetstore/DummyAssetData_Image.json";
 import sounddata from "../assetstore/DummyAssetData_Audio.json";
+
+import { Modal } from "../common/Modal";
+import AssetDetailModal from "../assetstore/AssetDetailModal";
+
+
 
 interface AssetTag {
   id: number;
@@ -117,8 +118,8 @@ function AssetSwiper() {
 
                 setModalOpen={setModalOpen}
                 setOpenModalData={setOpenModalData}
-                price={AssetData.price}
-                uploader={AssetData.uploader}
+                // price={AssetData.price}
+                // uploader={AssetData.uploader}
               />
             </SwiperSlide>
           );
@@ -130,9 +131,12 @@ function AssetSwiper() {
           modal={modalOpen}
           setModal={setModalOpen}
           width="800"
-          height="700"
+          height="710"
           element={
-            <p>{openModalData.title}</p>
+            <AssetDetailModal
+              openModalData={openModalData}
+              setModalOpen={setModalOpen}
+          />
           }
         />
       ) : null}

@@ -3,7 +3,9 @@ import styled from "styled-components";
 import AssetCard from "../common/AssetCard";
 import imgdata from "./DummyAssetData_Image.json"
 import sounddata from "./DummyAssetData_Audio.json"
+
 import { Modal } from "../common/Modal";
+import AssetDetailModal from "./AssetDetailModal";
 
 
 interface AssetTag {
@@ -93,8 +95,8 @@ function AssetstoreAssetList() {
 
                 setModalOpen={setModalOpen}
                 setOpenModalData={setOpenModalData}
-                price={AssetData.price}
-                uploader={AssetData.uploader}
+                // price={AssetData.price}
+                // uploader={AssetData.uploader}
               />
             )
           })
@@ -106,9 +108,12 @@ function AssetstoreAssetList() {
           modal={modalOpen}
           setModal={setModalOpen}
           width="800"
-          height="700"
+          height="710"
           element={
-            <p>{openModalData.title}</p>
+            <AssetDetailModal
+              openModalData={openModalData}
+              setModalOpen={setModalOpen}
+            />
           }
         />
       ) : null}

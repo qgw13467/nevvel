@@ -37,8 +37,8 @@ interface Asset {
 
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenModalData: React.Dispatch<React.SetStateAction<AssetData>>;
-  price: number,
-  uploader: AssetUploader
+  // price: number,
+  // uploader: AssetUploader
   AssetData: AssetData
 }
 
@@ -53,8 +53,8 @@ function AssetCard({
 
   setModalOpen,
   setOpenModalData,
-  price,
-  uploader,
+  // price,
+  // uploader,
   AssetData,
 } : Asset) {
 
