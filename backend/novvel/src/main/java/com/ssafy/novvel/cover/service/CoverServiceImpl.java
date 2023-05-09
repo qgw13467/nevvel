@@ -1,10 +1,13 @@
 package com.ssafy.novvel.cover.service;
 
+import com.ssafy.novvel.cover.dto.CoverSearchConditions;
+import com.ssafy.novvel.cover.dto.CoverWithConditions;
 import com.ssafy.novvel.cover.dto.CoverInfoAndEpisodesDto;
 import com.ssafy.novvel.cover.dto.CoverModifyDto;
 import com.ssafy.novvel.cover.repository.CoverRepository;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
 import com.ssafy.novvel.cover.entity.Cover;
+import com.ssafy.novvel.genre.entity.Genre;
 import com.ssafy.novvel.genre.repository.GenreRepository;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.resource.entity.Resource;
@@ -16,9 +19,12 @@ import java.util.Objects;
 import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class CoverServiceImpl implements CoverService {
 
@@ -96,5 +102,12 @@ public class CoverServiceImpl implements CoverService {
         }
 
         return urlAndThumbnail.isEmpty() ? null : urlAndThumbnail;
+    }
+
+    @Override
+    public Page<CoverWithConditions> searchCoverWithCondition(
+        CoverSearchConditions coverSearchConditions) {
+        log.info(coverSearchConditions.toString());
+        return null;
     }
 }

@@ -4,22 +4,20 @@ package com.ssafy.novvel.cover.controller;
 import com.ssafy.novvel.cover.dto.CoverInfoAndEpisodesDto;
 import com.ssafy.novvel.cover.dto.CoverModifyDto;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
+import com.ssafy.novvel.cover.dto.CoverSearchConditions;
+import com.ssafy.novvel.cover.dto.CoverWithConditions;
 import com.ssafy.novvel.cover.service.CoverService;
 import com.ssafy.novvel.resource.service.S3Service;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import java.io.IOException;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Optional;
 import javax.naming.AuthenticationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,10 +32,9 @@ public class CoverController {
     private final CoverService coverService;
     private final S3Service S3Service;
 
-    public CoverController(CoverService coverService,
-        com.ssafy.novvel.resource.service.S3Service s3Service) {
+    public CoverController(CoverService coverService, S3Service s3Service) {
         this.coverService = coverService;
-        S3Service = s3Service;
+        this.S3Service = s3Service;
     }
 
     @PostMapping()
@@ -75,7 +72,9 @@ public class CoverController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> searchCover() {
-        return null;
+    public ResponseEntity<Page<CoverWithConditions>> searchCover(
+        CoverSearchConditions coverSearchCriteria) {
+        return new ResponseEntity<>(coverService.searchCoverWithCondition(coverSearchCriteria),
+            HttpStatus.OK);
     }
 }
