@@ -6,8 +6,8 @@ import { AiOutlineSound } from "react-icons/ai";
 import EditorMainMenu from "./EditorMainMenu";
 import { mobile } from "@/src/util/Mixin";
 import { content } from "editor";
-import { atom,useAtom } from "jotai";
-import { assetOpenAtom,nowTextBlockAtom } from "@/src/store/EditorAssetStore";
+import { atom, useAtom } from "jotai";
+import { assetOpenAtom, nowTextBlockAtom } from "@/src/store/EditorAssetStore";
 
 
 type EditorMainListItemProps = {
@@ -31,8 +31,8 @@ function EditorMainListItem({
     y: 0,
   });
   const [style, setStyle] = useState(false)
-  const [assetOpen, setAssetOpen] =useAtom(assetOpenAtom)
-  const [nowTextBlock, setNowTextBlock] =useAtom(nowTextBlockAtom)
+  const [assetOpen, setAssetOpen] = useAtom(assetOpenAtom)
+  const [nowTextBlock, setNowTextBlock] = useAtom(nowTextBlockAtom)
 
   useEffect(() => {
     console.log(text)
@@ -80,29 +80,44 @@ function EditorMainListItem({
     setMenuBlock(true);
   };
 
-  const AssetHandler =(e:number) => {
-    if(e === 1) {
+  const AssetHandler = (e: number) => {
+    if (e === 1) {
       setAssetOpen(1)
       setNowTextBlock(content.idx)
-    }else {
+    } else {
       setAssetOpen(2)
       setNowTextBlock(content.idx)
     }
   }
 
+  const ImageEvent = content.event.map((asset, index) => {
+    if (asset.type === "IMAGE") {
+      return (<>{asset.assetId}</>)  
+    } 
+    if (index == 0 && asset.type !== "IMAGE" ){
+      return (<AssetButton onClick={() => AssetHandler(1)}>
+      <BiImageAdd className="image" size="24" />
+    </AssetButton>)
+    }
+  })
+
   return (
     <div onMouseLeave={() => setMenuBlock(false)}>
       {menuBlock ? (
-        <EditorMainMenu x={tooltipPos.x} y={tooltipPos.y} setText={setText} style={style} setStyle={setStyle}/>
+        <EditorMainMenu x={tooltipPos.x} y={tooltipPos.y} setText={setText} style={style} setStyle={setStyle} />
       ) : null}
       <BlockContainer>
         {plus ? (
           <>
             <PlusButton onClick={() => setPlus(!plus)}>-</PlusButton>
             <AssetButtonContainer>
-              <AssetButton onClick={() => AssetHandler(1)}>
-                <BiImageAdd className="image" size="24" />
-              </AssetButton>
+              {content.event.length == 0 ?
+                (<AssetButton onClick={() => AssetHandler(1)}>
+                  <BiImageAdd className="image" size="24" />
+                </AssetButton>
+                ) : (
+                  ImageEvent
+                )}
               <AssetButton onClick={() => AssetHandler(2)}>
                 <AiOutlineSound className="sound" size="24" />
               </AssetButton>
