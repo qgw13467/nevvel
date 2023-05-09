@@ -12,7 +12,7 @@ type assetstoreProps = {
 function AudUpload(props:assetstoreProps) {
 
   // ---------------------------------------------------------
-  // // 이미지 파일 업로딩
+  // // 사운드 파일 업로딩
   const [audio, setAudio] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -86,7 +86,7 @@ function AudUpload(props:assetstoreProps) {
   // 제출버튼
   const SubmitAsset = () => {
     // axios통신하기
-    console.log(title, description, price, selectTag)
+    console.log(audio, title, description, price, selectTag)
   }
 
   // 제출버튼 비활성화
@@ -108,23 +108,29 @@ function AudUpload(props:assetstoreProps) {
         {/* ----------------------------------------------------------------- */}
 
         <ColDiv>
-          <AssetInfoTextDiv1>
-            <p>음원 파일</p>
-          </AssetInfoTextDiv1>
-            {
-              audio?
-              null
-              :
+          <RowDiv>
+            <AssetInfoTextDiv2>
+              <p>음원 파일</p>
+            </AssetInfoTextDiv2>
             <AudUploadBtnDiv>
               {
                 audio?
                 <AudUploadBtn onClick={DeleteAud}>삭제</AudUploadBtn>
                 :
-                <AudUploadBtn
-                >업로드</AudUploadBtn>
+                null
+                // <AudUploadLabelBtn>
+                //   <AudUploadBtn>
+                //     <AudUploadBtnP>업로드</AudUploadBtnP>
+                //     <AudUploadInputBtn
+                //       type="file"
+                //       accept="audio/*"
+                //       onChange={handleAudioChange}
+                //     />
+                //   </AudUploadBtn>
+                // </AudUploadLabelBtn>
               }
             </AudUploadBtnDiv>
-            }
+          </RowDiv>
           <AudUploadLabel>
           <AudUploadInput
             type="file"
@@ -133,12 +139,12 @@ function AudUpload(props:assetstoreProps) {
           />
           {
             audio?
-            <audio src={URL.createObjectURL(audio)} ref={audioRef} controls />
+            <AudioUploaded src={URL.createObjectURL(audio)} ref={audioRef} controls />
             // <p>Selected audio: {audio.name}</p>
             :
-          <AudUnloadDiv>
-            <p>20MB 이하의 16-Bit Stereo 44.1kHz 음원파일을 업로드 해주세요</p>
-          </AudUnloadDiv>
+            <AudUnloadDiv>
+              <p>이곳을 클릭해서 음원파일을 업로드 해주세요 (20MB 이하)</p>
+            </AudUnloadDiv>
           }
           </AudUploadLabel>
           <AssetInfoTextDiv1>
@@ -210,7 +216,7 @@ const RowDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin-top: 3rem;
+  margin-top: 1rem;
 `
 
 const RowDivPriceTag = styled.div`
@@ -226,36 +232,68 @@ const ColDiv = styled.div`
 `
 
 const AudUploadLabel = styled.label`
-  width: 15rem;
-  height: 5rem;
+  width: 30rem;
+  height: 4rem;
   margin-right: 1rem;
   margin-left: 0.5rem;
+  margin-top: 1rem;
   border: 0.15rem dotted #4D4D4D;
   border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover{
+    cursor: pointer;
+  }
+`
+
+const AudioUploaded = styled.audio`
+  width: 30rem;
+`
+
+const AudUploadLabelBtn = styled.label`
+  width: 6rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+  margin-left: 0.5rem;
+  /* border: 0.15rem dotted #4D4D4D; */
+  /* border-radius: 1.5rem; */
   display: flex;
   align-items: center;
   &:hover{
     cursor: pointer;
   }
 `
+
 const AudUploadInput = styled.input`
   display: none;
 `
+const AudUploadInputBtn = styled.input`
+  width: 6rem;
+  height: 2.5rem;
+  visibility: hidden;
+  position: relative;
+`
+const AudUploadBtnP = styled.p`
+  position: absolute;
+  padding-left : 1.2rem;
+  padding-top: 0.4rem;
+`
 
 const AudUnloadDiv = styled.div`
-  width: 23rem;
+  width: 28rem;
   height: 3rem;
-  border: 0.2rem dotted #4D4D4D;
+  /* border: 0.2rem dotted #4D4D4D; */
   border-radius: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
 `
 
 const AudUploadBtnDiv = styled.div`
-  width: 30rem;
-  /* padding-left: 24rem; */
+  width: 6rem;
+  margin-left: 9rem;
   margin-top: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -281,7 +319,7 @@ const AssetInfoTextDiv1 =styled.div`
   margin-top: 1.2rem;
   margin-bottom: 0.3rem;
 `
-const AssetInfoTextDiv2 =styled.div`
+const AssetInfoTextDiv2 = styled.div`
   width: 14rem;
   font-size: 1.2rem;
   font-weight: bold;
