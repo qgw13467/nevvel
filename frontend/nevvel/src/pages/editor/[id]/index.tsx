@@ -3,9 +3,8 @@ import EditorHead from "@/src/components/editor/EditorHead";
 import EditorMain from "@/src/components/editor/EditorMain";
 import styled from "styled-components";
 import { episode } from "editor";
-import EditorMainAssetContainer from "@/src/components/editor/Main/Asset/EditorMainAssetContainer";
-import { useAtomValue } from "jotai";
-import { assetOpenAtom } from "@/src/store/EditorAssetStore";
+
+
 import { mobile } from "@/src/util/Mixin";
 
 function index() {
@@ -16,10 +15,10 @@ function index() {
     title:"",
     contents:[]
   })
-  const assetOpen = useAtomValue(assetOpenAtom)  
+
 
   return (<Wrapper>
-    <EditorWrapper assetOpen={assetOpen}>
+    <EditorWrapper >
       <EditorHead 
       episode={episode}
       setEpisode={setEpisode}/>
@@ -27,7 +26,7 @@ function index() {
       setEpisode={setEpisode}
       episode={episode}/>
     </EditorWrapper>
-    {assetOpen && <EditorMainAssetContainer />}
+
   </Wrapper>
   );
 }
@@ -40,14 +39,13 @@ const Wrapper = styled.div`
   }
 `
 
-const EditorWrapper = styled.div<{assetOpen:number}>`
+const EditorWrapper = styled.div`
   background-color: ${({ theme }) => theme.color.background};
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 91vh;
-  padding-left:${(props)=>(props.assetOpen ?(30):(20))}%;
-  padding-right: ${(props)=>(props.assetOpen ?(15):(20))}%;
+ 
 
 `;
 

@@ -7,7 +7,7 @@ import EditorMainMenu from "./EditorMainMenu";
 import { mobile } from "@/src/util/Mixin";
 import { content } from "editor";
 import { atom,useAtom } from "jotai";
-import { assetOpenAtom } from "@/src/store/EditorAssetStore";
+import { assetOpenAtom,nowTextBlockAtom } from "@/src/store/EditorAssetStore";
 
 
 type EditorMainListItemProps = {
@@ -32,6 +32,7 @@ function EditorMainListItem({
   });
   const [style, setStyle] = useState(false)
   const [assetOpen, setAssetOpen] =useAtom(assetOpenAtom)
+  const [nowTextBlock, setNowTextBlock] =useAtom(nowTextBlockAtom)
 
   useEffect(() => {
     console.log(text)
@@ -79,6 +80,16 @@ function EditorMainListItem({
     setMenuBlock(true);
   };
 
+  const AssetHandler =(e:number) => {
+    if(e === 1) {
+      setAssetOpen(1)
+      setNowTextBlock(content.idx)
+    }else {
+      setAssetOpen(2)
+      setNowTextBlock(content.idx)
+    }
+  }
+
   return (
     <div onMouseLeave={() => setMenuBlock(false)}>
       {menuBlock ? (
@@ -89,10 +100,10 @@ function EditorMainListItem({
           <>
             <PlusButton onClick={() => setPlus(!plus)}>-</PlusButton>
             <AssetButtonContainer>
-              <AssetButton onClick={() => setAssetOpen(1)}>
+              <AssetButton onClick={() => AssetHandler(1)}>
                 <BiImageAdd className="image" size="24" />
               </AssetButton>
-              <AssetButton onClick={() => setAssetOpen(2)}>
+              <AssetButton onClick={() => AssetHandler(2)}>
                 <AiOutlineSound className="sound" size="24" />
               </AssetButton>
             </AssetButtonContainer>

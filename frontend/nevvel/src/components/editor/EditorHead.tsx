@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { Modal } from "../common/Modal";
 import EditorPreview from "./Head/EditorPreview";
 import { AiFillCheckCircle } from "react-icons/ai";
+import { useAtomValue } from "jotai";
+import { assetOpenAtom } from "@/src/store/EditorAssetStore";
 
 type EditorHeadProps = {
   setEpisode: React.Dispatch<React.SetStateAction<episode>>;
@@ -16,6 +18,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
   const [postEpisode, setPostEpisode] = useState<episode>();
   const [modalOpen, setModalOpen] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
+  const assetOpen = useAtomValue(assetOpenAtom)  
   useEffect(() => {
     console.log(episode);
   }, [episode]);
@@ -57,15 +60,15 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           <WriteButton onClick={PublishHandler}>발행하기</WriteButton>
         </WriteButtonContainer>
       </ButtonWrapper>
-      <InputWrapper>
+      <InputWrapper assetOpen={assetOpen}>
         <TitleInput
           value={episode.title}
           onChange={Titlehandler}
           name="title"
           placeholder="에피소드 명을 입력하세요"
         />
-      </InputWrapper>
       <BackGroundAssetContainer>전체 에셋</BackGroundAssetContainer>
+      </InputWrapper>
       {modalOpen && (
         <Modal
           modal={modalOpen}
@@ -92,7 +95,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 3rem;
+
 `;
 const ButtonWrapper = styled.div`
   display: flex;
@@ -103,16 +106,22 @@ const WriteButtonContainer = styled.div``;
 
 const WriteButton = styled.button`
   color: ${({ theme }) => theme.color.point};
-  border: 3px solid ${({ theme }) => theme.color.point};
+  /* border: 3px solid ${({ theme }) => theme.color.point}; */
   margin: 1px;
   border-radius: 10px;
   height: 2.75rem;
   width: 5rem;
   font-weight: 700;
 `;
-const InputWrapper = styled.div`
+const InputWrapper = styled.div<{assetOpen:number}>`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding-left:${(props)=>(props.assetOpen ?(30):(20))}%;
+  padding-right: ${(props)=>(props.assetOpen ?(15):(20))}%;
 `;
 
 const TitleInput = styled.input`
@@ -126,20 +135,23 @@ const TitleInput = styled.input`
   border: none;
   border-radius: 10px;
   font-size: 16px;
-    box-shadow: 0px 0px 3px gray;
-  
+    /* box-shadow: 0px 0px 3px gray; */
+  width: 70%;
   ::placeholder {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 `;
 const BackGroundAssetContainer = styled.div`
- box-shadow: 0px 0px 3px gray;
+ /* box-shadow: 0px 0px 3px gray; */
  padding: 1rem;
  margin-bottom: 1rem;
  border-radius: 10px;
+ width: 30%;
+ height: 2rem;
 `
 
 const ToastContainer = styled.div`
+  margin-top: 1rem;
   position: fixed;
   background-color: ${({ theme }) => theme.color.point};
   width: 10rem;

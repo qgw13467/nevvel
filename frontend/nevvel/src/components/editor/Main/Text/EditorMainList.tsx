@@ -31,12 +31,12 @@ const MainContainer = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.color.background};
   border-radius: 10px;
-  box-shadow: 0px 0px 3px gray;
+  /* box-shadow: 0px 0px 3px gray; */
 `;
 
 const ListWrapper = styled.div`
   /* border: 2px solid ${({ theme }) => theme.color.hover}; */
-  height: 55vh;
+  height: 60vh;
   display: flex;
   flex-direction: column;
   overflow: scroll;
