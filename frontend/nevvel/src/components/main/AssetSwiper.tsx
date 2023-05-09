@@ -7,6 +7,8 @@ import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { Modal } from "../common/Modal";
+
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -49,6 +51,12 @@ function AssetSwiper() {
     setAssetData(imgdata.content);
   }, []);
 
+  // 에셋 디테일 모달 오픈 트리거
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  // 에셋 디테일로 열리는 에셋의 key값
+  const[openModalKey, setOpenModalKey] = useState<number>(0)
+
   return (
     <Wrapper>
       <Swiper
@@ -79,7 +87,7 @@ function AssetSwiper() {
       >
         {AssetData.map((AssetData, index: number) => {
           return (
-            <SwiperSlide key={index}>
+            <SwiperSlide>
               <AssetCard
                 key={index}
                 id={AssetData.id}
@@ -88,11 +96,28 @@ function AssetSwiper() {
                 thumbnail={AssetData.thumbnail}
                 url={AssetData.url}
                 tags={AssetData.tags}
+
+                setModalOpen={setModalOpen}
+                setOpenModalKey={setOpenModalKey}
+                price={AssetData.price}
+                uploader={AssetData.uploader}
               />
             </SwiperSlide>
           );
         })}
       </Swiper>
+      {/* 여기부터 모달 */}
+      {modalOpen ? (
+        <Modal
+          modal={modalOpen}
+          setModal={setModalOpen}
+          width="800"
+          height="700"
+          element={
+            <p>{openModalKey}</p>
+          }
+        />
+      ) : null}
     </Wrapper>
   );
 }
