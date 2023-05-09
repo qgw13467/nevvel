@@ -201,7 +201,6 @@ public class AssetServiceImpl implements AssetService {
     @Override
     @Transactional
     public Integer purchaseAsset(Long assetId, Member member) {
-        member = memberRepository.save(member);
         Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new NotFoundException("에셋을 찾을 수 없습니다"));
         Optional<MemberAsset> memberAssetOptional = memberAssetRepository.findByAssetAndMember(asset, member);
         if (!memberAssetOptional.isEmpty()) {
@@ -216,6 +215,7 @@ public class AssetServiceImpl implements AssetService {
         Member seller = asset.getMember();
         member.setPoint(member.getPoint() - asset.getPoint());
         seller.setPoint(seller.getPoint() + asset.getPoint());
+        member = memberRepository.save(member);
 
         TransactionHistory buyTransactionHistory = new TransactionHistory(member, asset, PointChangeType.BUY_ASSET, asset.getPoint());
         TransactionHistory sellTransactionHistory = new TransactionHistory(asset.getMember(), asset, PointChangeType.SELL_ASSET, asset.getPoint());
