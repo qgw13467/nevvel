@@ -1,15 +1,10 @@
 package com.ssafy.novvel.transactionhistory.controller;
 
-import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
 import com.ssafy.novvel.transactionhistory.dto.PointChargeDto;
 import com.ssafy.novvel.transactionhistory.service.TransactionHistoryService;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
