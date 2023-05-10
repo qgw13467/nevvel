@@ -9,6 +9,7 @@ import Image from "next/image";
 import eyes from "../../../assets/img/eyes.png";
 import SettingBox from "@/src/components/viewer/SettingBox";
 import DummyAssetData_audio from "@/src/components/assetstore/DummyAssetData_Audio.json";
+import { mobile, tabletH } from "@/src/util/Mixin";
 
 function index() {
   const [headerToggle, setHeaderToggle] = useState(true); // header on/off
@@ -19,6 +20,7 @@ function index() {
   const [audioEventCatch, setAudioEventCatch] = useState(false);
   // 오디오 재생
   const audioRef = useRef<any>(null);
+  const scrollRef = useRef<any>();
   useEffect(() => {
     if (EpisodeData.contents[tabNumber].event.length !== 0) {
       const events = EpisodeData.contents[tabNumber].event;
@@ -33,6 +35,7 @@ function index() {
         }
       }
     }
+    scrollRef.current.scrollTop = scrollRef.current?.scrollHeight 
     return () => {
       if (eventCatch) {
         setEventCatch(false);
@@ -93,7 +96,7 @@ function index() {
             <ViewerPageMain EpisodeData={EpisodeData} />
           </MainContainer>
         ) : (
-          <MainContainer onKeyDown={countHandler} onClick={countHandler}>
+          <MainContainer ref={scrollRef} onClick={countHandler}>
             {tabNumber === 0 ? (
               <div>{EpisodeData.title}</div>
             ) : (
@@ -129,6 +132,9 @@ const ViewerWrapper = styled.div`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  ${mobile} {
+    font-size: 12px;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -148,6 +154,16 @@ const MainContainer = styled.div`
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
+  }
+  ${mobile} {
+    font-size: 12px;
+    margin-left: 10%;
+  margin-right: 10%;  
+  }
+  ${tabletH}{
+    font-size: 16px;
+    margin-left: 20%;
+  margin-right: 20%;  
   }
   /* border: 1px solid black; */
 `;
