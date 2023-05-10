@@ -6,7 +6,7 @@ import styled from "styled-components";
 import EpisodeData from "../../../components/viewer/DummyEpisodeData.json";
 import { AiFillSetting } from "react-icons/ai";
 import Image from "next/image";
-import eyes from "../../../assets/img/eyes.png";
+import eyes from "@/src/assets/img/eyes.png";
 import SettingBox from "@/src/components/viewer/SettingBox";
 import DummyAssetData_audio from "@/src/components/assetstore/DummyAssetData_Audio.json";
 import { mobile, tabletH } from "@/src/util/Mixin";
