@@ -62,7 +62,7 @@ function index() {
   const clickhandler = (e: string) => {
     console.log(e);
     if (e === "head") {
-      setHeaderToggle(!headerToggle);
+      setHeaderToggle(true);
     } else if (e === "block") {
       setHeaderToggle(false);
       // 비동기 처리 아직 못했음
@@ -85,10 +85,10 @@ function index() {
         {headerToggle ? <ViewHeader EpisodeData={EpisodeData} /> : null}
       </HeaderContainer>
 
-      <MainWrapper>
+      <MainWrapper onClick={() => setHeaderToggle(false)}>
         {eventCatch ? (
           <ImageEvent>
-            <Image src={eyes} alt="Logo" width={600} height={600} />
+            <Image src={eyes} alt="Logo" fill />
           </ImageEvent>
         ) : null}
         {writeMode ? (
@@ -152,16 +152,15 @@ const MainContainer = styled.div`
   margin-left: 30%;
   margin-right: 30%;
   overflow-y: scroll;
+
   ::-webkit-scrollbar {
     display: none;
   }
   ${mobile} {
-    font-size: 12px;
     margin-left: 10%;
   margin-right: 10%;  
   }
   ${tabletH}{
-    font-size: 16px;
     margin-left: 20%;
   margin-right: 20%;  
   }
@@ -172,8 +171,20 @@ const ImageEvent = styled.div`
   /* position: relative; */
   position: fixed;
   opacity: 0.7;
-  left: 30%;
+  left: 15%;
   z-index: 10;
+  width: 70%;
+  height:70%;
+  ${tabletH}{
+  left: 15%;
+  width:80%;
+    height:80%;
+  }
+  ${mobile}{
+    left:18%;
+    width:60%;
+    height:60%;
+  }
 `;
 const SettingBtn = styled.button`
   position: fixed;
@@ -184,5 +195,10 @@ const SettingBtn = styled.button`
   top: 80%;
   left: 90%;
   color: ${({ theme }) => theme.color.text1};
+  ${mobile}{
+    left:80%;
+
+  }
 `;
+ 
 export default index;

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useAtom } from 'jotai';
 import { themeAtom } from '@/src/store/Theme';
+import { mobile } from '@/src/util/Mixin';
 
 type DarkModeToggleProps = {
     setTheme: Dispatch<SetStateAction<"light" | "dark">>;
@@ -42,6 +43,9 @@ const DarkModeBtn = styled.button`
   box-shadow: 0rem 0rem 0.5rem ${({ theme }) => theme.color.text1};
   color: ${({ theme }) => theme.color.text1};
   z-index: 100;
+  ${mobile}{
+    left:80%;
+  }
 `;
 
 export default DarkModeToggle
