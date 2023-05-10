@@ -21,6 +21,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +33,8 @@ public class CoverServiceImpl implements CoverService {
     private final ResourceService resourceService;
     private final GenreRepository genreRepository;
     private final CoverRepository coverRepository;
+
+    private final int numberOfCoversPerPage = 20;
 
     public CoverServiceImpl(ResourceService resourceService,
         GenreRepository genreRepository, CoverRepository coverRepository) {
@@ -108,6 +112,15 @@ public class CoverServiceImpl implements CoverService {
     public Page<CoverWithConditions> searchCoverWithCondition(
         CoverSearchConditions coverSearchConditions) {
         log.info(coverSearchConditions.toString());
+        Pageable pageable = PageRequest.of(coverSearchConditions.getPageNum(),
+            numberOfCoversPerPage);
+        // TODO
+        // 1. pageable로 검색
+        // 2. 조건들에 맞춰 쿼리문 작성
+        // 2-1. DESC sorttype 조회순(에피소드 viewConut 합수), 날짜순(최신 에피소드), 좋아요순(likes 순으로 정렬)
+        // 2-1. status 에 맞춰 조회(All이면 where문 작동 X)
+        // 2-1. genre에 맞춰 조회(1L이면 전체이므로 where문 작동 X)
+        // 3. 결과 반환^^
         return null;
     }
 }
