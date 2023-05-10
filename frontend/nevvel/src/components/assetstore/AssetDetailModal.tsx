@@ -2,6 +2,9 @@ import React from "react";
 import { useState, useRef } from "react";
 import styled from "styled-components";
 
+import { ModalonModal } from "../common/ModalonModal";
+import AskBuyModalContent from "./AskBuyModalContent";
+
 interface AssetTag {
   id : number,
   name : string,
@@ -57,7 +60,13 @@ function AssetDetailModal({
     audioRef.current.pause()
   }
 
-  // const [tagLIst, setTagLIst] = useState<string[]>(openModalData.tags.map((tags) => tags.name))
+  // 구매버튼으로 모달 위의 모달 열기
+  const [modalonModalOpen, setModalonModalOpen] = useState<boolean>(false)
+
+  const OpenModalonModal = () => {
+    setModalonModalOpen(true)
+  }
+
 
   // 모달창 닫기
   const CloseAssetDetail = () => {
@@ -144,7 +153,7 @@ function AssetDetailModal({
               <DetailInfoP>
                 다운로드 수 : {openModalData.downloadCount}
               </DetailInfoP>
-              <ModalBtn>구매</ModalBtn>
+              <ModalBtn onClick={OpenModalonModal}>구매</ModalBtn>
             </ColDiv>
 
           </RowDiv>
@@ -159,6 +168,20 @@ function AssetDetailModal({
 
       </MiriDiv>
       <ModalBtn onClick={CloseAssetDetail}>닫기</ModalBtn>
+      {/* 여기부터 모달온 모달 */}
+      {modalonModalOpen ? (
+        <ModalonModal
+          modal={modalonModalOpen}
+          width="500"
+          height="300"
+          element={
+            <AskBuyModalContent
+              setModalonModalOpen={setModalonModalOpen}
+            />
+          }
+          setModalonModalOpen={setModalonModalOpen}
+        />
+      ) : null}
     </div>
   )
 }
