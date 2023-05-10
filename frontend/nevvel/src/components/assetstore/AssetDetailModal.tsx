@@ -40,23 +40,23 @@ function AssetDetailModal({
   const audioRef = useRef<any>(null)
 
   // hover 트리거
-  const [hoverTrigger, setHoverTrigger] = useState<number>(0)
+  const [onOffTrigger, setOnOffTrigger] = useState<number>(0)
 
   // 이미지 hover 기능
-  const hoverOn= () => {
-    setHoverTrigger(1)
-  }
-  const hoverOff= () => {
-    setHoverTrigger(0)
-  }
+  // const hoverOn= () => {
+  //   setHoverTrigger(1)
+  // }
+  // const hoverOff= () => {
+  //   setHoverTrigger(0)
+  // }
 
-  // 오디오 hover 기능
+  // 오디오 재생 기능
   const AudioOn= () => {
-    setHoverTrigger(1)
+    setOnOffTrigger(1)
     audioRef.current.play()
   }
   const AudioOff= () => {
-    setHoverTrigger(0)
+    setOnOffTrigger(0)
     audioRef.current.pause()
   }
 
@@ -77,38 +77,28 @@ function AssetDetailModal({
   return(
     <div>
       <RowDiv>
-        <audio ref={audioRef} src={`${openModalData.url}`} />
+        <audio ref={audioRef} src={`${openModalData.url}`} onEnded={AudioOn} />
         {
           openModalData.type === "AUDIO"?
           (
-            hoverTrigger === 0?
+            onOffTrigger === 0?
             <ThumbnailImg
-            onMouseOver={AudioOn}
-            src="https://cdn4.iconfinder.com/data/icons/proglyphs-multimedia/512/Volume_Off-512.png"
-            alt="thumbnail"
+              onClick={AudioOn}
+              src="https://cdn4.iconfinder.com/data/icons/proglyphs-multimedia/512/Volume_Off-512.png"
+              alt="thumbnail"
             />
             :
             <ThumbnailImg
-              onMouseLeave={AudioOff}
+              onClick={AudioOff}
               src={openModalData.thumbnail}
               alt="thumbnail"
             />
           )
           :
-          (
-            hoverTrigger === 0?
-            <ThumbnailImg
-              onMouseOver={hoverOn}
-              src={openModalData.thumbnail}
-              alt="thumbnail"
-            />
-            :
-            <ThumbnailImg
-              onMouseLeave={hoverOff}
-              src={openModalData.url}
-              alt="thumbnail"
-            />
-            )
+          <ThumbnailImg
+            src={openModalData.url}
+            alt="image"
+          />
         }
         <ColDiv>
           <DetailInfoP>
