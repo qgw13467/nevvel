@@ -75,6 +75,19 @@ function AssetDetailModal({
     setModalOpen(false)
   }
 
+  // 미리보기 트리거
+  const [miriTrigger, setMiriTrigger] = useState<number>(0)
+
+  const MiriOperate = () => {
+    if (miriTrigger === 0) {
+      setMiriTrigger(1)
+    } else if (miriTrigger === 1) {
+      setMiriTrigger(2)
+    } else {
+      setMiriTrigger(0)
+    }
+  }
+
 
   return(
     <div>
@@ -162,15 +175,47 @@ function AssetDetailModal({
       <hr />
       <DetailInfoP>미리보기</DetailInfoP>
       <hr />
-      <MiriDiv>
+      <MiriDiv onClick={MiriOperate}>
         {
-          DummyEpisode.contents.slice(0,6).map((sentence) => {
+          DummyEpisode.contents.slice(0,7).map((sentence) => {
             return(
-              <div key={sentence.idx}>
+              <MiriPDiv key={sentence.idx}>
                 <p>{sentence.context}</p>
-              </div>
+              </MiriPDiv>
             )
           })
+        }
+        {
+          miriTrigger > 0?
+          <MiriImg
+            src={openModalData.url}
+            alt="image"
+          />
+          :
+          null
+        }
+        {
+          miriTrigger === 1?
+          DummyEpisode.contents.slice(7,9).map((sentence) => {
+            return(
+              <MiriPDiv key={sentence.idx}>
+                <p>{sentence.context}</p>
+              </MiriPDiv>
+            )
+          })
+          :
+          (
+            miriTrigger === 2?
+            DummyEpisode.contents.slice(7,14).map((sentence) => {
+              return(
+                <MiriPDiv key={sentence.idx}>
+                  <p>{sentence.context}</p>
+                </MiriPDiv>
+              )
+            })
+            :
+            null
+          )
         }
       </MiriDiv>
       <ModalBtn onClick={CloseAssetDetail}>닫기</ModalBtn>
@@ -259,6 +304,28 @@ const MiriDiv = styled.div`
   margin-top: 1rem;
   margin-bottom: 1rem;
 `
+
+const MiriPDiv = styled.div`
+  padding: 1rem;
+  font-size: 1.4rem;
+  position: relative;
+  z-index: 999;
+`
+
+const MiriP = styled.p`
+  
+`
+
+const MiriImg = styled.img`
+  float: left;
+  position: absolute;
+  border-radius: 1rem;
+  opacity: 0.7;
+  margin-left: 12.5rem;
+  /* width: auto;
+  height: 15rem; */
+`
+
 
 const ModalBtn = styled.button`
   background-color: ${({ theme }) => theme.color.button};

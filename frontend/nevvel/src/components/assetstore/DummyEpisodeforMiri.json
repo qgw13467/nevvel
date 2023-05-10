@@ -55,10 +55,10 @@
       "context": "감사합니다",
       "event": []
     },
-    { "idx": 13, "context": "Newvel팀 드림", "event": [] },
+    { "idx": 13, "context": "쥰하루 되세요!!", "event": [] },
     {
       "idx": 14,
-      "context": "쥰하루 되세요!!",
+      "context": "- Newvel팀 드림 -",
       "event": []
     }    
   ]
