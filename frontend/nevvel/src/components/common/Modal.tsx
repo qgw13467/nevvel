@@ -43,7 +43,7 @@ const Container = styled.div<{ width: string; height: string }>`
   flex-direction: column;
   align-items: center;
   font-size: 24px;
-
+  overflow-y: scroll;
 `;
 
 const ExitWrapper = styled.button`
@@ -78,4 +78,5 @@ const Canvas = styled.div`
 const Wrapper = styled.div`
   background-color: transparent;
   transition: all 0.5s;
+  height: 85vh;
 `;
