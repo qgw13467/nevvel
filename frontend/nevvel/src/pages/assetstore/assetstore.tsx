@@ -12,6 +12,7 @@ import { Modal } from "@/src/components/common/Modal";
 import ImgUpload from "@/src/components/assetstore/ImgUpload";
 import AudUpload from "@/src/components/assetstore/AudUpload";
 
+import TagData from "@/src/components/assetstore/DummyTagData.json";
 
 
 function assetstore() {
@@ -51,6 +52,25 @@ function assetstore() {
         </SearchBar>
         <WriteBtn onClick={AssetUpload}>에셋 업로드</WriteBtn>
       </SearchBtnDiv>
+      <RowDiv>
+        <CardInfo2Div>
+          <TagP>전체</TagP>
+        </CardInfo2Div>
+        {
+          TagData.content.map((tags) => {
+            return(
+              <CardInfo2Div key={tags.id}>
+                <TagP>{tags.tagName}</TagP>
+              </CardInfo2Div>
+            )
+            })
+        }
+        <CardInfo2Div>
+          <TagP>+</TagP>
+        </CardInfo2Div>
+      </RowDiv>
+
+
       <AssetstoreAssetList />
       
       {/* 여기부터 모달 */}
@@ -139,6 +159,42 @@ const WriteBtn = styled.button`
   font-size: 1.5rem;
   margin-left: 2rem;
 `;
+
+const RowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+`
+
+// 에셋카드 재활용
+const CardInfo2Div = styled.div`
+  background-color: ${({ theme }) => theme.color.buttonText};
+  color: #8385FF;
+  width: auto;
+  height: 3rem;
+  border-radius: 0.5rem;
+  box-shadow: 0.1rem 0.1rem;
+  border: 0.15rem solid #8385FF;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  &:hover{
+    background-color: #8385FF;
+    color: white
+  }
+`
+
+const TagP = styled.p`
+  font-size: 1.8rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+`
+
 
 const ModalDiv1 = styled.div`
   /* display: flex;
