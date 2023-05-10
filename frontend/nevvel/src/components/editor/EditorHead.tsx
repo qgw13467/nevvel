@@ -83,7 +83,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         />
       )}
       {saveToast && (
-        <ToastContainer>
+        <ToastContainer assetOpen={assetOpen}>
           <AiFillCheckCircle />
           임시저장 되었습니다.
         </ToastContainer>
@@ -127,7 +127,7 @@ const InputWrapper = styled.div<{assetOpen:number}>`
 const TitleInput = styled.input`
   height: 2rem;
   font-size: 1.5rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
   margin-bottom: 1rem;
   padding-left: 1rem;
   /* background-color: ${({ theme }) => theme.color.hover}; */
@@ -150,7 +150,7 @@ const BackGroundAssetContainer = styled.div`
  height: 2rem;
 `
 
-const ToastContainer = styled.div`
+const ToastContainer = styled.div<{assetOpen:number}>`
   margin-top: 1rem;
   position: fixed;
   background-color: ${({ theme }) => theme.color.point};
@@ -164,6 +164,7 @@ const ToastContainer = styled.div`
   border-radius: 0.5rem;
   transition: 0.1s ease-in;
   animation: slidein--bottom 0.5s;
+  left: ${(props)=>(props.assetOpen ?(30):(20))}vw;
 
   @keyframes slidein--bottom {
     0% {

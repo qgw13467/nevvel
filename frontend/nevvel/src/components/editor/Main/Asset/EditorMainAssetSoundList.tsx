@@ -22,7 +22,10 @@ function EditorMainAssetSoundList({
   const ClickHandler = (asset: Asset) => {
     const newBlocks = [...contents];
     const index = newBlocks.findIndex((el) => el.idx === nowTextBlock);
-    
+    if (
+      (newBlocks[index].event.length >= 2 )
+    ) {
+    } else {
     if (newBlocks[index].event.length !== 0){
       newBlocks[index].event.push({
         assetId: asset.id,
@@ -35,6 +38,7 @@ function EditorMainAssetSoundList({
         type: asset.type
       }) 
     }
+  }
    setContents(newBlocks)
 
   };
