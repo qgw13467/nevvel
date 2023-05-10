@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { ModalonModal } from "../common/ModalonModal";
 import AskBuyModalContent from "./AskBuyModalContent";
 
+import DummyEpisode from "./DummyEpisodeforMiri.json"
+
 interface AssetTag {
   id : number,
   name : string,
@@ -104,6 +106,7 @@ function AssetDetailModal({
           <DetailInfoP>
             {openModalData.title}
           </DetailInfoP>
+          <br />
 
           <RowDiv>
 
@@ -114,7 +117,7 @@ function AssetDetailModal({
                   openModalData.tags.map((tag) => {
                     return(
                     <CardInfo2Div key={tag.id}>
-                      <p>{tag.name}</p>
+                      <DetailInfoP>{tag.name}</DetailInfoP>
                     </CardInfo2Div>
                     )
                   })
@@ -127,6 +130,7 @@ function AssetDetailModal({
                   })
                 } */}
               </TagRowDiv>
+              <br />
               <RowDiv>
                 <UploaderImg
                   src={openModalData.uploader.profileImage}
@@ -140,9 +144,13 @@ function AssetDetailModal({
               <DetailInfoP>
                 가격 : {openModalData.price} Point
               </DetailInfoP>
+              <br />
+              <br />
               <DetailInfoP>
                 다운로드 수 : {openModalData.downloadCount}
               </DetailInfoP>
+              <br />
+              <br />
               <ModalBtn onClick={OpenModalonModal}>구매</ModalBtn>
             </ColDiv>
 
@@ -155,7 +163,15 @@ function AssetDetailModal({
       <DetailInfoP>미리보기</DetailInfoP>
       <hr />
       <MiriDiv>
-
+        {
+          DummyEpisode.contents.slice(0,6).map((sentence) => {
+            return(
+              <div key={sentence.idx}>
+                <p>{sentence.context}</p>
+              </div>
+            )
+          })
+        }
       </MiriDiv>
       <ModalBtn onClick={CloseAssetDetail}>닫기</ModalBtn>
       {/* 여기부터 모달온 모달 */}
@@ -213,13 +229,14 @@ const UploaderImg = styled.img`
   border-radius: 1rem;
 `
 const DetailInfoP = styled.p`
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  /* margin-top: 0.5rem;
+  margin-bottom: 1rem; */
+  color: ${({ theme }) => theme.color.text1};
 `
 
 // 에셋카드 재활용
 const CardInfo2Div = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.color.buttonText};
   color: black;
   width: 4rem;
   height: 2rem;

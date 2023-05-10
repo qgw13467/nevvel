@@ -39,6 +39,8 @@ function assetstore() {
     setModalChange(2)
   }
 
+  const TopTenTag = TagData.content.slice(0,9)
+
   return (
     <Wrapper>
       <AssetstoreBanner />
@@ -57,7 +59,7 @@ function assetstore() {
           <TagP>전체</TagP>
         </CardInfo2Div>
         {
-          TagData.content.map((tags) => {
+          TopTenTag.map((tags) => {
             return(
               <CardInfo2Div key={tags.id}>
                 <TagP>{tags.tagName}</TagP>
@@ -166,6 +168,8 @@ const RowDiv = styled.div`
   justify-content: flex-start;
   margin-top: 2rem;
   margin-bottom: 1rem;
+  height: 8rem;
+  flex-wrap: wrap;
 `
 
 // 에셋카드 재활용
@@ -184,9 +188,10 @@ const CardInfo2Div = styled.div`
   margin-left: 1rem;
   margin-right: 1rem;
   &:hover{
+    cursor: pointer;
     background-color: #8385FF;
-    color: white
-  }
+    color: white;
+  };
 `
 
 const TagP = styled.p`
