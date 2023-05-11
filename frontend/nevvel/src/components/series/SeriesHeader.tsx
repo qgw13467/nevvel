@@ -95,7 +95,7 @@ const SeriesInfo = styled.div`
         flex-direction: column;
         align-items: center;
     }
-    height: 30vh;
+    height: auto;
 `
 const SeriesEx = styled.div`
     display: flex;

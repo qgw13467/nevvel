@@ -1,3 +1,4 @@
+import { mobile } from "@/src/util/Mixin";
 import React, { useEffect, useState } from "react";
 import { cover, shoppingList } from "series";
 import styled from "styled-components";
@@ -61,6 +62,8 @@ function SeriesSelected({ Info }: SeriesSelectedProps) {
 const Wrapper = styled.div`
   margin-left: 10%;
   margin-right: 10%;
+  padding-top: 10%;
+  padding-bottom:10%;
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -68,6 +71,10 @@ const Wrapper = styled.div`
   align-content: space-between;
   height: 50vh;
   align-items: center;
+  ${mobile}{
+    padding-top: 20%;
+  padding-bottom:20%;
+  }
 `;
 const ListWrapper = styled.div`
   display: flex;

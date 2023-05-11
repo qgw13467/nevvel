@@ -74,7 +74,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           modal={modalOpen}
           setModal={setModalOpen}
           width="600"
-          height="500"
+          height="800"
           element={
             <div>
               <EditorPreview postEpisode={episode} />
