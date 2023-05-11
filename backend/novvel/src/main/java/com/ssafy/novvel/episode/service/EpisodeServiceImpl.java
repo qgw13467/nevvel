@@ -76,12 +76,9 @@ public class EpisodeServiceImpl implements EpisodeService{
         Episode episode = episodeRepository.save(new Episode(cover, episodeRegistDto, contextId));
         if (episode.getStatusType().equals(EpisodeStatusType.PUBLISHED)) {
             LocalDateTime createDate = episode.getCreatedDateTime();
-            episode.setPublishedDate(createDate);
-            if (cover.getFirstPublishDate() == null) {
-                cover.setFirstPublishDate(createDate.toLocalDate());
-                cover.setLastPublishDate(createDate.toLocalDate());
-            }
+            publishUpdate(episode, createDate);
         }
+
         return episode.getId();
     }
 
@@ -133,8 +130,8 @@ public class EpisodeServiceImpl implements EpisodeService{
         readEpisodeRepository.save(new ReadEpisode(episode, member));
 
         return new EpisodeContextDto(cover.getId(), cover.getTitle(), episode.getTitle(), episode.getId(), context.getContents(),
-                episodeRepository.findPrevEpisodeId(episode.getPublishedDate(), cover),
-                episodeRepository.findNextEpisodeId(episode.getPublishedDate(), cover));
+                episodeRepository.findPrevEpisodeId(episode.getPublishedDate(), cover, episodeId),
+                episodeRepository.findNextEpisodeId(episode.getPublishedDate(), cover, episodeId));
     }
 
     @Override
@@ -184,11 +181,7 @@ public class EpisodeServiceImpl implements EpisodeService{
         if (episode.getStatusType().equals(EpisodeStatusType.TEMPORARY)
                 && episodeRegistDto.getStatusType().equals(EpisodeStatusType.PUBLISHED)) {
             LocalDateTime now = LocalDateTime.now();
-            episode.setPublishedDate(now);
-            if (cover.getFirstPublishDate() == null) {
-                cover.setFirstPublishDate(now.toLocalDate());
-            }
-            cover.setLastPublishDate(now.toLocalDate());
+            publishUpdate(episode, now);
         }
 
         episode.setStatusType(episodeRegistDto.getStatusType());
@@ -293,14 +286,18 @@ public class EpisodeServiceImpl implements EpisodeService{
             for (Episode episode : episodes) {
                 LocalDateTime reservation = episode.getReservationTime();
                 episode.setStatusType(EpisodeStatusType.PUBLISHED);
-                episode.setPublishedDate(reservation);
-                if (episode.getCover().getFirstPublishDate() == null) {
-                    episode.getCover().setFirstPublishDate(reservation.toLocalDate());
-                }
-                episode.getCover().setLastPublishDate(reservation.toLocalDate());
+                publishUpdate(episode, reservation);
                 episode.setReservationTime(null);
             }
         }
+    }
+
+    private void publishUpdate(Episode episode, LocalDateTime localDateTime) {
+        episode.setPublishedDate(localDateTime);
+        if (episode.getCover().getFirstPublishDate() == null) {
+            episode.getCover().setFirstPublishDate(localDateTime.toLocalDate());
+        }
+        episode.getCover().setLastPublishDate(localDateTime.toLocalDate());
     }
 
     // episodeRegistDto(수정 or 새로 생성 시 사용) 넣으면 context 돌며 effect 돌며 모든 myAssetId 받아와
