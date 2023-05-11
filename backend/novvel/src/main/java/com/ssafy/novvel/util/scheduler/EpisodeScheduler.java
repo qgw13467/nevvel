@@ -12,7 +12,7 @@ public class EpisodeScheduler {
 
     private final EpisodeService episodeService;
 
-    @Async
+//    @Async
     @Scheduled(cron = "0 0/30 * * * *", zone = "Asia/Seoul") // 30분 단위 예약
 //    @Scheduled(cron = "0/60 * * * * ?", zone = "Asia/Seoul")
     public void publishEpisode() {

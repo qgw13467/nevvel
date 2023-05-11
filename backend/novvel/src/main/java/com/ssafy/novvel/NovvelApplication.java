@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@EnableAsync
+//@EnableAsync
 @EnableJpaAuditing
 @SpringBootApplication
 public class NovvelApplication {
