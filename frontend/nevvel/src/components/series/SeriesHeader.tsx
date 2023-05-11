@@ -59,7 +59,7 @@ function SeriesHeader({ SeriesData }: SeriesHeaderProps) {
                     modal={modalOpen}
                     setModal={setModalOpen}
                     width="300"
-                    height="600"
+                    height="400"
                     element={<SeriesSelected
                         Info={Info} />}
                 />}
