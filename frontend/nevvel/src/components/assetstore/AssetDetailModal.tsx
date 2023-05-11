@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import styled from "styled-components";
 
@@ -87,6 +87,14 @@ function AssetDetailModal({
       setMiriTrigger(0)
     }
   }
+
+  useEffect(() => {
+    if (miriTrigger > 0) {
+      audioRef.current.play()
+    } else {
+      audioRef.current.pause()
+    }
+  },[miriTrigger])
 
 
   return(
@@ -187,10 +195,17 @@ function AssetDetailModal({
         }
         {
           miriTrigger > 0?
-          <MiriImg
-            src={openModalData.url}
-            alt="image"
-          />
+          (
+            openModalData.type === "IMAGE"?
+              <MiriImgDiv>
+                <MiriImg
+                  src={openModalData.url}
+                  alt="image"
+                />
+              </MiriImgDiv>
+              :
+              null
+          )
           :
           null
         }
@@ -315,15 +330,21 @@ const MiriPDiv = styled.div`
 const MiriP = styled.p`
   
 `
+const MiriImgDiv = styled.div`
+  width: 22rem;
+  height: 22rem;
+  /* border: 0.1rem solid black; */
+  margin-left: 21rem;
+  position: absolute;
+`
 
 const MiriImg = styled.img`
-  float: left;
-  position: absolute;
+  /* float: left; */
   border-radius: 1rem;
   opacity: 0.7;
-  margin-left: 12.5rem;
-  /* width: auto;
-  height: 15rem; */
+  width: 22rem;
+  height: 22rem;
+  object-fit: contain;
 `
 
 
