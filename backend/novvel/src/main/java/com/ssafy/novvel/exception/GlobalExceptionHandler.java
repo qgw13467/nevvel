@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.IOException;
 
@@ -50,6 +49,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> authenticationException(Exception e) {
         e.printStackTrace();
         return new ResponseEntity<>(new ExceptionDto("권한이 없습니다.", e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> badRequestException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(new ExceptionDto("잘못된 요청입니다.", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NeedImageException.class)
     public ResponseEntity<ExceptionDto> needImageException(Exception e) {
