@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { ModalonModal } from "../common/ModalonModal";
 import AskBuyModalContent from "./AskBuyModalContent";
+import DoneBuyAsset from "./DoneBuyAsset";
 
 import DummyEpisode from "./DummyEpisodeforMiri.json"
 
@@ -29,13 +30,15 @@ type ModalDataProps = {
     downloadCount : number,
     tags: Array<AssetTag>,
     uploader : AssetUploader
-  },
+  };
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalStarter: boolean;
 }
 
 function AssetDetailModal({
   openModalData,
-  setModalOpen
+  setModalOpen,
+  modalStarter
   } : ModalDataProps) {
 
   // 오디오 재생
@@ -68,6 +71,9 @@ function AssetDetailModal({
   const OpenModalonModal = () => {
     setModalonModalOpen(true)
   }
+
+  // 모달 위의 모달 changer
+  const [modalChanger, setModalChanger] = useState<boolean>(false)
 
 
   // 모달창 닫기
@@ -241,9 +247,19 @@ function AssetDetailModal({
           width="500"
           height="300"
           element={
-            <AskBuyModalContent
-              setModalonModalOpen={setModalonModalOpen}
-            />
+            (
+              modalChanger?
+              <DoneBuyAsset
+                setModalonModalOpen={setModalonModalOpen}
+                setModalChanger={setModalChanger}
+                modalStarter={modalStarter}
+              />
+              :
+              <AskBuyModalContent
+                setModalonModalOpen={setModalonModalOpen}
+                setModalChanger={setModalChanger}
+              />
+            )
           }
           setModalonModalOpen={setModalonModalOpen}
         />
