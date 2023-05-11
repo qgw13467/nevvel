@@ -39,7 +39,7 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
 
         JPAQuery<List<CoverWithConditions>> query = new JPAQuery<>(entityManager);
 
-        List<CoverWithConditions> content = query.select(new QCoverWithConditions(cover, isUploaded(cover.id)))
+        List<CoverWithConditions> content = query.select(new QCoverWithConditions(cover))
             .from(cover)
             .leftJoin(cover.resource)
             .fetchJoin()
@@ -50,7 +50,7 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
             .where(
                 checkStatus(coverSearchConditions.getStatus()),
                 checkGenre(coverSearchConditions.getGenre()),
-                cover.publishDate.isNotNull()
+                cover.firstPublishDate.isNotNull()
             )
             .orderBy(order(coverSearchConditions.getSorttype()))
             .offset(pageable.getOffset())
@@ -81,20 +81,11 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
         return cover.genre.id.eq(genreId);
     }
 
-    private Expression<Boolean> isUploaded(NumberPath<Long> coverId) {
-        JPAQuery<?> query = new JPAQuery<>(entityManager);
-        return query.select(
-                episode.lastModifyedDateTime.max().goe(LocalDateTime.now().minusDays(7L)))
-            .from(episode)
-            .where(episode.cover.id.eq(coverId)
-                .and(episode.statusType.eq(EpisodeStatusType.PUBLISHED)));
-    }
-
     private OrderSpecifier<?> order(CoverSortType coverSortType) {
 
         switch (coverSortType) {
             case DATE:
-                return new OrderSpecifier<>(Order.DESC, cover.lastModifyedDateTime);
+                return new OrderSpecifier<>(Order.DESC, cover.lastPublishDate);
             case LIKE:
                 return new OrderSpecifier<>(Order.DESC, cover.likes.coalesce(0L));
             case HIT:

@@ -40,15 +40,15 @@ public class CoverWithConditions {
 
     @Builder
     @QueryProjection
-    public CoverWithConditions(Cover cover, Boolean isUploaded) {
+    public CoverWithConditions(Cover cover) {
         this.id = cover.getId();
         this.title = cover.getTitle();
         this.status = cover.getCoverStatusType();
         this.thumbnail = cover.getResource().getThumbnailUrl();
         this.genre = cover.getGenre().getName();
         this.writer = new CoverWriter(cover.getMember().getId(), cover.getMember().getNickname());
-        this.isUploaded = Boolean.TRUE.equals(isUploaded);
-        this.isNew = cover.getPublishDate().isAfter(LocalDate.now().minusDays(7L));
+        this.isUploaded = cover.getLastPublishDate().isAfter(LocalDate.now().minusDays(7L));
+        this.isNew = cover.getFirstPublishDate().isAfter(LocalDate.now().minusDays(7L));
     }
 
 }
