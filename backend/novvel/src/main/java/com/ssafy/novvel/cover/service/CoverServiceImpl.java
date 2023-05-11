@@ -62,7 +62,6 @@ public class CoverServiceImpl implements CoverService {
         coverInfoAndEpisodesDto.setDescription(cover.getDescription());
         coverInfoAndEpisodesDto.setGenreName(cover.getGenre().getName());
 
-
         coverInfoAndEpisodesDto.setEpisodes(coverRepository.findEpisodesInfoDto(coverId, memberId));
 
         return coverInfoAndEpisodesDto;
@@ -80,11 +79,11 @@ public class CoverServiceImpl implements CoverService {
         } else {
             // TODO
             // 1) multipart가 null이면 장르별 default image
-            // 2) 수정할 때 viewCount 추가로 받기
             Resource resource = resourceService.saveFile(multipartFile);
 
             Cover newCover = coverRepository.save(
-                new Cover(resource, coverId, cover.getPublishDate(), cover.getLikes(),
+                new Cover(resource, coverId, cover.getLastPublishDate(),
+                    cover.getFirstPublishDate(), cover.getLikes(), cover.getViewCount(),
                     coverModifyDto, cover.getMember(),
                     genreRepository.getReferenceById(coverModifyDto.getGenreId())));
 
@@ -92,10 +91,12 @@ public class CoverServiceImpl implements CoverService {
         }
 
     }
-    
+
     private List<String> findPreviousResourceInS3(Resource current, Resource previous) {
 
-        if(current == null || previous == null) return null;
+        if (current == null || previous == null) {
+            return null;
+        }
 
         List<String> urlAndThumbnail = new ArrayList<>();
         if (!current.getUrl().equals(previous.getUrl())) {

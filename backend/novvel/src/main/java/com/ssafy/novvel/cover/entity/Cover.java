@@ -49,14 +49,16 @@ public class Cover extends BaseEntity {
     @Column(name = "status_type")
     private CoverStatusType coverStatusType;
 
-    private LocalDate publishDate;
+    private LocalDate firstPublishDate;
+
+    private LocalDate lastPublishDate;
 
     @NotNull
     private Long likes;
 
     @PositiveOrZero
     private Long viewCount;
-    
+
     // 생성
     public Cover(Resource resource, CoverRegisterDto coverRegisterDto, Member member, Genre genre) {
 
@@ -71,13 +73,16 @@ public class Cover extends BaseEntity {
     }
 
     // 수정
-    public Cover(Resource resource, Long coverId, LocalDate publishDate, Long likes,
+    public Cover(Resource resource, Long coverId, LocalDate lastPublishDate,
+        LocalDate firstPublishDate, Long likes, Long viewCount,
         CoverModifyDto coverModifyDto,
         Member member, Genre genre) {
 
         this.resource = resource;
         this.likes = likes;
-        this.publishDate = publishDate;
+        this.lastPublishDate = lastPublishDate;
+        this.firstPublishDate = firstPublishDate;
+        this.viewCount = viewCount;
         this.id = coverId;
         this.member = member;
         this.coverStatusType = coverModifyDto.getCoverStatusType();
