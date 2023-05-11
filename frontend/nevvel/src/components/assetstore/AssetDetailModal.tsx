@@ -197,16 +197,6 @@ function AssetDetailModal({
       <hr />
       {/* 미리보기 영역 클릭하면 미리보기 트리거가 0->1->2->0으로 순회 */}
       <MiriDiv onClick={MiriOperate}>
-        {/* 처음에 기본으로 있는 미리보기 내용 */}
-        {
-          DummyEpisode.contents.slice(0,7).map((sentence) => {
-            return(
-              <MiriPDiv key={sentence.idx}>
-                <p>{sentence.context}</p>
-              </MiriPDiv>
-            )
-          })
-        }
         {/* 미리보기 트리거 1됐을때 나타나는 에셋 */}
         {/* 데이터 타입이 이미지일 경우 이미지, 오디오일 경우 useRef 음원 재생 */}
         {
@@ -224,6 +214,16 @@ function AssetDetailModal({
           )
           :
           null
+        }
+        {/* 처음에 기본으로 있는 미리보기 내용 */}
+        {
+          DummyEpisode.contents.slice(0,7).map((sentence) => {
+            return(
+              <MiriPDiv key={sentence.idx}>
+                <p>{sentence.context}</p>
+              </MiriPDiv>
+            )
+          })
         }
         {/* 미리보기 트리거 1됐을때 나타나는 내용 */}
         {
@@ -363,19 +363,20 @@ const MiriP = styled.p`
   
 `
 const MiriImgDiv = styled.div`
-  width: 22rem;
-  height: 22rem;
+  width: 35rem;
+  height: 35rem;
   /* border: 0.1rem solid black; */
-  margin-left: 21rem;
+  margin-left: 4.75rem;
   position: absolute;
+  margin-top: 5rem;
 `
 
 const MiriImg = styled.img`
   /* float: left; */
   border-radius: 1rem;
   opacity: 0.7;
-  width: 22rem;
-  height: 22rem;
+  width: 35rem;
+  height: 35rem;
   object-fit: contain;
 `
 
