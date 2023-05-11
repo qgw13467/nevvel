@@ -128,9 +128,12 @@ function assetstore({ content }: any) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(context: any) {
+   // 클라이언트의 쿠키 가져오기
+   const { req } = context;
+   const { cookie } = req.headers;
   try {
-    const res = await axios.get("http://k8d1061.p.ssafy.io:8080/api/tags");
+    const res = await axios.get("http://k8d1061.p.ssafy.io:8080/api/tags",{headers: { cookie } });
     return {
       props: { content: res.data },
     };
