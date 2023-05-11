@@ -74,7 +74,9 @@ public class CoverController {
     @GetMapping()
     public ResponseEntity<Page<CoverWithConditions>> searchCover(
         CoverSearchConditions coverSearchCriteria) {
+
         return new ResponseEntity<>(coverService.searchCoverWithCondition(coverSearchCriteria),
             HttpStatus.OK);
+
     }
 }

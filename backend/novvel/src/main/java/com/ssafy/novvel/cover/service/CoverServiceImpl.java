@@ -7,7 +7,7 @@ import com.ssafy.novvel.cover.dto.CoverModifyDto;
 import com.ssafy.novvel.cover.repository.CoverRepository;
 import com.ssafy.novvel.cover.dto.CoverRegisterDto;
 import com.ssafy.novvel.cover.entity.Cover;
-import com.ssafy.novvel.genre.entity.Genre;
+import com.ssafy.novvel.cover.repository.CoverRepositoryCustom;
 import com.ssafy.novvel.genre.repository.GenreRepository;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.resource.entity.Resource;
@@ -33,8 +33,6 @@ public class CoverServiceImpl implements CoverService {
     private final ResourceService resourceService;
     private final GenreRepository genreRepository;
     private final CoverRepository coverRepository;
-
-    private final int numberOfCoversPerPage = 20;
 
     public CoverServiceImpl(ResourceService resourceService,
         GenreRepository genreRepository, CoverRepository coverRepository) {
@@ -80,7 +78,9 @@ public class CoverServiceImpl implements CoverService {
         if (!Objects.equals(cover.getMember().getId(), userId)) {
             throw new AuthenticationException();
         } else {
-
+            // TODO
+            // 1) multipart가 null이면 장르별 default image
+            // 2) 수정할 때 viewCount 추가로 받기
             Resource resource = resourceService.saveFile(multipartFile);
 
             Cover newCover = coverRepository.save(
@@ -111,16 +111,11 @@ public class CoverServiceImpl implements CoverService {
     @Override
     public Page<CoverWithConditions> searchCoverWithCondition(
         CoverSearchConditions coverSearchConditions) {
-        log.info(coverSearchConditions.toString());
+
+        final int numberOfCoversPerPage = 20;
         Pageable pageable = PageRequest.of(coverSearchConditions.getPageNum(),
             numberOfCoversPerPage);
-        // TODO
-        // 1. pageable로 검색
-        // 2. 조건들에 맞춰 쿼리문 작성
-        // 2-1. DESC sorttype 조회순(에피소드 viewConut 합수), 날짜순(최신 에피소드), 좋아요순(likes 순으로 정렬)
-        // 2-1. status 에 맞춰 조회(All이면 where문 작동 X)
-        // 2-1. genre에 맞춰 조회(1L이면 전체이므로 where문 작동 X)
-        // 3. 결과 반환^^
-        return null;
+
+        return coverRepository.searchCover(coverSearchConditions, pageable);
     }
 }

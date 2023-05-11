@@ -8,6 +8,7 @@ import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.util.BaseEntity;
 import java.util.List;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import lombok.*;
 
@@ -52,6 +53,9 @@ public class Cover extends BaseEntity {
 
     @NotNull
     private Long likes;
+
+    @PositiveOrZero
+    private Long viewCount;
     
     // 생성
     public Cover(Resource resource, CoverRegisterDto coverRegisterDto, Member member, Genre genre) {
@@ -63,6 +67,7 @@ public class Cover extends BaseEntity {
         this.title = coverRegisterDto.getTitle();
         this.genre = genre;
         this.likes = 0L;
+        this.viewCount = 0L;
     }
 
     // 수정
