@@ -76,7 +76,6 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
         return new PageImpl<>(
             content,
             pageable,
-            //content.size()
             count == null ? 0 : count
         );
     }
