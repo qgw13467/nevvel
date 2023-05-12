@@ -5,6 +5,8 @@ import com.ssafy.novvel.asset.entity.Tag;
 import com.ssafy.novvel.asset.service.AssetService;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.util.ControllerUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,10 +32,10 @@ public class TagController {
     @GetMapping("/search")
     @Operation(summary = "태그를 통해 검색", description = "등록된 에셋을 <strong>태그를 통해 검색</strong> 합니다.")
     public ResponseEntity<Slice<AssetSearchDto>> findAssetsByTags(@RequestParam("keyword") List<String> keywords,
-                                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                  @AuthenticationPrincipal Object principal,
                                                                   Pageable pageable) {
-
-        Slice<AssetSearchDto> result = assetService.searchAssetByTag(keywords, pageable, customUserDetails.getMember());
+        Member member = ControllerUtils.isCustomUserDetails(principal);
+        Slice<AssetSearchDto> result = assetService.searchAssetByTag(keywords, pageable, member);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

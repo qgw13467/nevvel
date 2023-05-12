@@ -1,11 +1,7 @@
 package com.ssafy.novvel.cover.controller;
 
 
-import com.ssafy.novvel.cover.dto.CoverInfoAndEpisodesDto;
-import com.ssafy.novvel.cover.dto.CoverModifyDto;
-import com.ssafy.novvel.cover.dto.CoverRegisterDto;
-import com.ssafy.novvel.cover.dto.CoverSearchConditions;
-import com.ssafy.novvel.cover.dto.CoverWithConditions;
+import com.ssafy.novvel.cover.dto.*;
 import com.ssafy.novvel.cover.service.CoverService;
 import com.ssafy.novvel.resource.service.S3Service;
 import com.ssafy.novvel.util.token.CustomUserDetails;
@@ -13,6 +9,7 @@ import java.io.IOException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,7 +48,8 @@ public class CoverController {
 
     @GetMapping("/{cover-num}")
     @Operation(summary = "소설(표지)의 에피소드 반환", description = "소설(표지)의 <strong>에피소드를 반환</strong> 합니다.")
-    public ResponseEntity<CoverInfoAndEpisodesDto> getAllEpisodes(@PathVariable("cover-num") Long coverNum,
+    public ResponseEntity<CoverInfoAndEpisodesDto> getAllEpisodes(
+        @PathVariable("cover-num") Long coverNum,
         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return new ResponseEntity<>(
@@ -77,12 +75,21 @@ public class CoverController {
     }
 
     @GetMapping()
-    @Operation(summary = "소설(표지) 목록", description = "<strong>소설(표지)들을 반환</strong> 합니다.")
+    @Operation(summary = "소설(표지) 목록", description = "<strong>소설(표지)들을 상태와 함께 반환</strong> 합니다.")
     public ResponseEntity<Page<CoverWithConditions>> searchCover(
         CoverSearchConditions coverSearchCriteria) {
 
         return new ResponseEntity<>(coverService.searchCoverWithCondition(coverSearchCriteria),
             HttpStatus.OK);
 
+    }
+
+    @GetMapping("/purchased-on")
+    @Operation(summary = "구매한 소설(표지) 목록", description = "<strong>구매한 소설(표지)들을 반환</strong> 합니다.")
+    public ResponseEntity<Page<CoverPurchasedDto>> getPurchasedCover(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
+
+        return new ResponseEntity<>(
+            coverService.getPurchasedCover(customUserDetails.getMember(), pageable), HttpStatus.OK);
     }
 }

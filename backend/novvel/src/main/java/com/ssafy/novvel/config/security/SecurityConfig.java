@@ -15,12 +15,13 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Slf4j
@@ -71,7 +72,14 @@ public class SecurityConfig {
             .cors()
             .and()
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers(HttpMethod.GET, "/covers").permitAll()
+                .antMatchers(HttpMethod.GET,
+                        "/covers",
+                        "/assets",
+                        "/assets/search",
+                        "/assets/uploader/**",
+                        "/tags/search",
+                        "/tags"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
@@ -88,6 +96,17 @@ public class SecurityConfig {
             )
             .addFilterBefore(new JwtAuthenticationProcessingFilter(jwtProvider, memberRepository),
                 LogoutFilter.class);
+
+        //todo 에러발생시 처리 로직 수정 필요
+        http.exceptionHandling()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    authException.printStackTrace();
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    accessDeniedException.printStackTrace();
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                });
         return http.build();
     }
 }

@@ -6,6 +6,7 @@ import com.ssafy.novvel.asset.dto.AssetSearchDto;
 import com.ssafy.novvel.asset.dto.AssetSearchReqKeywordTagDto;
 import com.ssafy.novvel.asset.service.AssetService;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.util.ControllerUtils;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,11 @@ public class AssetController {
     @GetMapping
     @Operation(summary = "에셋 검색", description = "에셋을 <strong>검색</strong> 합니다.")
     public ResponseEntity<?> searhAsset(AssetFilterDto assetFilterDto,
-                                        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                        @AuthenticationPrincipal Object principal,
                                         Pageable pageable) {
+        Member member = ControllerUtils.isCustomUserDetails(principal);
         log.info("AssetFilterDto: " + assetFilterDto.toString());
-        Page<AssetSearchDto> result = assetService.searchAsset(assetFilterDto, customUserDetails.getMember(), pageable);
+        Page<AssetSearchDto> result = assetService.searchAsset(assetFilterDto, member, pageable);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 
@@ -44,9 +46,10 @@ public class AssetController {
     @GetMapping("/search")
     @Operation(summary = "에셋 키워드 검색", description = "에셋을 <strong>키워드로 검색</strong> 합니다.")
     public ResponseEntity<Page> searchAssetByKeywordAndTags(AssetSearchReqKeywordTagDto assetSearchReqKeywordTagDto,
-                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                            @AuthenticationPrincipal Object principal,
                                                             Pageable pageable) {
-        Page<AssetSearchDto> assetSearchDtos = assetService.searchAssetByKeywordAndTags(assetSearchReqKeywordTagDto, customUserDetails.getMember(), pageable);
+        Member member = ControllerUtils.isCustomUserDetails(principal);
+        Page<AssetSearchDto> assetSearchDtos = assetService.searchAssetByKeywordAndTags(assetSearchReqKeywordTagDto, member, pageable);
         return new ResponseEntity<>(assetSearchDtos, HttpStatus.OK);
     }
 
@@ -77,11 +80,11 @@ public class AssetController {
     @GetMapping("/uploader/{memberId}")
     @Operation(summary = "member_id가 등록한 에셋을 반환")
     public ResponseEntity<Page<AssetSearchDto>> searchByMemberId(@PathVariable("memberId") Long memberId,
-                                                                 @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                 @AuthenticationPrincipal Object principal,
                                                                  Pageable pageable) {
-
+        Member member = ControllerUtils.isCustomUserDetails(principal);
         Page<AssetSearchDto> assetSearchDtoPage =
-                assetService.searchAssetByUploader(memberId, customUserDetails.getMember(), pageable);
+                assetService.searchAssetByUploader(memberId, member, pageable);
 
         return new ResponseEntity<>(assetSearchDtoPage, HttpStatus.OK);
     }
