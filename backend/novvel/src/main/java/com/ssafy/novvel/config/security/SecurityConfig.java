@@ -72,7 +72,7 @@ public class SecurityConfig {
             .cors()
             .and()
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers(HttpMethod.GET, "/covers").permitAll()
+                .antMatchers(HttpMethod.GET, "/covers", "/covers/*").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2

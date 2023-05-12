@@ -9,8 +9,10 @@ import com.ssafy.novvel.cover.dto.CoverSearchConditions;
 import com.ssafy.novvel.cover.dto.CoverWithConditions;
 import com.ssafy.novvel.cover.service.CoverService;
 import com.ssafy.novvel.resource.service.S3Service;
+import com.ssafy.novvel.util.ControllerUtils;
 import com.ssafy.novvel.util.token.CustomUserDetails;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequestMapping("/covers")
 public class CoverController {
@@ -51,10 +54,13 @@ public class CoverController {
     @GetMapping("/{cover-num}")
     public ResponseEntity<CoverInfoAndEpisodesDto> getAllEpisodes(
         @PathVariable("cover-num") Long coverNum,
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        @AuthenticationPrincipal Object principal) {
+
+        log.info(String.valueOf(principal.getClass()));
 
         return new ResponseEntity<>(
-            coverService.getAllEpisodes(coverNum, customUserDetails.getId()), HttpStatus.OK);
+            coverService.getAllEpisodes(coverNum, ControllerUtils.isCustomUserDetails(principal)),
+            HttpStatus.OK);
     }
 
     @PutMapping("/{cover-num}")
