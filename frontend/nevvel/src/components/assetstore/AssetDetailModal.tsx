@@ -376,12 +376,15 @@ const MiriP = styled.p`
   
 `
 const MiriImgDiv = styled.div`
-  width: 35rem;
-  height: 35rem;
+  width: 45rem;
+  height: 45rem;
   /* border: 0.1rem solid black; */
-  margin-left: 4.75rem;
+  /* margin-left: 4.75rem; */
   position: absolute;
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const MiriImg = styled.img`
