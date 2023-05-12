@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import EditorMainList from "./Main/Text/EditorMainList";
-import EditorMainInput from "./Main/Text/EditorMainInput";
 import { episode,content } from "editor";
 import { useAtomValue } from "jotai";
 import { assetOpenAtom } from "@/src/store/EditorAssetStore";
@@ -28,12 +27,8 @@ function EditorMain({setEpisode,episode}:EditorMainProps) {
       <EditorMainList
 			contents={contents}
 			setContents={setContents}
-			/>
-      <EditorMainInput
-			currentText={currentText}
+      currentText={currentText}
 			setCurrentText={setCurrentText}
-			contents={contents}
-			setContents={setContents}
 			/>
     </Wrapper>
         {assetOpen && <EditorMainAssetContainer 
