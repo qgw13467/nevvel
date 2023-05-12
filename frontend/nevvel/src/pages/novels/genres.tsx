@@ -3,6 +3,8 @@ import NovelPagination from "@/src/components/common/NovelPagination";
 import { useRouter } from "next/dist/client/router";
 import { useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import NovelCard from "@/src/components/common/NovelCard";
 
 interface Novel {
   genre: number | string;
@@ -11,7 +13,8 @@ interface Novel {
   pageNum: number | string;
 }
 
-function GenreNovel(props: Novel) {
+// function GenreNovel(props: Novel) {
+function GenreNovel(props: any) {
   // console.log(props);
   const { query } = useRouter();
 
@@ -69,21 +72,26 @@ function GenreNovel(props: Novel) {
 
   return (
     <Wrapper>
-      {typeof props.pageNum == "number" ? (
+      {/* {typeof props.pageNum == "number" ? (
         <NovelNav nav="genres" pageNum={props.pageNum} />
       ) : (
         ""
-      )}
+      )} */}
       <NovelTop>
         {query.name}
         {query.genre}
         {query.sort}
         {query.pageNum}
         <hr />
-        {props.name}
+        {/* {props.content.content[0].id}
+        {props.content.content[0].title}
+        {props.content.content[0].genre}
+        <img src={props.content.content[0].thumbnail} alt="안돼" /> */}
+
+        {/* {props.name}
         {props.genre}
         {props.sort}
-        {props.pageNum}
+        {props.pageNum} */}
         <SortWrapper>
           <SortContent
             onClick={() => {
@@ -110,14 +118,22 @@ function GenreNovel(props: Novel) {
           </SortContent>
         </SortWrapper>
       </NovelTop>
+      <NovelCard
+        id={props.content.content[0].id}
+        title={props.content.content[0].title}
+        writer={props.content.content[0].writer.nickname}
+        writerId={props.content.content[0].writer.id}
+        genre={props.content.content[0].genre}
+        thumbnail={props.content.content[0].thumbnail}
+      />
       {/* <NovelLists /> */}
-      <NovelPagination
+      {/* <NovelPagination
         nav="genres"
         name={props.name}
         genre={props.genre}
         sort={props.sort}
         pageNum={props.pageNum}
-      />
+      /> */}
     </Wrapper>
   );
 }
@@ -158,7 +174,18 @@ export async function getServerSideProps(context: {
   } else {
     pageNum = Number(context.query.pageNum);
   }
-  return { props: { genre: genre, sort: sort, name: name, pageNum: pageNum } };
+  try {
+    const res = await axios.get("http://k8d1061.p.ssafy.io/api/covers");
+    return {
+      props: { content: res.data },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: { content: "에러남" },
+    };
+  }
+  // return { props: { genre: genre, sort: sort, name: name, pageNum: pageNum } };
 }
 
 export default GenreNovel;
