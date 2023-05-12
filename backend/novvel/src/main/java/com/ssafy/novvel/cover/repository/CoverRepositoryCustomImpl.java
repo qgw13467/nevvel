@@ -33,6 +33,7 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
         Pageable pageable) {
 
         JPAQuery<List<CoverWithConditions>> query = new JPAQuery<>(entityManager);
+        JPAQuery<Long> countQuery = new JPAQuery<>(entityManager);
 
         List<CoverWithConditions> content = query.select(new QCoverWithConditions(cover))
             .from(cover)
@@ -52,9 +53,29 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
             .limit(pageable.getPageSize())
             .fetch();
 
+        Long count = countQuery.select(cover.id.count())
+            .from(cover)
+            .leftJoin(cover.resource)
+            .fetchJoin()
+            .leftJoin(cover.member)
+            .fetchJoin()
+            .leftJoin(cover.genre)
+            .fetchJoin()
+            .where(
+                checkStatus(coverSearchConditions.getStatus()),
+                checkGenre(coverSearchConditions.getGenre()),
+                cover.firstPublishDate.isNotNull()
+            )
+            .orderBy(order(coverSearchConditions.getSorttype()))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetchOne();
+
         return new PageImpl<>(
             content,
-            pageable, content.size());
+            pageable,
+            count == null ? 0 : count
+        );
     }
 
     private Predicate checkStatus(CoverStatusType coverStatusType) {
@@ -79,11 +100,11 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
     private OrderSpecifier<?> order(CoverSortType coverSortType) {
 
         switch (coverSortType) {
-            case DATE:
+            case date:
                 return new OrderSpecifier<>(Order.DESC, cover.lastPublishDate);
-            case LIKE:
+            case like:
                 return new OrderSpecifier<>(Order.DESC, cover.likes.coalesce(0L));
-            case HIT:
+            case hit:
             default:
                 return new OrderSpecifier<>(Order.DESC, cover.viewCount.coalesce(0L));
         }
