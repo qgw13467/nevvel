@@ -63,6 +63,7 @@ function EditorMainInput({
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+
     }
   };
 
@@ -70,7 +71,7 @@ function EditorMainInput({
   return (
     <InputWrapper>
       <BlockInput
-      ref={textareaRef}
+        ref={textareaRef}
         value={currentText}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -95,7 +96,7 @@ const BlockInput = styled.textarea`
   display: flex;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.color.editor};
-  width: 90%;
+  width: 92%;
   padding-top: 1rem;
   border: none;
   border-radius: 10px;
@@ -103,6 +104,8 @@ const BlockInput = styled.textarea`
   box-shadow: 0px 0px 2px gray;
   height: auto;
   min-height: 3rem;
+  resize: none;
+  margin-left: 2%;
 
   ${tabletH} {
     width: 84%;

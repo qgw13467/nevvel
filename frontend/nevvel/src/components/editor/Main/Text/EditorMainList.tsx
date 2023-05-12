@@ -43,14 +43,16 @@ function EditorMainList({
             />
           ))}
         </ListWrapper>
-        <InputWrapper>
-          <EditorMainInput
-            currentText={currentText}
-            setCurrentText={setCurrentText}
-            contents={contents}
-            setContents={setContents}
-          />
-        </InputWrapper>
+        <ContentWrapper>
+          <InputWrapper>
+            <EditorMainInput
+              currentText={currentText}
+              setCurrentText={setCurrentText}
+              contents={contents}
+              setContents={setContents}
+            />
+          </InputWrapper>
+        </ContentWrapper>
       </MainContainer>
     </MainWrapper>
   );
@@ -71,19 +73,29 @@ const MainContainer = styled.div`
 
 const ListWrapper = styled.div`
   /* border: 2px solid ${({ theme }) => theme.color.hover}; */
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
   width: 100%;
   ::-webkit-scrollbar {
     display: none;
+    margin-bottom: 1rem;
   }
 `;
 
+const ContentWrapper = styled.div`
+  flex: 1;
+`;
+
 const InputWrapper = styled.div`
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-`
+  display: flex;
+  flex-grow: 1;
+  margin-top: 0.5rem;
+  /* padding: 0.5rem; */
+  /* background-color: ${({ theme }) => theme.color.secondary}; */
+  /* border-radius: 5px; */
+  /* box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1); */
+`;
 
 const AssetWrapper = styled.div``;
 
