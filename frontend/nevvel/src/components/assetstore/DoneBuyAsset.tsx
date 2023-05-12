@@ -26,9 +26,9 @@ function DoneBuyAsset({setModalonModalOpen, setModalChanger, modalStarter} : Mod
           modalStarter?
           <RowDiv>
             {/* 제출버튼 */}
-            <BuyBtn>글쓰러가기</BuyBtn>
+            <BuyBtn>구매한 에셋 보기</BuyBtn>
             {/* 닫기버튼 */}
-            <ModalCloseBtn onClick={CloseBuyModal}>에셋 계속보기</ModalCloseBtn>
+            <ModalCloseBtn onClick={CloseBuyModal}>에셋 계속 보기</ModalCloseBtn>
           </RowDiv>
           :
           <RowDiv>
