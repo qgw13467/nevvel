@@ -31,9 +31,11 @@ function EditorMain({setEpisode,episode}:EditorMainProps) {
 			setCurrentText={setCurrentText}
 			/>
     </Wrapper>
+    <NumColor>
         {assetOpen && <EditorMainAssetContainer 
         contents={contents}
         setContents={setContents} />}
+    </NumColor>
   </>
   );
 }
@@ -45,4 +47,9 @@ background-color: ${({ theme })=> theme.color.background};
   padding-left:${(props)=>(props.assetOpen ?(30):(20))}%;
   padding-right: ${(props)=>(props.assetOpen ?(15):(20))}%;
 `;
+const NumColor = styled.div`
+position: fixed;
+  color: ${({ theme})=>theme.color.background};
+
+`
 export default EditorMain;

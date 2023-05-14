@@ -97,11 +97,11 @@ const BlockInput = styled.textarea`
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.color.editor};
   width: 92%;
-  padding-top: 1rem;
+  padding: 1rem;
   border: none;
   border-radius: 10px;
-  padding-left: 1rem;
-  box-shadow: 0px 0px 2px gray;
+  padding-bottom: 0;
+
   height: auto;
   min-height: 3rem;
   resize: none;

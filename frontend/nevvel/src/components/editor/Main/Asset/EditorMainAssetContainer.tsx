@@ -34,6 +34,7 @@ function EditorMainAssetContainer( {setContents,contents}:EditorMainAssetContain
 const AssetContainer = styled.div`
   box-shadow: 0px 0px 2px gray;
   background-color: ${({ theme })=> theme.color.background};
+  color : ${({ theme})=>theme.color.background};
   height: 100vh;
   width:20vw;
   padding: 1rem;
