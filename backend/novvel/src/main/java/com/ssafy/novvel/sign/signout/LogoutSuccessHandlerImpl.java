@@ -35,6 +35,11 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
         response.addCookie(jwtProvider.createEmptyCookie(JWTProvider.getAccessToken()));
         response.addCookie(jwtProvider.createEmptyCookie(JWTProvider.getRefreshToken()));
 
+        Cookie userDto = new Cookie("userDto","");
+        userDto.setMaxAge(0);
+        userDto.setPath("/");
+        response.addCookie(userDto);
+
         customUserDetails.getMember().removeToken();
         memberRepository.save(customUserDetails.getMember());
         response.sendRedirect(index);
