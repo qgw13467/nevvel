@@ -74,6 +74,7 @@ public class ResourceServiceImpl implements ResourceService {
 
                 case ".mp3":
                 case ".wma":
+                case ".wav":
                     resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(), false);
                     break;
                 default:
