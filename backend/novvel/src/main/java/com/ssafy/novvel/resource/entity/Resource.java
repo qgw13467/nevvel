@@ -20,6 +20,7 @@ public class Resource extends BaseEntity {
     private String originName;
     @NotNull
     private String changedName;
+    private String thumbnailName;
     @NotNull
     @Setter
     private String url;
@@ -30,6 +31,13 @@ public class Resource extends BaseEntity {
     public Resource(String originName,String changedName, Boolean isThumbnail) {
         this.originName = originName;
         this.changedName = changedName;
+        this.isThumbnail = isThumbnail;
+    }
+
+    public Resource(String originName,String changedName, String thumbnailName,Boolean isThumbnail) {
+        this.originName = originName;
+        this.changedName = changedName;
+        this.thumbnailName = thumbnailName;
         this.isThumbnail = isThumbnail;
     }
 }

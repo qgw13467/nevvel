@@ -38,7 +38,7 @@ public class S3ServiceImpl implements S3Service {
         DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(this.bucket, resource.getChangedName());
         amazonS3Client.deleteObject(deleteObjectRequest);
         if (resource.getThumbnailUrl() != null) {
-            DeleteObjectRequest deleteThumbnailObjectRequest = new DeleteObjectRequest(this.bucket, resource.getThumbnailUrl());
+            DeleteObjectRequest deleteThumbnailObjectRequest = new DeleteObjectRequest(this.bucket, resource.getThumbnailName());
             amazonS3Client.deleteObject(deleteThumbnailObjectRequest);
         }
 

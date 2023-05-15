@@ -60,16 +60,19 @@ public class ResourceServiceImpl implements ResourceService {
                 case ".jpeg":
                     mid = convertToPng(file);
                     thumbnail = convertResolutionPng(mid, newWidth, newHeight);
-                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(), true);
+                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(),
+                            fileNamePrefix + thumbnail.getName(), true);
                     break;
                 case ".png":
                     thumbnail = convertResolutionPng(file, newWidth, newHeight);
-                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(), true);
+                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(),
+                            fileNamePrefix + thumbnail.getName(), true);
                     break;
                 case ".gif":
                     mid = makeThumbnailFromGif(file);
                     thumbnail = convertResolutionPng(mid, newWidth, newHeight);
-                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(), true);
+                    resourceEntity = new Resource(file.getName(), fileNamePrefix + file.getName(),
+                            fileNamePrefix + thumbnail.getName(), true);
                     break;
 
                 case ".mp3":
