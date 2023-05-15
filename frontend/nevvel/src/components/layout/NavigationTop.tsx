@@ -3,8 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import { AiOutlineSearch } from "react-icons/ai";
 import styled from "styled-components";
-import { loginAtom } from "@/src/store/Login";
+import { loginAtom, userInfoAtom } from "@/src/store/Login";
 import { useAtomValue } from "jotai";
+import { MyPageModal } from "./MyPageModal";
 import { tabletH } from "../../util/Mixin";
 import { mobile } from "../../util/Mixin";
 
@@ -16,7 +17,7 @@ function NavigationTop() {
   };
 
   const loginStatus = useAtomValue(loginAtom);
-  // console.log(loginStatus);
+  const userInfoStatus = useAtomValue(userInfoAtom);
 
   const router = useRouter();
   // 검색창에 키보드 입력 시
@@ -54,6 +55,12 @@ function NavigationTop() {
     setWord("");
   };
 
+  // 프로필 클릭 시 모달
+  const [modalStatus, setModalStatus] = useState(false);
+  const modalOpenHandler = () => {
+    setModalStatus(true);
+  };
+
   return (
     <Wrapper>
       <SearchBar>
@@ -70,14 +77,23 @@ function NavigationTop() {
       {loginStatus ? (
         <Profile loginStatus={loginStatus}>
           <MyPage>
-            <Link href="/myPage">마이페이지</Link>
+            <ImageDiv onClick={modalOpenHandler}>
+              <Img src={userInfoStatus?.profileImage} alt="profileImage" />
+            </ImageDiv>
+            {modalStatus ? (
+              <MyPageModal
+                modal={modalStatus}
+                setModal={setModalStatus}
+                width="100"
+                height="70"
+              />
+            ) : (
+              ""
+            )}
           </MyPage>
         </Profile>
       ) : (
         <Profile loginStatus={loginStatus}>
-          <SignIn>
-            <Link href="/login">회원가입</Link>
-          </SignIn>
           <LogIn>
             <Link href="/login">로그인</Link>
           </LogIn>
@@ -86,6 +102,8 @@ function NavigationTop() {
     </Wrapper>
   );
 }
+
+export default NavigationTop;
 
 const Wrapper = styled.div`
   display: flex;
@@ -130,18 +148,14 @@ const SearchIcon = styled.div`
 const Profile = styled.div<{ loginStatus: boolean }>`
   color: ${({ theme }) => theme.color.text1};
   display: flex;
-  margin-right: ${({ loginStatus }) => (loginStatus ? "" : "5rem")};
+  margin-right: 5rem;
   width: 10rem;
-  justify-content: space-between;
+  justify-content: center;
 
   ${tabletH} {
     font-size: 14px;
     margin-right: 10%;
   }
-`;
-
-const SignIn = styled.div`
-  font-size: 13.5px;
 `;
 
 const LogIn = styled.div`
@@ -150,4 +164,16 @@ const LogIn = styled.div`
 
 const MyPage = styled.div``;
 
-export default NavigationTop;
+const ImageDiv = styled.div`
+  border: 1px solid ${({ theme }) => theme.color.text1};
+  border-radius: 100rem;
+  object-fit: cover;
+  margin-top: 2rem;
+  cursor: pointer;
+`;
+
+const Img = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 100rem;
+`;
