@@ -102,6 +102,7 @@ function TagSearchBar(props:ImageUploadProps){
         placeholder="에셋 태그를 입력해주세요."
         onChange={onChangeKeyword}
         onKeyDown={handleKeyDown}
+        maxLength={4}
        />
        {
         keyword?
