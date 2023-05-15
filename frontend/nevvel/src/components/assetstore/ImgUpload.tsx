@@ -413,6 +413,8 @@ const AssetInfoTextDiv =styled.div`
 `
 
 const AssetInfoInput1 = styled.input`
+  background-color: ${({ theme }) => theme.color.background};
+  color: ${({ theme }) => theme.color.button};
   width: 15rem;
   height: 2.5rem;
   border: 0.15rem solid #4D4D4D;
@@ -420,6 +422,8 @@ const AssetInfoInput1 = styled.input`
 `
 
 const AssetInfoInput2 = styled.input`
+  background-color: ${({ theme }) => theme.color.background};
+  color: ${({ theme }) => theme.color.button};
   width: 15rem;
   height: 7.5rem;
   border: 0.15rem solid #4D4D4D;
