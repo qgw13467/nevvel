@@ -123,6 +123,6 @@ public class CoverServiceImpl implements CoverService {
 
     @Override
     public Page<CoverWithConditions> getCoverOfUploader(Member member, Long id, Pageable pageable) {
-        return null;
+        return coverRepository.findCoverById(member, id, pageable) ;
     }
 }
