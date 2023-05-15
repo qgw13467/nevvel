@@ -33,10 +33,24 @@ function ImgUpload(props:assetstoreProps) {
   const [image, setImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      setImage(files[0]);
+      const fileName = files[0].name;
+      if (fileName) {
+        const extension = fileName.split('.').pop()?.toLowerCase();
+        if (extension && allowedExtensions.includes(extension)){
+          setImage(files[0]);
+        } else {
+          alert("지원되지 않는 파일 확장자입니다.")
+        }
+      } else {
+        alert("오류가 발생하였습니다")
+      }
+    } else {
+      alert("오류가 발생하였습니다")
     }
     // console.log(image)
   };
