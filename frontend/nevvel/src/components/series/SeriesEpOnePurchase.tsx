@@ -13,13 +13,13 @@ function SeriesEpOnePurchase({ Info }: SeriesEpOnePurchaseProps) {
   const router = useRouter();
   const episodePurchase = async () => {
     try {
-      const res = await springApi.post("/purchasing", {
-        coverId: router.query.id,
+      const res = await springApi.post("episodes/purchasing", {
+        coverId: Number(router.query.id),
         episodes: [Info.id],
       });
       if (res.status === 201) {
         console.log(res);
-        router.push(`viewer/${Info.id}`);
+        router.push(`/viewer/${Info.id}`);
       } else if (res.status === 200) {
         if (confirm("포인트가 부족합니다. 충전하러 가시겠습니까?")) {
           router.push("/profile/purchase");
