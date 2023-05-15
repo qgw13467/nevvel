@@ -3,6 +3,12 @@ import styled from "styled-components";
 import DummyTagData from './DummyTagData.json'
 import { NewvelApi } from "@/src/api";
 
+type TagData = {
+  id: number;
+  tagName: string;
+  useCount: number;
+};
+
 type TagInputWidthProps = {
   TagInputWidth?: string;
 }
@@ -24,7 +30,19 @@ function TagSearchBar(props:ImageUploadProps){
   // },[])
 
   // axios후 태그 리스트 만들기
-  const [tagLIst, setTagLIst] = useState<string[]>(DummyTagData.content.map((tag) => tag.tagName))
+  const [tagLIst, setTagLIst] = useState<string[]>([])
+
+  useEffect(() => {
+    const getTagData = async () => {
+      const res = await NewvelApi.tagsList();
+      const TagObjtoList = await (res.data.content).map((obj:TagData) => (obj.tagName))
+      setTagLIst(TagObjtoList);
+      // console.log(res)
+    };
+    getTagData();
+  }, []);
+
+
   
   // useEffect(() => {
   //   // console.log(DummyTagData.content.length)
