@@ -25,7 +25,7 @@ function viewer() {
   const router = useRouter();
   const id = router.query.id;
   const [headerToggle, setHeaderToggle] = useState(true); // header on/off
-  const [tabNumber, setTabNumber] = useState(0); // tab mode 일 때 사용
+  const [tabNumber, setTabNumber] = useState(1); // tab mode 일 때 사용
   const [eventCatch, setEventCatch] = useState(false); // tab mode 일때 이벤트 있는 경우 사용
   const [settingBox, setSettingBox] = useState(false); // 설정 box 보여 줄 때 사용
   const [writeMode, setWriteMode] = useState(false); // tab or page 모드 설정 토글
@@ -38,6 +38,7 @@ function viewer() {
   const scrollRef = useRef<any>();
   const nowTextBlock = useAtomValue(numAtom);
   const [EpisodeData, setEpisodeData] = useState<episode>(Dummy_Episode);
+  
   
   // 소설 받아오기 페이지 
   const getViewerData = async (Id: number) => {
@@ -93,8 +94,8 @@ function viewer() {
   }, [nowTextBlock]);
 
   useEffect(() => {
-    if (EpisodeData.contents[tabNumber].event.length !== 0) {
-      const events = EpisodeData.contents[tabNumber].event;
+    if (EpisodeData.contents[tabNumber-1].event.length !== 0) {
+      const events = EpisodeData.contents[tabNumber-1].event;
       for (const event of events) {
         if (event.type === "IMAGE") {
           console.log("이미지당");
@@ -153,9 +154,10 @@ function viewer() {
 
   const countHandler = () => {
     const contentLength = EpisodeData.contents.length;
-    if (tabNumber < contentLength - 1) {
+    console.log(contentLength,"contentLength")
+    if (tabNumber <= contentLength - 1) {
       setTabNumber(tabNumber + 1);
-    } else if (tabNumber === contentLength - 1) {
+    } else if (tabNumber === contentLength) {
       console.log("마지막 입니다. ");
     }
     console.log(tabNumber);

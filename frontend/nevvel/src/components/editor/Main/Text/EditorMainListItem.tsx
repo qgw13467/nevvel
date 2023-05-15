@@ -104,10 +104,9 @@ function EditorMainListItem({
   };
 
   const ImageEvent = content.event.map((asset, index) => {
-    const assetImageFindIndex = IMAGE.findIndex((el)=>el.id == asset.assetId)
-    const assetAudioFindIndex = AUDIO.findIndex((el)=>el.id == asset.assetId)
-    if (content.event.length == 1 && index == 0 && asset.type === "IMAGE") {
 
+    if (content.event.length == 1 && index == 0 && asset.type === "IMAGE") {
+      const assetImageFindIndex = IMAGE.findIndex((el)=>el.id == asset.assetId)
       return (
         <AssetContainer key={index}>
           <Img src={IMAGE[assetImageFindIndex].thumbnail} alt="썸네일" />
@@ -121,6 +120,7 @@ function EditorMainListItem({
       index == 0 &&
       asset.type === "AUDIO"
     ) {
+      const assetAudioFindIndex = AUDIO.findIndex((el)=>el.id == asset.assetId)
       return (
         <AssetContainer key={index}>
           <AssetButton onClick={() => AssetHandler(1)}>
@@ -130,6 +130,8 @@ function EditorMainListItem({
         </AssetContainer>
       );
     } else {
+      const assetImageFindIndex = IMAGE.findIndex((el)=>el.id == asset.assetId)
+      const assetAudioFindIndex = AUDIO.findIndex((el)=>el.id == asset.assetId)
       return (
         <div key={index}>
           {asset.type === "IMAGE" && (

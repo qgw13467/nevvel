@@ -7,6 +7,7 @@ import { assetOpenAtom} from "@/src/store/EditorAssetStore";
 import { useAtom,useAtomValue } from 'jotai'
 import {IoIosArrowBack} from 'react-icons/io'
 import { content } from 'editor'
+import EditorMainAssetTotalList from './EditorMainAssetTotalList'
 
 
 type EditorMainAssetContainerProps = {
@@ -23,9 +24,15 @@ function EditorMainAssetContainer( {setContents,contents}:EditorMainAssetContain
     <CloseBtn onClick={
       ()=>  setAssetOpen(0)
     }><IoIosArrowBack /></CloseBtn>
+    <div>
+      <button onClick={()=>setAssetOpen(1)}>이미지</button>
+      <button onClick={()=>setAssetOpen(2)}>오디오</button>
+      <button onClick={()=>setAssetOpen(3)}>전체 에셋 목록 </button>
+    </div>
     </AssetHeaderContainer>
   <div>{assetOpen === 1 && <EditorMainAssetImageList contents={contents} setContents={setContents} />}</div>
   <div>{assetOpen === 2 && <EditorMainAssetSoundList contents={contents} setContents={setContents}/>}</div>
+  <div>{assetOpen === 3 && <EditorMainAssetTotalList />}</div>
   </AssetContainer>
   )
 }
