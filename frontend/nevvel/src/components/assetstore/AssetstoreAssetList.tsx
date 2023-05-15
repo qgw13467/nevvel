@@ -12,7 +12,8 @@ import springApi from "@/src/api";
 
 interface AssetTag {
   id : number,
-  name : string,
+  tagName : string,
+  useCount : number
 }
 
 interface AssetUploader {
@@ -43,6 +44,7 @@ function AssetstoreAssetList() {
   useEffect(() => {
     const getAssetList = async() => {
       const res = await springApi.get(`/assets?assettype=${assetTypeTrigger}&pageNum=1&searchtype=ALL&sort =downloadCount`)
+      console.log(res.data.content)
       setAssetData(res.data.content)
     }
     getAssetList()
@@ -71,7 +73,8 @@ function AssetstoreAssetList() {
     isAvailable : false,
     tags: [{
       id : 0,
-      name : "",
+      tagName : "",
+      useCount : 0
     }],
     uploader : {
       id : 0,
