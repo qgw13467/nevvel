@@ -82,6 +82,16 @@ function TagSearchBar(props:ImageUploadProps){
     setKeyword("")
   }
 
+  // 자동완성에 없는 경우 엔터 치면 새로운 태그 생성
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter'){
+      if (keyword) {
+        props.AddTag(keyword.trim())
+      }
+    }
+    setKeyword("")
+  }
+
 
   return(
     <AssetInfoInputDiv
@@ -89,8 +99,9 @@ function TagSearchBar(props:ImageUploadProps){
     >
       <AssetInfoInput1
         TagInputWidth={props.TagInputWidth}
-        placeholder="에셋 태그를 입력하고 선택해주세요."
+        placeholder="에셋 태그를 입력해주세요."
         onChange={onChangeKeyword}
+        onKeyDown={handleKeyDown}
        />
        {
         keyword?
@@ -131,6 +142,10 @@ const AssetInfoInput1 = styled.input<TagInputWidthProps>`
   height: 2.5rem;
   border: 0.15rem solid #4D4D4D;
   border-radius: 0.6rem;
+  :focus{
+    border: 0.15rem solid #4D4D4D;
+    box-shadow: 0.1rem 0.1rem 0.6rem;
+  }
 `
 
 const ResultDiv = styled.div<TagInputWidthProps>`
