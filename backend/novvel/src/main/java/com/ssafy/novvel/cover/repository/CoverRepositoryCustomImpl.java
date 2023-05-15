@@ -112,7 +112,8 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
             .fetchJoin()
             .where(
                 checkStatus(CoverStatusType.ALL),
-                checkMine(id, member)
+                checkMine(id, member),
+                cover.member.id.eq(id)
             )
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -122,7 +123,8 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
             .from(cover)
             .where(
                 checkStatus(CoverStatusType.ALL),
-                checkMine(id, member)
+                checkMine(id, member),
+                cover.id.eq(id)
             )
             .fetchOne();
 
@@ -217,12 +219,12 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
     }
 
     private Predicate checkMine(Long writerId, Member member) {
+        BooleanExpression booleanExpression = cover.coverStatusType.ne(CoverStatusType.DELETED);
         if (member == null || !writerId.equals(member.getId())) {
-            return episode.statusType.ne(EpisodeStatusType.TEMPORARY)
-                .or(cover.firstPublishDate.isNotNull());
+            return booleanExpression.and(cover.firstPublishDate.isNotNull());
         }
 
-        return null;
+        return booleanExpression;
     }
 
 
