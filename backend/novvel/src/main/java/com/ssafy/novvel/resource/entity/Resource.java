@@ -19,14 +19,17 @@ public class Resource extends BaseEntity {
     @NotNull
     private String originName;
     @NotNull
+    private String changedName;
+    @NotNull
     @Setter
     private String url;
     private Boolean isThumbnail;
     @Setter
     private String thumbnailUrl;
 
-    public Resource(String originName, Boolean isThumbnail) {
+    public Resource(String originName,String changedName, Boolean isThumbnail) {
         this.originName = originName;
+        this.changedName = changedName;
         this.isThumbnail = isThumbnail;
     }
 }
