@@ -243,7 +243,7 @@ const RowDiv = styled.div`
   justify-content: flex-start;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  height: 8rem;
+  height: 6rem;
   flex-wrap: wrap;
 `;
 
@@ -268,6 +268,22 @@ const CardInfo2Div = styled.div`
     color: white;
   }
 `;
+
+const ClickCardInfo2Div = styled.div`
+  background-color: #8385ff;
+  color: white;
+  width: auto;
+  height: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0.05rem 0.05rem;
+  border: 0.15rem solid #8385ff;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left:0.6rem;
+  margin-right: 0.6rem;
+`
 
 const TagP = styled.p`
   font-size: 0.9rem;
