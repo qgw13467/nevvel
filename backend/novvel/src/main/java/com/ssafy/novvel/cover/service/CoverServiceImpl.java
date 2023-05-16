@@ -17,13 +17,12 @@ import com.ssafy.novvel.exception.NotFoundException;
 import com.ssafy.novvel.exception.NotYourAuthorizationException;
 import com.ssafy.novvel.genre.repository.GenreRepository;
 import com.ssafy.novvel.member.entity.Member;
+import com.ssafy.novvel.member.repository.MemberRepository;
 import com.ssafy.novvel.resource.entity.Resource;
 import com.ssafy.novvel.resource.service.ResourceService;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
@@ -36,13 +35,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 public class CoverServiceImpl implements CoverService {
+    private final MemberRepository memberRepository;
 
     private final ResourceService resourceService;
     private final GenreRepository genreRepository;
     private final CoverRepository coverRepository;
     private final ReadEpisodeRepository readEpisodeRepository;
     private final LikedCoverRepository likedCoverRepository;
-    private final EntityManager entityManager;
 
     public CoverServiceImpl(
             ResourceService resourceService,
@@ -50,13 +49,13 @@ public class CoverServiceImpl implements CoverService {
             CoverRepository coverRepository,
             ReadEpisodeRepository readEpisodeRepository,
             LikedCoverRepository likedCoverRepository,
-            EntityManager entityManager) {
+            MemberRepository memberRepository) {
         this.resourceService = resourceService;
         this.genreRepository = genreRepository;
         this.coverRepository = coverRepository;
         this.readEpisodeRepository = readEpisodeRepository;
         this.likedCoverRepository = likedCoverRepository;
-        this.entityManager = entityManager;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -156,8 +155,9 @@ public class CoverServiceImpl implements CoverService {
     }
 
     @Override
+    @Transactional
     public int likeCover(Member member, Long coverId) {
-        entityManager.persist(member);
+        member = memberRepository.save(member);
         Optional<LikedCover> likedCoverOptional = likedCoverRepository.findByMemberAndCoverId(member, coverId);
 
         if (likedCoverOptional.isEmpty()) {
