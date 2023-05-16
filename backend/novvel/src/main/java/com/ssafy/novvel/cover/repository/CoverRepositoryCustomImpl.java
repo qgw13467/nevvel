@@ -133,10 +133,10 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
 
     private void checkMemberForSelect(JPAQuery<EpisodeInfoDto> query, Member member) {
         if (member == null) {
-            query.select(new QEpisodeInfoDto(episode.id, episode.point, episode.viewCount,
+            query.select(new QEpisodeInfoDto(episode.id, episode.title, episode.point, episode.viewCount,
                 episode.publishedDate));
         } else {
-            query.select(new QEpisodeInfoDto(episode.id, episode.point, episode.viewCount,
+            query.select(new QEpisodeInfoDto(episode.id, episode.title, episode.point, episode.viewCount,
                 episode.publishedDate, transactionHistory.pointChangeType,
                 readEpisode.member.id.isNotNull()));
         }
@@ -160,7 +160,7 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
 
     private Predicate checkMemberForWhere(Member writer, Member member) {
         if (member == null) {
-            return episode.statusType.ne(EpisodeStatusType.TEMPORARY);
+            return episode.statusType.eq(EpisodeStatusType.PUBLISHED);
         }
 
         BooleanExpression booleanExpression = new CaseBuilder().when(
