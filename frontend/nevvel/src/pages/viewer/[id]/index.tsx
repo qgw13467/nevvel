@@ -11,7 +11,7 @@ import springApi from "@/src/api";
 import { AiFillSetting } from "react-icons/ai";
 
 import { bigMobile, mobile, tabletH } from "@/src/util/Mixin";
-import { episodeViewer } from "viewer";
+import { episodeViewer,newEpisodeViewer } from "viewer";
 
 import ViewHeader from "../../../components/viewer/ViewHeader";
 import ViewerTabMain from "../../../components/viewer/Main/ViewerTabMain";
@@ -45,6 +45,7 @@ function viewer() {
   const [imageEvent, setImageEvent] = useState<string>("");
   const [audioEvent, setAudioEvent] = useState<string>("");
   const [viewerColor, setViewerColor] = useState<string>("");
+  const [headerEpisodeData, setHeaderEpisodeData] = useState<newEpisodeViewer>()
 
   useEffect(() => {
     console.log(viewerColor);
@@ -57,6 +58,7 @@ function viewer() {
       if (res) {
         console.log(res);
         setEpisodeData(res.data);
+        setHeaderEpisodeData(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -229,7 +231,7 @@ function viewer() {
         <ViewerWrapper viewerColor={viewerColor}>
           <HeaderContainer onClick={() => clickhandler("head")}>
             {headerToggle && EpisodeData ? (
-              <ViewHeader id={id} EpisodeData={EpisodeData} />
+              <ViewHeader id={id} EpisodeData={EpisodeData} headerEpisodeData={headerEpisodeData}/>
             ) : null}
           </HeaderContainer>
 
@@ -296,6 +298,7 @@ function viewer() {
                 EpisodeData={EpisodeData}
                 setSettingBox={setSettingBox}
                 settingBox={settingBox}
+                headerEpisodeData={headerEpisodeData}
               />
             ) : null}
           </BottomContainer>
@@ -384,6 +387,11 @@ const MainContainer = styled.div<{ writeMode: boolean }>`
     margin-left: 20%;
     margin-right: 20%;
   }
+  ${bigMobile}{
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
   ${mobile} {
     margin-left: 5%;
     margin-right: 5%;
