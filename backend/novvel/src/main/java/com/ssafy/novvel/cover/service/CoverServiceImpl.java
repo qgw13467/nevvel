@@ -173,7 +173,7 @@ public class CoverServiceImpl implements CoverService {
     }
 
     @Override
-    public Page<CoverWithConditions> getFateviteCover(Member member, Pageable pageable) {
+    public Page<CoverWithConditions> getFavoriteCover(Member member, Pageable pageable) {
         return likedCoverRepository.getLikedCovers(member, pageable);
     }
 }

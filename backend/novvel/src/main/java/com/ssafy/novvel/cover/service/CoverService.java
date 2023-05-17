@@ -36,5 +36,5 @@ public interface CoverService {
 
     int likeCover(Member member, Long coverId);
 
-    Page<CoverWithConditions> getFateviteCover(Member member, Pageable pageable);
+    Page<CoverWithConditions> getFavoriteCover(Member member, Pageable pageable);
 }

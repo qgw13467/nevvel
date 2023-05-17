@@ -35,20 +35,6 @@ public class LikedCoverCustomRepositoryImpl implements LikedCoverCustomRepositor
 
         List<OrderSpecifier> ORDERS = getAllOrderSpecifiers(pageable);
 
-//        List<CoverWithConditions> coverWithConditionList = query
-//                .select(new QCoverWithConditions(likedCover.cover))
-//                .from(likedCover)
-//                .where(
-//                        likedCover.member.eq(member)
-//                )
-//                .leftJoin(likedCover.cover.resource)
-//                .fetchJoin()
-//                .leftJoin(likedCover.cover.genre)
-//                .fetchJoin()
-//                .orderBy(ORDERS.stream().toArray(OrderSpecifier[]::new))
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
         List<CoverWithConditions> coverWithConditionList = query
                 .select(new QCoverWithConditions(cover))
                 .from(cover)
