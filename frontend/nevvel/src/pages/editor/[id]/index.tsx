@@ -66,10 +66,6 @@ function index() {
     // setAssetData(DummyAssetData_image.content)
   }, []);
 
-
-
-
-  
   return (<Wrapper>
     <EditorWrapper  ref={scrollRef} >
       <EditorHeadWrapper>

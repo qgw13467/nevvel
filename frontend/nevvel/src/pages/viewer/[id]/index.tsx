@@ -45,6 +45,7 @@ function viewer() {
   const [imageEvent, setImageEvent] = useState<string>("");
   const [audioEvent, setAudioEvent] = useState<string>("");
   const [viewerColor, setViewerColor] = useState<string>("");
+  
 
   useEffect(() => {
     console.log(viewerColor);

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { episode } from "editor";
+import { episode, postEpisode } from "editor";
 
 import { useRouter } from "next/router";
 import { Modal } from "../common/Modal";
@@ -28,6 +28,32 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
   const assetOpen = useAtomValue(assetOpenAtom);
   const [postedEpisodeId, setPostedEpisodeId] = useState<number>();
   const [reLocation, setRelocation] = useState<content[]>([]);
+  const [reservationEpisode, setReservationEpisode] = useState<postEpisode>();
+  const [pointChange, setPointChange] = useState<number>(0);
+  const [reservationDate, setReservationDate] = useState({
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    date: new Date().getDate(),
+    hours: new Date().getHours() + 1,
+    minutes: "00",
+  });
+  const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    if (toggle) {
+      if (postModalOpen && postEpisode) {
+        setReservationEpisode({
+          coverId: postEpisode.coverId,
+          statusType: "PUBLISHED",
+          point: pointChange,
+          title: postEpisode.title,
+          contents: postEpisode.contents,
+          reservation: true,
+          reservationTime: "",
+        });
+      }
+    }
+  }, [toggle]);
 
   useEffect(() => {
     console.log(episode);
@@ -70,7 +96,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
 
   const PublishHandler = () => {
     relocationHandler();
-    setRelocation([])
+    setRelocation([]);
     if (episode.title == "") {
       alert("제목을 입력해주세요");
     } else if (episode.contents.length == 0) {
@@ -79,8 +105,8 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
       if (episode.statusType == "TEMPORARY") {
         setEpisode({ ...episode, statusType: "PUBLISHED" });
       }
-      setPostEpisode(episode);
       setPostModalOpen(true);
+      setPostEpisode(episode);
     }
   };
 
@@ -91,11 +117,11 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
       alert("내용을 입력해주세요");
     } else {
       if (e == "save") {
-        relocationHandler()
+        relocationHandler();
         // 임시 저장을 클릭 했다면
         setSaveToast(true);
       } else if (e == "cancel") {
-        relocationHandler()
+        relocationHandler();
         setPostModalOpen(false);
         setSaveToast(true);
       }
@@ -112,6 +138,20 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
       }
     } catch (error) {
       console.log(error);
+    }
+    // setPostedEpisodeId(320);
+  };
+
+  const ReservationHandler = async () => {
+    try {
+      const res = await springApi.post("/episodes");
+      if (res.status === 201) {
+        console.log(res);
+        setPostedEpisodeId(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(reservationEpisode);
     }
     // setPostedEpisodeId(320);
   };
@@ -139,27 +179,224 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
   };
 
   const relocationHandler = () => {
-      if (
-        episode.contents[episode.contents.length - 1]?.idx !=
-        episode.contents.length
-      ) {
-        episode.contents.map((content, index) => {
-          console.log(index)
-          reLocation.push({
-            idx: index + 1,
-            context: content.context,
-            event: content.event,
-          });
+    if (
+      episode.contents[episode.contents.length - 1]?.idx !=
+      episode.contents.length
+    ) {
+      episode.contents.map((content, index) => {
+        console.log(index);
+        reLocation.push({
+          idx: index + 1,
+          context: content.context,
+          event: content.event,
         });
-        setEpisode({ ...episode, contents:reLocation});
-        setRelocation([])
+      });
+      setEpisode({ ...episode, contents: reLocation });
+      setRelocation([]);
     }
   };
 
   const previewHandler = () => {
     relocationHandler();
-    setModalOpen(true)
-  }
+    setModalOpen(true);
+  };
+
+  const HandleChange = (e: string) => {
+    if (e == "-" && pointChange > 0) {
+      setPointChange(pointChange - 100);
+    } else if (e == "+") setPointChange(pointChange + 100);
+  };
+
+  useEffect(() => {
+    if (postEpisode) {
+      setPostEpisode({ ...postEpisode, point: pointChange });
+    }
+  }, [pointChange]);
+
+  // 날짜 예외 처리
+  useEffect(() => {
+    if (
+      (reservationDate.month == 4 && reservationDate.date == 31) ||
+      (reservationDate.month == 6 && reservationDate.date == 31) ||
+      (reservationDate.month == 9 && reservationDate.date == 31) ||
+      (reservationDate.month == 11 && reservationDate.date == 31)
+    ) {
+      setReservationDate({
+        ...reservationDate,
+        date: 30,
+      });
+    }
+    return () => {
+      // if(reservationEpisode){
+      //   setReservationEpisode(
+      //     {...reservationEpisode,
+      //       reservationTime:`${reservationDate.year}-${reservationDate.month}-${reservationDate.date}T${reservationDate.hours}:${reservationDate.minutes}:00`})
+      // }
+    };
+  }, [reservationDate]);
+
+  const TimeHandler = () => {
+    if (reservationEpisode) {
+      setReservationEpisode({
+        ...reservationEpisode,
+        reservationTime: `${reservationDate.year}-${reservationDate.month}-${reservationDate.date}T${reservationDate.hours}:${reservationDate.minutes}:00`,
+      });
+    }
+  };
+  
+  useEffect(()=>{
+    if(reservationEpisode?.reservationTime!==""){
+      console.log("여기 오나")
+      ReservationHandler();
+    }
+
+  },[reservationEpisode])
+
+  // useEffect(()=>{
+  //   console.log(reservationEpisode)
+  // },[reservationEpisode])
+
+  const DateChange = (e: string) => {
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth();
+    +1;
+    let date = today.getDate();
+    let hours = today.getHours();
+    if (e == "year+") {
+      setReservationDate({
+        ...reservationDate,
+        year: reservationDate.year + 1,
+      });
+    } else if (e == "year-" && reservationDate.year > year) {
+      setReservationDate({
+        ...reservationDate,
+        year: reservationDate.year - 1,
+      });
+    }
+    // 월은 12월 개념
+    else if (e == "month+" && reservationDate.month < 12) {
+      setReservationDate({
+        ...reservationDate,
+        month: reservationDate.month + 1,
+      });
+    } else if (e == "month-") {
+      // 같은 년도 인 경우에는 날짜가 현재 날짜보다 커야함
+      if (reservationDate.year == year && reservationDate.month > month) {
+        setReservationDate({
+          ...reservationDate,
+          month: reservationDate.month - 1,
+        });
+      } else if (reservationDate.month > 1) {
+        setReservationDate({
+          ...reservationDate,
+          month: reservationDate.month - 1,
+        });
+      }
+      //
+    } else if (e == "date+") {
+      if (
+        (reservationDate.month == 1 && reservationDate.date < 31) ||
+        (reservationDate.month == 3 && reservationDate.date < 31) ||
+        (reservationDate.month == 5 && reservationDate.date < 31) ||
+        (reservationDate.month == 7 && reservationDate.date < 31) ||
+        (reservationDate.month == 8 && reservationDate.date < 31) ||
+        (reservationDate.month == 10 && reservationDate.date < 31) ||
+        (reservationDate.month == 12 && reservationDate.date < 31)
+      ) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date + 1,
+        });
+      } else if (
+        (reservationDate.month == 4 && reservationDate.date > 30) ||
+        (reservationDate.month == 6 && reservationDate.date > 30) ||
+        (reservationDate.month == 9 && reservationDate.date > 30) ||
+        (reservationDate.month == 11 && reservationDate.date > 30)
+      ) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date + 1,
+        });
+      } else if (reservationDate.month == 2 && reservationDate.date < 28) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date + 1,
+        });
+      } else if (
+        // 윤년
+        reservationDate.year % 4 == 0 &&
+        reservationDate.year % 100 !== 0 &&
+        reservationDate.month == 2 &&
+        reservationDate.date > 29
+      ) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date + 1,
+        });
+      } else if (
+        // 윤년
+        reservationDate.year % 400 == 0 &&
+        reservationDate.year % 100 == 0 &&
+        reservationDate.month == 2 &&
+        reservationDate.date > 29
+      ) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date + 1,
+        });
+      }
+    } else if (e == "date-") {
+      if (
+        reservationDate.month == month &&
+        reservationDate.date > date &&
+        reservationDate.date > 1
+      ) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date - 1,
+        });
+      } else if (reservationDate.date > 1) {
+        setReservationDate({
+          ...reservationDate,
+          date: reservationDate.date - 1,
+        });
+      }
+    } else if (e == "hours+" && reservationDate.hours < 23) {
+      setReservationDate({
+        ...reservationDate,
+        hours: reservationDate.hours + 1,
+      });
+    } else if (e == "hours-") {
+      if (reservationDate.date == date && reservationDate.hours > hours) {
+        setReservationDate({
+          ...reservationDate,
+          hours: reservationDate.hours - 1,
+        });
+      } else if (reservationDate.hours >= 1) {
+        setReservationDate({
+          ...reservationDate,
+          hours: reservationDate.hours - 1,
+        });
+      }
+    } else if (e == "minutes+" || e == "minutes-") {
+      if (reservationDate.minutes == "00") {
+        setReservationDate({
+          ...reservationDate,
+          minutes: "30",
+        });
+      } else if (reservationDate.minutes == "30") {
+        setReservationDate({
+          ...reservationDate,
+          minutes: "00",
+        });
+      }
+    }
+  };
+
+  // useEffect(()=>{
+  //   setReservationDate({...reservationDate,})
+  // },[reservationDate])
 
   return (
     <Wrapper>
@@ -207,25 +444,93 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         <Modal
           modal={postModalOpen}
           setModal={setPostModalOpen}
-          width="1200"
+          width="600"
           height="600"
           element={
             <div>
               {!eid && (
-                <>
+                <ModalContainer>
                   발행하시겠습니까?
-                  <button onClick={postHandler}>네</button>
-                  <button onClick={() => saveHandler("cancel")}>아니요</button>
-                </>
+                  <ModalPostForm>
+                    <div>{reservationEpisode?.title}</div>
+                    <button onClick={() => HandleChange("-")}>-</button>
+                    <div>{pointChange}point</div>
+                    <button onClick={() => HandleChange("+")}>+</button>
+                    <button onClick={() => setToggle(!toggle)}>toggle</button>
+                    {toggle ? (
+                      <>
+                        <button onClick={() => DateChange("year-")}>-</button>
+                        <div>{reservationDate.year}년</div>
+                        <button onClick={() => DateChange("year+")}>+</button>
+                        <button onClick={() => DateChange("month-")}>-</button>
+                        <div>{reservationDate.month}월</div>
+                        <button onClick={() => DateChange("month+")}>+</button>
+                        <button onClick={() => DateChange("date-")}>-</button>
+                        <div>{reservationDate.date}일</div>
+                        <button onClick={() => DateChange("date+")}>+</button>
+                        <button onClick={() => DateChange("hours-")}>-</button>
+                        <div>{reservationDate.hours}시</div>
+                        <button onClick={() => DateChange("hours+")}>+</button>
+                        <button onClick={() => DateChange("minutes-")}>
+                          -
+                        </button>
+                        <div>{reservationDate.minutes}분</div>
+                        <button onClick={() => DateChange("minutes+")}>
+                          +
+                        </button>
+                        <button onClick={TimeHandler}>등록</button>
+                        <button onClick={() => saveHandler("cancel")}>
+                          취소
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={postHandler}>등록</button>
+                        <button onClick={() => saveHandler("cancel")}>
+                          취소
+                        </button>
+                      </>
+                    )}
+                  </ModalPostForm>
+                </ModalContainer>
               )}
               {eid && (
-                <>
+                <ModalContainer>
                   현재 수정한 상태로 발행하시겠습니까 ?
+                  <ModalPostForm>
+                    <div>{reservationEpisode?.title}</div>
+                    <button onClick={() => HandleChange("-")}>-</button>
+                    <div>{pointChange}point</div>
+                    <button onClick={() => HandleChange("+")}>+</button>
+                    {toggle ? (
+                      <>
+                        <button onClick={() => DateChange("year-")}>-</button>
+                        <div>{reservationDate.year}년</div>
+                        <button onClick={() => DateChange("year+")}>+</button>
+                        <button onClick={() => DateChange("month-")}>-</button>
+                        <div>{reservationDate.month}월</div>
+                        <button onClick={() => DateChange("month+")}>+</button>
+                        <button onClick={() => DateChange("date-")}>-</button>
+                        <div>{reservationDate.date}일</div>
+                        <button onClick={() => DateChange("date+")}>+</button>
+                        <button onClick={() => DateChange("hours-")}>-</button>
+                        <div>{reservationDate.hours}시</div>
+                        <button onClick={() => DateChange("hours+")}>+</button>
+                        <button onClick={() => DateChange("minutes-")}>
+                          -
+                        </button>
+                        <div>{reservationDate.minutes}분</div>
+                        <button onClick={() => DateChange("minutes+")}>
+                          +
+                        </button>
+                      </>
+                    ) : null}
+                  </ModalPostForm>
                   <button onClick={puthandler}>네</button>
                   <button onClick={() => setPostModalOpen(false)}>
                     아니요
                   </button>
-                </>
+                </ModalContainer>
               )}
             </div>
           }
@@ -325,4 +630,8 @@ const ToastContainer = styled.div<{ assetOpen: number }>`
   }
 `;
 
+const ModalContainer = styled.div`
+  padding: 3rem;
+`;
+const ModalPostForm = styled.div``;
 export default EditorHead;
