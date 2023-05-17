@@ -127,7 +127,7 @@ public class CoverController {
     public ResponseEntity<?> getlikesCover(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            Pageable pageable) {
 
-        Page<CoverWithConditions> result = coverService.getFateviteCover(customUserDetails.getMember(), pageable);
+        Page<CoverWithConditions> result = coverService.getFavoriteCover(customUserDetails.getMember(), pageable);
         log.info(result.toString());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
