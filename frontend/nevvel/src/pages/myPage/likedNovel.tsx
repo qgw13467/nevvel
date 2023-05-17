@@ -50,47 +50,47 @@ interface Novel {
   empty: boolean;
 }
 
-function PurchasedNovel() {
+function LikedNovel() {
   // 로그인 여부 확인
   const loginStatus = useAtomValue(loginAtom);
 
   // 로그아웃 상태인 경우 메인페이지로 리다이렉트
   // 로그인 상태인 경우 axios 요청
   const router = useRouter();
-  const [purchasedNovel, setPurchasedNovel] = useState<Novel | undefined>(
+  const [likedNovel, setLikedNovel] = useState<Novel | undefined>(
     undefined
   );
   useEffect(() => {
-    const getPurchasedCovers = async () => {
-      const res = await NewvelApi.purchasedCovers();
+    const getLikedCovers = async () => {
+      const res = await NewvelApi.likesCovers();
       // console.log(res.data);
-      setPurchasedNovel(res.data);
+      setLikedNovel(res.data);
     };
     // if (!loginStatus) {
     //   router.push({ pathname: "/" });
     // } else {
-      getPurchasedCovers();
+        getLikedCovers();
     // }
   }, []);
 
   return (
     <Wrapper>
-      <NovelTop>구매한 소설</NovelTop>
-      {purchasedNovel?.empty ? (
+      <NovelTop>좋아요한 소설</NovelTop>
+      {likedNovel?.empty ? (
         <NovelEmptyWrapper>
           <ImageWrapper>
             <Image
               src={nevvel_m_dark}
-              alt="구매한 소설이 존재하지 않습니다."
+              alt="좋아요한 소설이 존재하지 않습니다."
               width={300}
               height={300}
             />
           </ImageWrapper>
-          <NovelEmpty>구매한 소설이 존재하지 않습니다.</NovelEmpty>
+          <NovelEmpty>좋아요한 소설이 존재하지 않습니다.</NovelEmpty>
         </NovelEmptyWrapper>
       ) : (
         <NovelExists>
-          {purchasedNovel?.content.map((novel, index: number) => {
+          {likedNovel?.content.map((novel, index: number) => {
             return (
               <NovelCard
                 key={index}
@@ -109,7 +109,7 @@ function PurchasedNovel() {
   );
 }
 
-export default PurchasedNovel;
+export default LikedNovel;
 
 const Wrapper = styled.div``;
 

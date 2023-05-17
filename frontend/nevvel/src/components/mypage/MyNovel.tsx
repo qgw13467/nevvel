@@ -63,7 +63,6 @@ function MyNovel() {
   const [uploadedMore, setUploadedMore] = useState("");
   useEffect(() => {
     const getUploadedCovers = async () => {
-      // const res = await axios.get(`http://localhost:8080/api/covers/uploader/${userInfoStatus?.id}`)
       const res = await springApi.get(`/covers/uploader/${userInfoStatus?.id}`);
       // console.log(res.data);
       setUploadedNovel(res.data);
@@ -92,7 +91,6 @@ function MyNovel() {
   const [purchasedMore, setPurchasedMore] = useState("");
   useEffect(() => {
     const getPurchasedCovers = async () => {
-      // const res = await axios.get("http://localhost:8080/api/covers/purchased-on")
       const res = await NewvelApi.purchasedCovers();
       // console.log(res.data);
       setPurchasedNovel(res.data);
@@ -107,9 +105,32 @@ function MyNovel() {
   // 구매한 소설 5개 받아오기
   useEffect(() => {
     setPurchasedNovel5(purchasedNovel?.content?.slice(0, 5));
-  });
+  }, [purchasedNovel]);
 
   // 좋아요한 소설
+  const [likedNovel, setLikedNovel] = useState<Novel | undefined>(undefined);
+  const [likedNovel5, setLikedNovel5] = useState<Content[] | undefined>(
+    undefined
+  );
+  const [likedMore, setLikedMore] = useState("");
+  useEffect(() => {
+    const getLikedCovers = async () => {
+      const res = await NewvelApi.likesCovers();
+      // console.log(res.data);
+      setLikedNovel(res.data);
+      if (res.data.empty) {
+        setLikedMore("");
+      } else {
+        setLikedMore("/myPage/likedNovel");
+      }
+    };
+    getLikedCovers();
+  }, []);
+  // 좋아요한 소설 5개 받아오기
+  useEffect(() => {
+    setLikedNovel5(likedNovel?.content?.slice(0, 5));
+  }, [likedNovel]);
+
   return (
     <NovelWrapper>
       <TitleWrapper>웹소설</TitleWrapper>
@@ -137,7 +158,7 @@ function MyNovel() {
           )}
         </UploadedNovelDiv>
       </NovelContent>
-      {/* <NovelContent>
+      <NovelContent>
         <SemiTitle title="구매한 소설" more={purchasedMore} />
         <PurchasedNovelDiv>
           {purchasedNovel?.empty ? (
@@ -160,9 +181,30 @@ function MyNovel() {
             </NovelDiv>
           )}
         </PurchasedNovelDiv>
-      </NovelContent> */}
+      </NovelContent>
       <NovelContent>
-        <SemiTitle title="좋아요한 소설" more="" />
+        <SemiTitle title="좋아요한 소설" more={likedMore} />
+        <LikedNovelDiv>
+          {likedNovel?.empty ? (
+            <EmptyDiv>좋아요한 소설이 존재하지 않습니다.</EmptyDiv>
+          ) : (
+            <NovelDiv>
+              {likedNovel5?.map((novel, index: number) => {
+                return (
+                  <NovelCard
+                    key={index}
+                    id={novel.id}
+                    title={novel.title}
+                    writer={novel.writer.nickname}
+                    writerId={novel.writer.id}
+                    genre={novel.genre}
+                    thumbnail={novel.thumbnail}
+                  />
+                );
+              })}
+            </NovelDiv>
+          )}
+        </LikedNovelDiv>
       </NovelContent>
     </NovelWrapper>
   );
@@ -184,8 +226,6 @@ const NovelContent = styled.div`
   flex-direction: column;
 `;
 
-const UploadedNovelDiv = styled.div``;
-
 const EmptyDiv = styled.div`
   padding-left: 8%;
   margin-top: 1rem;
@@ -194,4 +234,8 @@ const EmptyDiv = styled.div`
 
 const NovelDiv = styled.div``;
 
+const UploadedNovelDiv = styled.div``;
+
 const PurchasedNovelDiv = styled.div``;
+
+const LikedNovelDiv = styled.div``;
