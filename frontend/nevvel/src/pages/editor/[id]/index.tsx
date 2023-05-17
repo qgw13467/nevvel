@@ -81,6 +81,7 @@ function index() {
   );
 }
 const Wrapper = styled.div`
+background-color: ${({theme})=>theme.color.background};
   display: flex;
   color:white;
   flex-direction: row;

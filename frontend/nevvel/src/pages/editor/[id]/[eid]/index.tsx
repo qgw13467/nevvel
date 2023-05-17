@@ -106,6 +106,8 @@ function index() {
   );
 }
 const Wrapper = styled.div`
+  background-color: ${({theme})=>theme.color.background};
+  height: 100%;
   display: flex;
   color: white;
   flex-direction: row;

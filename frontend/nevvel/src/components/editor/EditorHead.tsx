@@ -35,7 +35,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
     month: new Date().getMonth() + 1,
     date: new Date().getDate(),
     hours: new Date().getHours() + 1,
-    minutes: "00",
+    minutes: "00"
   });
   const [toggle, setToggle] = useState(false);
 
@@ -124,6 +124,13 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         relocationHandler();
         setPostModalOpen(false);
         setSaveToast(true);
+        setPointChange(0)
+        setReservationDate({year: new Date().getFullYear(),
+        month: new Date().getMonth() + 1,
+        date: new Date().getDate(),
+        hours: new Date().getHours() + 1,
+        minutes: "00"})
+        setToggle(false)
       }
       setEpisode({ ...episode, statusType: "TEMPORARY" });
     }
@@ -137,6 +144,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         setPostedEpisodeId(res.data);
       }
     } catch (error) {
+      console.log(postEpisode)
       console.log(error);
     }
     // setPostedEpisodeId(320);
@@ -502,6 +510,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
                     <button onClick={() => HandleChange("-")}>-</button>
                     <div>{pointChange}point</div>
                     <button onClick={() => HandleChange("+")}>+</button>
+                    <button onClick={() => setToggle(!toggle)}>toggle</button>
                     {toggle ? (
                       <>
                         <button onClick={() => DateChange("year-")}>-</button>
@@ -523,13 +532,20 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
                         <button onClick={() => DateChange("minutes+")}>
                           +
                         </button>
+                        <button onClick={TimeHandler}>등록</button>
+                        <button onClick={() => saveHandler("cancel")}>
+                          취소
+                        </button>
                       </>
-                    ) : null}
+                    ) : (
+                      <>
+                        <button onClick={postHandler}>등록</button>
+                        <button onClick={() => saveHandler("cancel")}>
+                          취소
+                        </button>
+                      </>
+                    )}
                   </ModalPostForm>
-                  <button onClick={puthandler}>네</button>
-                  <button onClick={() => setPostModalOpen(false)}>
-                    아니요
-                  </button>
                 </ModalContainer>
               )}
             </div>
