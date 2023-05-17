@@ -32,9 +32,27 @@ type TagData = {
 
 function assetstore({ content }: any) {
 
-  // 필터 정보를 받아서 axios할 쿼리스트링 구성해주기
-  const [queryString, setQueryString] = useState<string>("")
+  // 에셋리스트로 props하는 reaxios 신호
+  const [reaxiosTrigger, setReaxiosTrigger] = useState<boolean>(false)
+  
+  // 이미지/사운드 필터
+  const [imgAudTrigger, setImgAudTrigger] = useState<string>("IMAGE&")
 
+  // 태그필터
+  const [appliedTags, setAppliedTags] = useState<string>("")
+
+  // 페이지네이션
+  const [paginationNum, setPaginationNum] = useState<number>(1)
+
+  // 인기/최신 필터 ownloadCount,desc| createdDateTime
+  const [popNewTrigger, setPopNewTrigger] = useState<string>("downloadCount,desc")
+
+  // 필터 정보를 받아서 axios할 쿼리스트링 구성해주기
+  const queryString = `/assets?assettype=${imgAudTrigger}${appliedTags}page=${paginationNum}&searchtype=ALL&sort=${popNewTrigger}`
+
+  useEffect(() => {
+    console.log(queryString)
+  },[queryString])
   // Modal Open trigger
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -76,19 +94,31 @@ function assetstore({ content }: any) {
 
   const AddTag = () => {
     setTagModalOpen(true);
-    console.log('되는데')
   };
 
   // 이미지/사운드 버튼 스위치
-  const [imgAudTrigger, setImgAudTrigger] = useState<string>("IMAGE")
 
-  const SwitchtoAud = () => {
-    setImgAudTrigger("AUDIO")
+  const SwitchtoAud = async() => {
+    await setImgAudTrigger("AUDIO&")
+    setReaxiosTrigger(true)
   }
 
-  const SwitchtoImg = () => {
-    setImgAudTrigger("IMAGE")
+  const SwitchtoImg = async() => {
+    await setImgAudTrigger("IMAGE&")
+    setReaxiosTrigger(true)
   }
+
+  // 인기순/최신순 버튼 스위치
+  const SwitchtoNew = async() => {
+    await setPopNewTrigger("createdDateTime,desc")
+    setReaxiosTrigger(true)
+  }
+
+  const SwitchtoPop = async() => {
+    await setPopNewTrigger("downloadCount,desc")
+    setReaxiosTrigger(true)
+  }
+
 
   // 에셋 업로드 후 axios 트리거
   const [afterUpload, setAfterUpload] = useState<boolean>(false)
@@ -124,7 +154,7 @@ function assetstore({ content }: any) {
       </TagRowDiv>
       <SwitchZone>
         {
-          (imgAudTrigger === "IMAGE") ?
+          (imgAudTrigger === "IMAGE&") ?
           <ImgAudSwitchDiv>
             <ClickImgSwitchBtn>
               <BiImage size="30px" />
@@ -143,15 +173,27 @@ function assetstore({ content }: any) {
             </ClickAudSwitchBtn>
           </ImgAudSwitchDiv>
         }
-        <SwitchDiv>
-          <PopNewSwitchBtn>인기순</PopNewSwitchBtn>
+        {
+          (popNewTrigger === "downloadCount,desc")?
+          <SwitchDiv>
+            <PopNewSwitchBtn>인기순</PopNewSwitchBtn>
+            <p>|</p>
+            <PopNewSwitchBtn onClick={SwitchtoNew}>최신순</PopNewSwitchBtn>
+          </SwitchDiv>
+          :
+          <SwitchDiv>
+          <PopNewSwitchBtn onClick={SwitchtoPop}>인기순</PopNewSwitchBtn>
           <p>|</p>
           <PopNewSwitchBtn>최신순</PopNewSwitchBtn>
         </SwitchDiv>
+        }
       </SwitchZone>
       <AssetstoreAssetList
         afterUpload={afterUpload}
         setAfterUpload={setAfterUpload}
+        reaxiosTrigger={reaxiosTrigger}
+        setReaxiosTrigger={setReaxiosTrigger}
+        queryString={queryString}
       />
 
       {/* 여기부터 업로드 모달 */}
