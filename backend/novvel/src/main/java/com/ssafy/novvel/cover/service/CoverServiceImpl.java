@@ -83,9 +83,9 @@ public class CoverServiceImpl implements CoverService {
                 new CoverWriter(cover.getMember().getId(), cover.getMember().getNickname()));
 
         ReadEpisode readEpisode = null;
-        if (member != null) {
-            readEpisode = readEpisodeRepository.findTopByMemberIdOrderByLastModifyedDateTimeDesc(
-                    member.getId()).orElse(null);
+        if(member != null) {
+            readEpisode = readEpisodeRepository.findFirstByMember_IdAndEpisode_Cover_IdOrderByLastModifyedDateTimeDesc(
+                member.getId(), coverId);
         }
         Long lastReadEpisodeId = null;
         if (readEpisode != null) {
