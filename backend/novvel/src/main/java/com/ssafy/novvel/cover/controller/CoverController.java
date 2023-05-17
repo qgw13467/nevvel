@@ -18,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.Optional;
 import javax.naming.AuthenticationException;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -123,5 +120,16 @@ public class CoverController {
         int result = coverService.likeCover(customUserDetails.getMember(), coverId);
 
         return new ResponseEntity<>(HttpStatus.valueOf(result));
+    }
+
+    @GetMapping("/likes")
+    @Operation(summary = "찜하기", description = "<strong>찜 등록 201, 찜 삭제 200</strong>")
+    public ResponseEntity<?> getlikesCover(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           Pageable pageable) {
+
+        Page<CoverWithConditions> result = coverService.getFateviteCover(customUserDetails.getMember(), pageable);
+        log.info(result.toString());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

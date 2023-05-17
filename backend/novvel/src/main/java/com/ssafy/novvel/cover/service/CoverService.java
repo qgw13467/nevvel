@@ -9,10 +9,7 @@ import com.ssafy.novvel.cover.dto.CoverWithConditions;
 import com.ssafy.novvel.cover.entity.Cover;
 import com.ssafy.novvel.member.entity.Member;
 import com.ssafy.novvel.resource.entity.Resource;
-import com.ssafy.novvel.util.token.CustomUserDetails;
-
 import java.io.IOException;
-import java.util.List;
 import javax.naming.AuthenticationException;
 
 import org.springframework.data.domain.Page;
@@ -38,5 +35,6 @@ public interface CoverService {
     Page<CoverWithConditions> getCoverOfUploader(Member member, Long id, Pageable pageable);
 
     int likeCover(Member member, Long coverId);
-    Page<CoverWithConditions> getFateviteCover(Member member);
+
+    Page<CoverWithConditions> getFateviteCover(Member member, Pageable pageable);
 }
