@@ -39,7 +39,8 @@ public class LikedCoverCustomRepositoryImpl implements LikedCoverCustomRepositor
                 .select(new QCoverWithConditions(cover))
                 .from(cover)
                 .where(
-                    cover.in(                        JPAExpressions
+                    cover.in(
+                            JPAExpressions
                             .select(likedCover.cover)
                             .from(likedCover)
                             .where(
