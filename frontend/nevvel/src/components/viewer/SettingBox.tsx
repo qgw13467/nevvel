@@ -163,20 +163,23 @@ const BoxContainer = styled.div<{viewerColor:string}>`
   width: 15rem;
   height: 15rem;
   top: 50%;
-  left: 73%;
+  /* left: 73%; */
   box-shadow: 0rem 0rem 1px gray;
   border-radius: 1rem;
   z-index: 100000;
   padding: 1rem;
-  background-color:${(props)=>props.viewerColor};
+  background-color:${(props)=>props.viewerColor ?(props.viewerColor):("#fefefe")};
   color:${(props)=>props.viewerColor =="#1a1a1a" ? ("#fefefe"):("#1a1a1a")};
   ${tabletH} {
-    top: 50%;
+    top: 60%;
     left: 55%;
   }
   ${mobile} {
-    top: 55%;
-    left: 30%;
+    width: 100%;
+  height: 15rem;
+    top: 50vh;
+    left: 0;
+    box-shadow: none;
   }
 `;
 

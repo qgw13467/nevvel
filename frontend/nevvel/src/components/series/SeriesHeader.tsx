@@ -61,6 +61,7 @@ function SeriesHeader({
       alert("로그인 하세요");
     }
   };
+  
 
   return (
     <HeaderContainer>
