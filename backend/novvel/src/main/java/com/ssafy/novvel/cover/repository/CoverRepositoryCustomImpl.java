@@ -249,10 +249,6 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
 
     private CoverWithConditions covertCoverWithConditions(Cover cover, DefaultImage defaultImage) {
 
-        if (cover == null) {
-            return new CoverWithConditions();
-        }
-
         String thumbnail = null;
         if (cover.getResource() != null) {
             thumbnail = cover.getResource().getThumbnailUrl();
