@@ -494,7 +494,6 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
                         <ToggleBtnContainer  onClick={() => setToggle(false)}>
                           <ToggleBtn
                             toggle={toggle}
-                           
                             className="now"
                           ></ToggleBtn>
                           <ToggleBtnText>바로발행</ToggleBtnText>
@@ -595,58 +594,79 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
                     <button onClick={() => HandleChange("+")}>+</button>
                     <button onClick={() => setToggle(!toggle)}>toggle</button>
                     {toggle ? (
+                      <>
                       <ModalListItem>
-                        <div>{reservationDate.year}년</div>
-                        <BtnContainer>
-                          <button onClick={() => DateChange("year-")}>-</button>
-                          <button onClick={() => DateChange("year+")}>+</button>
-                        </BtnContainer>
-                        <div>{reservationDate.month}월</div>
-                        <BtnContainer>
-                          <button onClick={() => DateChange("month-")}>
-                            -
-                          </button>
-                          <button onClick={() => DateChange("month+")}>
-                            +
-                          </button>
-                        </BtnContainer>
-                        <div>{reservationDate.date}일</div>
-                        <BtnContainer>
-                          <button onClick={() => DateChange("date-")}>-</button>
-                          <button onClick={() => DateChange("date+")}>+</button>
-                        </BtnContainer>
-                        <div>{reservationDate.hours}시</div>
-                        <BtnContainer>
-                          <button onClick={() => DateChange("hours-")}>
-                            -
-                          </button>
-                          <button onClick={() => DateChange("hours+")}>
-                            +
-                          </button>
-                        </BtnContainer>
-                        <div>{reservationDate.minutes}분</div>
-                        <BtnContainer>
-                          <button onClick={() => DateChange("minutes-")}>
-                            -
-                          </button>
-                          <button onClick={() => DateChange("minutes+")}>
-                            +
-                          </button>
-                        </BtnContainer>
-                        <ModalListItemData>
-                          <button onClick={TimeHandler}>등록</button>
-                          <button onClick={() => saveHandler("cancel")}>
+                      예약날짜
+                          <ModalListItemData>
+                            <div>{reservationDate.year}년</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("year-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("year+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.month}월</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("month-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("month+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.date}일</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("date-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("date+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.hours}시</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("hours-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("hours+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.minutes}분</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("minutes-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("minutes+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                          </ModalListItemData>
+                          <PostBtn onClick={TimeHandler}>등록</PostBtn>
+                          <PostBtn onClick={() => saveHandler("cancel")}>
                             취소
-                          </button>
-                        </ModalListItemData>
+                          </PostBtn>
                       </ModalListItem>
+                      </>
                     ) : (
-                      <ModalListItemData>
-                        <button onClick={postHandler}>등록</button>
-                        <button onClick={() => saveHandler("cancel")}>
-                          취소
-                        </button>
-                      </ModalListItemData>
+                      <>
+                        <ModalListItem className="now">
+                          등록을 누르시면 바로 발행 됩니다.
+                        </ModalListItem>
+                        <BottomBtn>
+                          <PostBtn className="first" onClick={postHandler}>
+                            등록
+                          </PostBtn>
+                          <PostBtn
+                            className="choice"
+                            onClick={() => saveHandler("cancel")}
+                          >
+                            취소
+                          </PostBtn>
+                        </BottomBtn>
+                      </>
                     )}
                   </ModalPostForm>
                 </ModalContainer>
