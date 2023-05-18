@@ -16,7 +16,7 @@ interface Novel {
     status: string;
     thumbnail: string;
     genre: string;
-    coverWriter: {
+    writer: {
       id: number;
       nickname: string;
     };
@@ -50,7 +50,7 @@ interface Novel {
   empty: boolean;
 }
 
-function UploadedNovel() {
+function PurchasedNovel() {
   // 로그인 여부 확인
   const loginStatus = useAtomValue(loginAtom);
 
@@ -63,14 +63,14 @@ function UploadedNovel() {
   useEffect(() => {
     const getPurchasedCovers = async () => {
       const res = await NewvelApi.purchasedCovers();
-      console.log(res.data);
+      // console.log(res.data);
       setPurchasedNovel(res.data);
     };
-    if (!loginStatus) {
-      router.push({ pathname: "/" });
-    } else {
-      getPurchasedCovers();
-    }
+    // if (!loginStatus) {
+    //   router.push({ pathname: "/" });
+    // } else {
+    getPurchasedCovers();
+    // }
   }, []);
 
   return (
@@ -96,8 +96,8 @@ function UploadedNovel() {
                 key={index}
                 id={novel.id}
                 title={novel.title}
-                writer={novel.coverWriter.nickname}
-                writerId={novel.coverWriter.id}
+                writer={novel.writer.nickname}
+                writerId={novel.writer.id}
                 genre={novel.genre}
                 thumbnail={novel.thumbnail}
               />
@@ -109,7 +109,7 @@ function UploadedNovel() {
   );
 }
 
-export default UploadedNovel;
+export default PurchasedNovel;
 
 const Wrapper = styled.div``;
 
@@ -138,4 +138,7 @@ const ImageWrapper = styled.div`
   opacity: 0.3;
 `;
 
-const NovelExists = styled.div``;
+const NovelExists = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;

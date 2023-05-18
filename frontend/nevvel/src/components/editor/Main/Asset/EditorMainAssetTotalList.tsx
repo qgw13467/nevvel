@@ -10,14 +10,17 @@ type EditorMainAssetTotalListProps = {
   assetStore: Asset[];
   assetType: "AUDIO" | "IMAGE";
   setAssetType: React.Dispatch<React.SetStateAction<"AUDIO" | "IMAGE">>;
+  setAxiosReloaer: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function EditorMainAssetTotalList({
   assetStore,
   assetType,
   setAssetType,
+  setAxiosReloaer
 }: EditorMainAssetTotalListProps) {
-  // 에셋 디테일 모달 오픈 트리거
+
+   // 에셋 디테일 모달 오픈 트리거
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // 에셋 디테일로 열리는 에셋의 데이터
@@ -80,6 +83,7 @@ function EditorMainAssetTotalList({
               openModalData={openModalData}
               setModalOpen={setModalOpen}
               modalStarter={modalStarter}
+              setAxiosReloaer={setAxiosReloaer}  
             />
           }
         />

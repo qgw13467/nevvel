@@ -8,6 +8,7 @@ import springApi from "@/src/api";
 type assetstoreProps = {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setAfterUpload: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type AudType = {
@@ -87,6 +88,10 @@ function AudUpload(props:assetstoreProps) {
 
 
   // 태그 저장
+
+  // 저장된 태그 외 입력하는 태그도 추가할지 결정하는 트리거
+  const AddTagTrigger = true
+
   const [selectTag, setSelectTag] = useState<string[]>([])
 
   const AddTag = (newSelectTag:string) => {
@@ -152,7 +157,10 @@ function AudUpload(props:assetstoreProps) {
       alert('업로드 과정에서 문제가 발생하였습니다.')
     }
 
-    props.setModalOpen(false)  }
+    props.setModalOpen(false)
+    props.setAfterUpload(true)
+    
+  }
   
   // 제출버튼 비활성화
   const UnsubmitAsset = () => {
@@ -250,6 +258,7 @@ function AudUpload(props:assetstoreProps) {
                 selectTag={selectTag}
                 AddTag={AddTag}
                 TagInputWidth={"14rem"}
+                AddTagTrigger={AddTagTrigger}
               />
               <TagRowDiv>
                 {
@@ -443,20 +452,22 @@ const AssetInfoInput3 = styled.input`
 
 
 const TagRowDiv = styled.div`
-  width: 14rem;
-  height: 4rem;
+  width: 15rem;
+  height: 6rem;
   display: flex;
   flex-direction: row;
-  justify-content: left;
+  justify-content: flex-start;
   margin-top: 0.5rem;
-  white-space: nowrap;
+  flex-wrap: wrap;
 `
 
 // 에셋카드 재활용
 const CardInfo2Div = styled.div`
   background-color: white;
   color: black;
-  width: 4rem;
+  /* width: 4rem; */
+  padding-left: 0.15rem;
+  padding-right: 0.15rem;
   height: 2rem;
   border-radius: 0.5rem;
   /* box-shadow: 0.5rem 0.5rem 0.2rem; */
@@ -467,6 +478,7 @@ const CardInfo2Div = styled.div`
   justify-content: center;
   margin-left: 0.5rem;
   font-size: 1rem;
+  margin-top: 0.2rem;
 `
 
 const ModalCloseBtn = styled.button`

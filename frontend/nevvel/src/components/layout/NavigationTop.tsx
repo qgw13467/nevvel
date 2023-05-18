@@ -87,7 +87,7 @@ function NavigationTop(props: Props) {
           placeholder="작품명, 작가명을 입력하세요"
         />
         <SearchIcon>
-          <AiOutlineSearch onClick={clickResultHandler} />
+          <AiOutlineSearch onClick={clickResultHandler} color="#666666"/>
         </SearchIcon>
       </SearchBar>
       {loginStatus ? (
@@ -198,7 +198,7 @@ const MyPage = styled.div`
 `;
 
 const ImageDiv = styled.div`
-  border: 1px solid ${({ theme }) => theme.color.text1};
+  /* border: 1px solid ${({ theme }) => theme.color.text1}; */
   border-radius: 100rem;
   object-fit: cover;
   margin-top: 2rem;

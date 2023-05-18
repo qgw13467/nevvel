@@ -41,7 +41,15 @@ interface Asset {
   uploader: AssetUploader;
 }
 
-function AssetSwiper(props: { content: Asset[] }) {
+
+interface AssetSwiperProps {
+  content: Asset[];
+  setAxiosReloaer: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function AssetSwiper(props: AssetSwiperProps) {
+
+
   // 에셋 10개 받아오기
   const assetSwiperData = props.content.slice(0, 10);
 
@@ -135,6 +143,7 @@ function AssetSwiper(props: { content: Asset[] }) {
               openModalData={openModalData}
               setModalOpen={setModalOpen}
               modalStarter={modalStarter}
+              setAxiosReloaer={props.setAxiosReloaer}
             />
           }
         />

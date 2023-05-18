@@ -5,6 +5,8 @@ import { NewvelApi } from "@/src/api";
 import { userInfoAtom } from "@/src/store/Login";
 import { useAtomValue } from "jotai";
 import SemiTitle from "./SemiTitle";
+import { Modal } from "../common/Modal";
+import CreateNewNovel from "../mypage/CreateNewNovel";
 import styled from "styled-components";
 import NovelCard from "../common/NovelCard";
 
@@ -14,7 +16,7 @@ interface Content {
   status: string;
   thumbnail: string;
   genre: string;
-  coverWriter: {
+  writer: {
     id: number;
     nickname: string;
   };
@@ -105,12 +107,44 @@ function MyNovel() {
   // 구매한 소설 5개 받아오기
   useEffect(() => {
     setPurchasedNovel5(purchasedNovel?.content?.slice(0, 5));
-  });
+  }, [purchasedNovel]);
 
   // 좋아요한 소설
+  const [likedNovel, setLikedNovel] = useState<Novel | undefined>(undefined);
+  const [likedNovel5, setLikedNovel5] = useState<Content[] | undefined>(
+    undefined
+  );
+  const [likedMore, setLikedMore] = useState("");
+  useEffect(() => {
+    const getLikedCovers = async () => {
+      const res = await NewvelApi.likesCovers();
+      // console.log(res.data);
+      setLikedNovel(res.data);
+      if (res.data.empty) {
+        setLikedMore("");
+      } else {
+        setLikedMore("/myPage/likedNovel");
+      }
+    };
+    getLikedCovers();
+  }, []);
+  // 좋아요한 소설 5개 받아오기
+  useEffect(() => {
+    setLikedNovel5(likedNovel?.content?.slice(0, 5));
+  }, [likedNovel]);
+
+  // 새 소설 생성하기
+  const [modalOpen, setModalOpen] = useState(false);
+  const newNovelHandler = () => {
+    setModalOpen(true);
+  };
+
   return (
     <NovelWrapper>
-      <TitleWrapper>웹소설</TitleWrapper>
+      <TitleWrapper>
+        <NovelTitle>웹소설</NovelTitle>
+        <NewNovel onClick={newNovelHandler}>새 소설 생성하기</NewNovel>
+      </TitleWrapper>
       <NovelContent>
         <SemiTitle title="작성한 소설" more={uploadedMore} />
         <UploadedNovelDiv>
@@ -124,8 +158,8 @@ function MyNovel() {
                     key={index}
                     id={novel.id}
                     title={novel.title}
-                    writer={novel.coverWriter.nickname}
-                    writerId={novel.coverWriter.id}
+                    writer={novel.writer.nickname}
+                    writerId={novel.writer.id}
                     genre={novel.genre}
                     thumbnail={novel.thumbnail}
                   />
@@ -148,8 +182,8 @@ function MyNovel() {
                     key={index}
                     id={novel.id}
                     title={novel.title}
-                    writer={novel.coverWriter.nickname}
-                    writerId={novel.coverWriter.id}
+                    writer={novel.writer.nickname}
+                    writerId={novel.writer.id}
                     genre={novel.genre}
                     thumbnail={novel.thumbnail}
                   />
@@ -160,8 +194,38 @@ function MyNovel() {
         </PurchasedNovelDiv>
       </NovelContent>
       <NovelContent>
-        <SemiTitle title="좋아요한 소설" more="" />
+        <SemiTitle title="좋아요한 소설" more={likedMore} />
+        <LikedNovelDiv>
+          {likedNovel?.empty ? (
+            <EmptyDiv>좋아요한 소설이 존재하지 않습니다.</EmptyDiv>
+          ) : (
+            <NovelDiv>
+              {likedNovel5?.map((novel, index: number) => {
+                return (
+                  <NovelCard
+                    key={index}
+                    id={novel.id}
+                    title={novel.title}
+                    writer={novel.writer.nickname}
+                    writerId={novel.writer.id}
+                    genre={novel.genre}
+                    thumbnail={novel.thumbnail}
+                  />
+                );
+              })}
+            </NovelDiv>
+          )}
+        </LikedNovelDiv>
       </NovelContent>
+      {modalOpen && (
+        <Modal
+          modal={modalOpen}
+          setModal={setModalOpen}
+          width="300"
+          height="500"
+          element={<CreateNewNovel setModalOpen={setModalOpen} />}
+        />
+      )}
     </NovelWrapper>
   );
 }
@@ -177,12 +241,23 @@ const TitleWrapper = styled.div`
   font-weight: 800;
 `;
 
+const NovelTitle = styled.div`
+  font-size: 20px;
+  font-weight: 800;
+`;
+
+const NewNovel = styled.div`
+  margin-left: 2rem;
+  cursor: pointer;
+  &:hover {
+    color: #8385ff;
+  }
+`;
+
 const NovelContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-const UploadedNovelDiv = styled.div``;
 
 const EmptyDiv = styled.div`
   padding-left: 8%;
@@ -190,6 +265,13 @@ const EmptyDiv = styled.div`
   text-align: center;
 `;
 
-const NovelDiv = styled.div``;
+const NovelDiv = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const UploadedNovelDiv = styled.div``;
 
 const PurchasedNovelDiv = styled.div``;
+
+const LikedNovelDiv = styled.div``;

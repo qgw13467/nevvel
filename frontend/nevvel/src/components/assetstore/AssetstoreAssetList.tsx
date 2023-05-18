@@ -35,28 +35,76 @@ interface Asset {
   uploader : AssetUploader
 }
 
-function AssetstoreAssetList() {
+interface AssetstorePorps {
+  afterUpload : boolean;
+  setAfterUpload : React.Dispatch<React.SetStateAction<boolean>>;
+  reaxiosTrigger : boolean;
+  setReaxiosTrigger : React.Dispatch<React.SetStateAction<boolean>>;
+  queryString : string;
+}
+
+function AssetstoreAssetList(props : AssetstorePorps) {
 
   const [AssetData, setAssetData] = useState<Array<Asset>>([]);
-  const [assetTypeTrigger, setAssetTypeTrigger] = useState<string>("IMAGE")
+
+  const [axiosURI, setAxiosURI] = useState<string>("/assets?assettype=IMAGE&page=1&searchtype=ALL&sort=downloadCount,desc")
+
+  const [uritoAxios, setUritoAxios] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (props.reaxiosTrigger === true){
+      setAxiosURI(props.queryString)
+      props.setReaxiosTrigger(false)
+      setUritoAxios(true)
+    }
+  },[props.reaxiosTrigger])
+
 
   // axios로 데이터 get받아오기
   useEffect(() => {
     const getAssetList = async() => {
-      const res = await springApi.get(`/assets?assettype=${assetTypeTrigger}&pageNum=1&searchtype=ALL&sort =downloadCount`)
+      const res = await springApi.get(`${axiosURI}`)
       console.log(res.data.content)
       setAssetData(res.data.content)
     }
     getAssetList()
   },[])
-  // console.log('이건데', AssetData)
 
-  const changeImg = () => {
-    setAssetTypeTrigger("IMAGE")
-  }
-  const changeSound = () => {
-    setAssetTypeTrigger("AUDIO")
-  }
+  // reaxios로 데이터 get 받아오기
+  useEffect(() => {
+    const getAssetList = async() => {
+      const res = await springApi.get(`${axiosURI}`)
+      console.log(res.data.content)
+      setAssetData(res.data.content)
+      setUritoAxios(false)
+    }
+    if (uritoAxios === true){
+      getAssetList()
+    }
+  },[uritoAxios])
+
+
+  // axios reloader
+
+  const[axiosReloader, setAxiosReloaer] = useState<boolean>(false)
+
+  useEffect(() => {
+    const getAssetList = async() => {
+      const res = await springApi.get(`/assets?assettype=IMAGE&pageNum=1&searchtype=ALL&sort =downloadCount`)
+      console.log(res.data.content)
+      setAssetData(res.data.content)
+      setAxiosReloaer(false)
+      props.setAfterUpload(false)
+    }
+    if (axiosReloader === true) {
+      getAssetList()
+    }
+    if (axiosReloader === true){
+      getAssetList()
+    }
+  },[axiosReloader, props.afterUpload])  
+
+
 
   // 에셋 디테일 모달 오픈 트리거
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -83,16 +131,13 @@ function AssetstoreAssetList() {
     }
   })
 
+
+  
   // 모달의 모달이 어떻게 나올지 결정해주는 인자
   const [modalStarter, setModalStarter] = useState<boolean>(true)
 
   return(
     <div>
-      <div>
-        {/* 이미지 데이터/사운드 데이터 스위치 버튼 */}
-        <button onClick={changeImg}>이미지</button>
-        <button onClick={changeSound}>사운드</button>
-      </div>
       <Wrapper>
         {
           AssetData.map((AssetData) => {
@@ -128,6 +173,7 @@ function AssetstoreAssetList() {
               openModalData={openModalData}
               setModalOpen={setModalOpen}
               modalStarter={modalStarter}
+              setAxiosReloaer={setAxiosReloaer}              
             />
           }
         />

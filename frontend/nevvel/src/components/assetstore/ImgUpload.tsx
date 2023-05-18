@@ -12,8 +12,8 @@ import springApi from "@/src/api";
 type assetstoreProps = {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
+  setAfterUpload: React.Dispatch<React.SetStateAction<boolean>>;
+}
 // type TagType = {
 //   tagName: string,
 // }
@@ -22,7 +22,7 @@ type ImgType = {
   type: string,
   title: string,
   description: string,
-  point: number,
+  point: number|null,
   tags: string[],
 }
 
@@ -86,15 +86,19 @@ function ImgUpload(props:assetstoreProps) {
   }
 
   // 가격저장
-  const [price, setPrice] = useState<number>(0)
+  const [price, setPrice] = useState<number|null>(null)
 
   const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pricevalue = parseInt(e.target.value);
-    setPrice(isNaN(pricevalue) ? 0 : pricevalue);
+    setPrice(isNaN(pricevalue) ? null : pricevalue);
   }
 
 
   // 태그 저장
+
+  // 저장된 태그 외 입력하는 태그도 추가할지 결정하는 트리거
+  const AddTagTrigger = true
+
   const [selectTag, setSelectTag] = useState<string[]>([])
 
   const AddTag = (newSelectTag:string) => {
@@ -112,7 +116,7 @@ function ImgUpload(props:assetstoreProps) {
     type: "",
     title: "",
     description: "",
-    point: 0,
+    point: null,
     tags: [""],
   })
 
@@ -178,6 +182,7 @@ function ImgUpload(props:assetstoreProps) {
     }
 
     props.setModalOpen(false)
+    props.setAfterUpload(true)
   }
 
   // useEffect(()=>{
@@ -306,6 +311,7 @@ function ImgUpload(props:assetstoreProps) {
             selectTag={selectTag}
             AddTag={AddTag}
             TagInputWidth={"15rem"}
+            AddTagTrigger={AddTagTrigger}
           />
           <TagRowDiv>
             {
@@ -456,18 +462,22 @@ const ImgDelBtn = styled.button`
 
 const TagRowDiv = styled.div`
   width: 15rem;
-  height: 2.5rem;
+  height: 3rem;
   display: flex;
   flex-direction: row;
-  justify-content: left;
+  justify-content: flex-start;
+  /* align-items: center; */
   margin-top: 0.5rem;
+  flex-wrap: wrap;
 `
 
 // 에셋카드 재활용
 const CardInfo2Div = styled.div`
   background-color: white;
   color: black;
-  width: 4rem;
+  /* width: 4rem; */
+  padding-left: 0.15rem;
+  padding-right: 0.15rem;
   height: 2rem;
   border-radius: 0.5rem;
   /* box-shadow: 0.5rem 0.5rem 0.2rem; */
@@ -478,6 +488,7 @@ const CardInfo2Div = styled.div`
   justify-content: center;
   margin-left: 0.5rem;
   font-size: 1rem;
+  margin-top: 0.2rem;
 `
 
 const ModalCloseBtn = styled.button`

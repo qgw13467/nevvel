@@ -1,21 +1,42 @@
 import React from "react";
 import styled from "styled-components";
+import springApi from "@/src/api";
 
 
 type ModalonModalProps = {
   setModalonModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setModalChanger: React.Dispatch<React.SetStateAction<boolean>>;
+  setBuyBtnChanger : React.Dispatch<React.SetStateAction<boolean>>;
+  AssetId : number
+  setAxiosReloaer : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AskBuyModalContent({setModalonModalOpen, setModalChanger} : ModalonModalProps) {
+function AskBuyModalContent({setModalonModalOpen, setModalChanger, AssetId, setBuyBtnChanger, setAxiosReloaer} : ModalonModalProps) {
 
   const BuyAsset = () => {
     // axios
-    setModalChanger(true)
+    springApi.post(`/assets/purchasing/${AssetId}`)
+      .then(res => {
+        if (res.status === 201) {
+          setModalChanger(true)
+          setBuyBtnChanger(true)
+          setAxiosReloaer(true)
+        } else if (res.status === 200) {
+          alert('포인트 잔액이 부족합니다')
+          setModalonModalOpen(false)
+        } else if (res.status === 204) {
+          alert("이미 구매한 에셋입니다")
+          setModalonModalOpen(false)
+        } else {
+          alert("오류가 발생하였습니다")
+          setModalonModalOpen(false)
+        }
+      })
   }
 
   const CloseBuyModal = () => {
     setModalonModalOpen(false)
+    setBuyBtnChanger(true)
   }
 
   return(

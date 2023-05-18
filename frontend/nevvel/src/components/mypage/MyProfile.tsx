@@ -52,7 +52,7 @@ const ProfileContent = styled.div`
 `;
 
 const ProfileImgDiv = styled.div`
-  border: 1px solid ${({ theme }) => theme.color.text1};
+  /* border: 1px solid ${({ theme }) => theme.color.text1}; */
   border-radius: 100rem;
   object-fit: cover;
   width: 128px;
@@ -60,8 +60,8 @@ const ProfileImgDiv = styled.div`
 `;
 
 const ProfileImg = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 128px;
+  height: 128px;
   border-radius: 100rem;
 `;
 

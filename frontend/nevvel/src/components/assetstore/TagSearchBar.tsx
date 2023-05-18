@@ -17,6 +17,7 @@ type ImageUploadProps = {
   selectTag: string[];
   AddTag: (newSelectTag:string) => void;
   TagInputWidth? : string;
+  AddTagTrigger : boolean
 }
 
 function TagSearchBar(props:ImageUploadProps){
@@ -84,12 +85,12 @@ function TagSearchBar(props:ImageUploadProps){
 
   // 자동완성에 없는 경우 엔터 치면 새로운 태그 생성
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter'){
+    if (event.key === 'Enter' && props.AddTagTrigger === true){
       if (keyword) {
         props.AddTag(keyword.trim())
       }
     }
-    setKeyword("")
+    // setKeyword("")
   }
 
 
@@ -99,10 +100,10 @@ function TagSearchBar(props:ImageUploadProps){
     >
       <AssetInfoInput1
         TagInputWidth={props.TagInputWidth}
-        placeholder="에셋 태그를 입력해주세요."
+        placeholder="에셋 태그를 입력해주세요.(최대 8글자)"
         onChange={onChangeKeyword}
         onKeyDown={handleKeyDown}
-        maxLength={4}
+        maxLength={8}
        />
        {
         keyword?

@@ -20,6 +20,9 @@ import TagAddModal from "@/src/components/assetstore/TagAddModal";
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next"
 import { Props } from "next/dist/client/script";
 
+import { BiImage } from "react-icons/bi";
+import { AiOutlineSound } from "react-icons/ai";
+
 
 type TagData = {
   id: number;
@@ -28,6 +31,28 @@ type TagData = {
 };
 
 function assetstore({ content }: any) {
+
+  // 에셋리스트로 props하는 reaxios 신호
+  const [reaxiosTrigger, setReaxiosTrigger] = useState<boolean>(false)
+  
+  // 이미지/사운드 필터
+  const [imgAudTrigger, setImgAudTrigger] = useState<string>("IMAGE&")
+
+  // 태그필터
+  const [appliedTags, setAppliedTags] = useState<string>("")
+
+  // 페이지네이션
+  const [paginationNum, setPaginationNum] = useState<number>(1)
+
+  // 인기/최신 필터 ownloadCount,desc| createdDateTime
+  const [popNewTrigger, setPopNewTrigger] = useState<string>("downloadCount,desc")
+
+  // 필터 정보를 받아서 axios할 쿼리스트링 구성해주기
+  const queryString = `/assets?assettype=${imgAudTrigger}${appliedTags}page=${paginationNum}&searchtype=ALL&sort=${popNewTrigger}`
+
+  useEffect(() => {
+    console.log(queryString)
+  },[queryString])
   // Modal Open trigger
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -63,14 +88,40 @@ function assetstore({ content }: any) {
     getTagData();
   }, []);
 
-  const TopTag = tagData.slice(0, 28);
+  const TopTag = tagData.slice(0, 20);
 
   const [tagModalOpen, setTagModalOpen] = useState<boolean>(false)
 
   const AddTag = () => {
     setTagModalOpen(true);
-    console.log('되는데')
   };
+
+  // 이미지/사운드 버튼 스위치
+
+  const SwitchtoAud = async() => {
+    await setImgAudTrigger("AUDIO&")
+    setReaxiosTrigger(true)
+  }
+
+  const SwitchtoImg = async() => {
+    await setImgAudTrigger("IMAGE&")
+    setReaxiosTrigger(true)
+  }
+
+  // 인기순/최신순 버튼 스위치
+  const SwitchtoNew = async() => {
+    await setPopNewTrigger("createdDateTime,desc")
+    setReaxiosTrigger(true)
+  }
+
+  const SwitchtoPop = async() => {
+    await setPopNewTrigger("downloadCount,desc")
+    setReaxiosTrigger(true)
+  }
+
+
+  // 에셋 업로드 후 axios 트리거
+  const [afterUpload, setAfterUpload] = useState<boolean>(false)
 
   return (
     <Wrapper>
@@ -86,7 +137,7 @@ function assetstore({ content }: any) {
         </SearchBar>
         <WriteBtn onClick={AssetUpload}>에셋 업로드</WriteBtn>
       </SearchBtnDiv>
-      <RowDiv>
+      <TagRowDiv>
         <CardInfo2Div>
           <TagP>전체</TagP>
         </CardInfo2Div>
@@ -100,9 +151,50 @@ function assetstore({ content }: any) {
         <CardInfo2Div onClick={AddTag} >
           <TagP>+</TagP>
         </CardInfo2Div>
-      </RowDiv>
-
-      <AssetstoreAssetList />
+      </TagRowDiv>
+      <SwitchZone>
+        {
+          (imgAudTrigger === "IMAGE&") ?
+          <ImgAudSwitchDiv>
+            <ClickImgSwitchBtn>
+              <BiImage size="30px" />
+            </ClickImgSwitchBtn>
+            <AudSwitchBtn onClick={SwitchtoAud}>
+              <AiOutlineSound size="25px" />
+            </AudSwitchBtn>
+          </ImgAudSwitchDiv>
+          :
+          <ImgAudSwitchDiv>
+            <ImgSwitchBtn onClick={SwitchtoImg}>
+              <BiImage size="25px" />
+            </ImgSwitchBtn>
+            <ClickAudSwitchBtn>
+              <AiOutlineSound size="30px" />
+            </ClickAudSwitchBtn>
+          </ImgAudSwitchDiv>
+        }
+        {
+          (popNewTrigger === "downloadCount,desc")?
+          <SwitchDiv>
+            <PopNewSwitchBtn>인기순</PopNewSwitchBtn>
+            <p>|</p>
+            <PopNewSwitchBtn onClick={SwitchtoNew}>최신순</PopNewSwitchBtn>
+          </SwitchDiv>
+          :
+          <SwitchDiv>
+          <PopNewSwitchBtn onClick={SwitchtoPop}>인기순</PopNewSwitchBtn>
+          <p>|</p>
+          <PopNewSwitchBtn>최신순</PopNewSwitchBtn>
+        </SwitchDiv>
+        }
+      </SwitchZone>
+      <AssetstoreAssetList
+        afterUpload={afterUpload}
+        setAfterUpload={setAfterUpload}
+        reaxiosTrigger={reaxiosTrigger}
+        setReaxiosTrigger={setReaxiosTrigger}
+        queryString={queryString}
+      />
 
       {/* 여기부터 업로드 모달 */}
       {modalOpen ? (
@@ -130,9 +222,9 @@ function assetstore({ content }: any) {
                 <ModalCloseBtn onClick={CloseAssetUpload}>닫기</ModalCloseBtn>
               </ModalDiv1>
             ) : modalChange === 1 ? (
-              <ImgUpload modalOpen={modalOpen} setModalOpen={setModalOpen} />
+              <ImgUpload modalOpen={modalOpen} setModalOpen={setModalOpen} setAfterUpload={setAfterUpload} />
             ) : (
-              <AudUpload modalOpen={modalOpen} setModalOpen={setModalOpen} />
+              <AudUpload modalOpen={modalOpen} setModalOpen={setModalOpen} setAfterUpload={setAfterUpload} />
             )
           }
         />
@@ -149,6 +241,7 @@ function assetstore({ content }: any) {
             element={
               <TagAddModal
                 tagData={tagData}
+                setTagModalOpen={setTagModalOpen}
               />
             }
           />
@@ -189,6 +282,9 @@ const Wrapper = styled.div`
   padding-left: 3%;
   padding-right: 3%;
 `;
+
+
+// 서치바 및 업로드 버튼
 
 const SearchBtnDiv = styled.div`
   width: 87%;
@@ -236,13 +332,16 @@ const WriteBtn = styled.button`
   }
 `;
 
-const RowDiv = styled.div`
+
+// 에셋 태그
+
+const TagRowDiv = styled.div`
   width: 87%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   margin-top: 2rem;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   height: 6rem;
   flex-wrap: wrap;
 `;
@@ -290,6 +389,83 @@ const TagP = styled.p`
   margin-right: 0.6rem;
   margin-left: 0.6rem;
 `;
+
+
+
+// 스위치 영역
+
+const SwitchZone = styled.div`
+  width: 87%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+`
+
+const SwitchDiv = styled.div`
+  width: 87%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1rem;
+  /* margin-bottom: 1rem; */
+  height: 2rem;
+  font-size: 1.2rem;
+  `
+
+// 이미지/오디오 스위치
+const ImgAudSwitchDiv = styled.div`
+  width: 10.2rem;
+  height: 3.5rem;
+  border: 0.15rem solid #4D4D4D;
+  border-radius: 0.5rem;
+  display: flex;
+  margin-left: 1rem;
+`
+
+const ImgSwitchBtn = styled.button`
+  background-color : ${({ theme }) => theme.color.pointText};
+  width: 5rem;
+  height: 100%;
+  /* font-size: 1rem; */
+  &:hover{
+    box-shadow: inset 0.1rem 0.1rem 0.6rem #4D4D4D;
+  }
+`
+const ClickImgSwitchBtn = styled.button`
+  width: 5rem;
+  height: 100%;
+  border-right: 0.1rem solid #4D4D4D;
+  background-color: #8385ff;
+  border-radius: 0.3rem 0 0 0.3rem;
+`
+const AudSwitchBtn = styled.button`
+  width: 5rem;
+  height: 100%;
+  &:hover{
+    box-shadow: inset 0.1rem 0.1rem 0.6rem #4D4D4D;
+  }
+`
+const ClickAudSwitchBtn = styled.button`
+  width: 5rem;
+  height: 100%;
+  border-left: 0.1rem solid #4D4D4D;
+  background-color: #8385ff;
+  border-radius: 0 0.3rem 0.3rem 0;
+`
+
+
+// 인기/최신 스위치
+const PopNewSwitchBtn = styled.button`
+  color : ${({ theme }) => theme.color.button};
+  width: 4rem;
+  height: 2rem;
+  font-size: 1.2rem;
+  /* border: 0.1rem solid black; */
+`
+
+
+// 여기서부터 모달
 
 const ModalDiv1 = styled.div`
   /* display: flex;
