@@ -11,6 +11,7 @@ import { assetOpenAtom } from "@/src/store/EditorAssetStore";
 import springApi from "@/src/api";
 import { content } from "editor";
 
+import { BiCaretUp, BiCaretDown } from "react-icons/bi";
 type EditorHeadProps = {
   setEpisode: React.Dispatch<React.SetStateAction<episode>>;
   episode: episode;
@@ -35,7 +36,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
     month: new Date().getMonth() + 1,
     date: new Date().getDate(),
     hours: new Date().getHours() + 1,
-    minutes: "00"
+    minutes: "00",
   });
   const [toggle, setToggle] = useState(false);
 
@@ -124,13 +125,15 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         relocationHandler();
         setPostModalOpen(false);
         setSaveToast(true);
-        setPointChange(0)
-        setReservationDate({year: new Date().getFullYear(),
-        month: new Date().getMonth() + 1,
-        date: new Date().getDate(),
-        hours: new Date().getHours() + 1,
-        minutes: "00"})
-        setToggle(false)
+        setPointChange(0);
+        setReservationDate({
+          year: new Date().getFullYear(),
+          month: new Date().getMonth() + 1,
+          date: new Date().getDate(),
+          hours: new Date().getHours() + 1,
+          minutes: "00",
+        });
+        setToggle(false);
       }
       setEpisode({ ...episode, statusType: "TEMPORARY" });
     }
@@ -144,7 +147,7 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
         setPostedEpisodeId(res.data);
       }
     } catch (error) {
-      console.log(postEpisode)
+      console.log(postEpisode);
       console.log(error);
     }
     // setPostedEpisodeId(320);
@@ -251,14 +254,13 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
       });
     }
   };
-  
-  useEffect(()=>{
-    if(reservationEpisode?.reservationTime!==""){
-      console.log("여기 오나")
+
+  useEffect(() => {
+    if (reservationEpisode?.reservationTime !== "") {
+      console.log("여기 오나");
       ReservationHandler();
     }
-
-  },[reservationEpisode])
+  }, [reservationEpisode]);
 
   // useEffect(()=>{
   //   console.log(reservationEpisode)
@@ -455,54 +457,135 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
           width="600"
           height="600"
           element={
-            <div>
-              {!eid && (
+            <Container>
+              {!eid ? (
                 <ModalContainer>
-                  발행하시겠습니까?
+                  <ModalPostHeader>발행</ModalPostHeader>
                   <ModalPostForm>
-                    <div>{reservationEpisode?.title}</div>
-                    <button onClick={() => HandleChange("-")}>-</button>
-                    <div>{pointChange}point</div>
-                    <button onClick={() => HandleChange("+")}>+</button>
-                    <button onClick={() => setToggle(!toggle)}>toggle</button>
+                    <ModalListItemData>
+                      제목
+                      <div>{reservationEpisode?.title}</div>
+                    </ModalListItemData>
+                    <ModalListItemData>
+                      전체 에셋
+                      <div>{reservationEpisode?.title}</div>
+                    </ModalListItemData>
+                    <ModalListItem>
+                      포인트
+                      <div>{pointChange}point</div>
+                      <BtnContainer>
+                        <Btn onClick={() => HandleChange("-")}>
+                          <BiCaretDown />
+                        </Btn>
+                        <Btn onClick={() => HandleChange("+")}>
+                          <BiCaretUp />
+                        </Btn>
+                      </BtnContainer>
+                    </ModalListItem>
+                    <ModalListItem>
+                      발행시간 설정
+                        <ToggleBtnContainer  onClick={() => setToggle(true)}>
+                          <ToggleBtn
+                            toggle={toggle}
+                            className="reserve"
+                          ></ToggleBtn>
+                          <ToggleBtnText>예약발행</ToggleBtnText>
+                        </ToggleBtnContainer>
+                        <ToggleBtnContainer  onClick={() => setToggle(false)}>
+                          <ToggleBtn
+                            toggle={toggle}
+                           
+                            className="now"
+                          ></ToggleBtn>
+                          <ToggleBtnText>바로발행</ToggleBtnText>
+                        </ToggleBtnContainer>
+                    </ModalListItem>
+
                     {toggle ? (
                       <>
-                        <button onClick={() => DateChange("year-")}>-</button>
-                        <div>{reservationDate.year}년</div>
-                        <button onClick={() => DateChange("year+")}>+</button>
-                        <button onClick={() => DateChange("month-")}>-</button>
-                        <div>{reservationDate.month}월</div>
-                        <button onClick={() => DateChange("month+")}>+</button>
-                        <button onClick={() => DateChange("date-")}>-</button>
-                        <div>{reservationDate.date}일</div>
-                        <button onClick={() => DateChange("date+")}>+</button>
-                        <button onClick={() => DateChange("hours-")}>-</button>
-                        <div>{reservationDate.hours}시</div>
-                        <button onClick={() => DateChange("hours+")}>+</button>
-                        <button onClick={() => DateChange("minutes-")}>
-                          -
-                        </button>
-                        <div>{reservationDate.minutes}분</div>
-                        <button onClick={() => DateChange("minutes+")}>
-                          +
-                        </button>
-                        <button onClick={TimeHandler}>등록</button>
-                        <button onClick={() => saveHandler("cancel")}>
-                          취소
-                        </button>
+                        <ModalListItem>
+                          예약날짜
+                          <ModalListItemData>
+                            <div>{reservationDate.year}년</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("year-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("year+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.month}월</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("month-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("month+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.date}일</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("date-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("date+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.hours}시</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("hours-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("hours+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                            <div>{reservationDate.minutes}분</div>
+                            <BtnContainer>
+                              <Btn onClick={() => DateChange("minutes-")}>
+                                <BiCaretDown />
+                              </Btn>
+                              <Btn onClick={() => DateChange("minutes+")}>
+                                <BiCaretUp />
+                              </Btn>
+                            </BtnContainer>
+                          </ModalListItemData>
+                        </ModalListItem>
+                        <BottomBtn>
+                          <PostBtn className="first" onClick={TimeHandler}>
+                            등록
+                          </PostBtn>
+                          <PostBtn
+                            className="choice"
+                            onClick={() => saveHandler("cancel")}
+                          >
+                            취소
+                          </PostBtn>
+                        </BottomBtn>
                       </>
                     ) : (
                       <>
-                        <button onClick={postHandler}>등록</button>
-                        <button onClick={() => saveHandler("cancel")}>
-                          취소
-                        </button>
+                        <ModalListItem className="now">
+                          등록을 누르시면 바로 발행 됩니다.
+                        </ModalListItem>
+                        <BottomBtn>
+                          <PostBtn className="first" onClick={postHandler}>
+                            등록
+                          </PostBtn>
+                          <PostBtn
+                            className="choice"
+                            onClick={() => saveHandler("cancel")}
+                          >
+                            취소
+                          </PostBtn>
+                        </BottomBtn>
                       </>
                     )}
                   </ModalPostForm>
                 </ModalContainer>
-              )}
-              {eid && (
+              ) : (
                 <ModalContainer>
                   현재 수정한 상태로 발행하시겠습니까 ?
                   <ModalPostForm>
@@ -512,43 +595,63 @@ function EditorHead({ episode, setEpisode }: EditorHeadProps) {
                     <button onClick={() => HandleChange("+")}>+</button>
                     <button onClick={() => setToggle(!toggle)}>toggle</button>
                     {toggle ? (
-                      <>
-                        <button onClick={() => DateChange("year-")}>-</button>
+                      <ModalListItem>
                         <div>{reservationDate.year}년</div>
-                        <button onClick={() => DateChange("year+")}>+</button>
-                        <button onClick={() => DateChange("month-")}>-</button>
+                        <BtnContainer>
+                          <button onClick={() => DateChange("year-")}>-</button>
+                          <button onClick={() => DateChange("year+")}>+</button>
+                        </BtnContainer>
                         <div>{reservationDate.month}월</div>
-                        <button onClick={() => DateChange("month+")}>+</button>
-                        <button onClick={() => DateChange("date-")}>-</button>
+                        <BtnContainer>
+                          <button onClick={() => DateChange("month-")}>
+                            -
+                          </button>
+                          <button onClick={() => DateChange("month+")}>
+                            +
+                          </button>
+                        </BtnContainer>
                         <div>{reservationDate.date}일</div>
-                        <button onClick={() => DateChange("date+")}>+</button>
-                        <button onClick={() => DateChange("hours-")}>-</button>
+                        <BtnContainer>
+                          <button onClick={() => DateChange("date-")}>-</button>
+                          <button onClick={() => DateChange("date+")}>+</button>
+                        </BtnContainer>
                         <div>{reservationDate.hours}시</div>
-                        <button onClick={() => DateChange("hours+")}>+</button>
-                        <button onClick={() => DateChange("minutes-")}>
-                          -
-                        </button>
+                        <BtnContainer>
+                          <button onClick={() => DateChange("hours-")}>
+                            -
+                          </button>
+                          <button onClick={() => DateChange("hours+")}>
+                            +
+                          </button>
+                        </BtnContainer>
                         <div>{reservationDate.minutes}분</div>
-                        <button onClick={() => DateChange("minutes+")}>
-                          +
-                        </button>
-                        <button onClick={TimeHandler}>등록</button>
-                        <button onClick={() => saveHandler("cancel")}>
-                          취소
-                        </button>
-                      </>
+                        <BtnContainer>
+                          <button onClick={() => DateChange("minutes-")}>
+                            -
+                          </button>
+                          <button onClick={() => DateChange("minutes+")}>
+                            +
+                          </button>
+                        </BtnContainer>
+                        <ModalListItemData>
+                          <button onClick={TimeHandler}>등록</button>
+                          <button onClick={() => saveHandler("cancel")}>
+                            취소
+                          </button>
+                        </ModalListItemData>
+                      </ModalListItem>
                     ) : (
-                      <>
+                      <ModalListItemData>
                         <button onClick={postHandler}>등록</button>
                         <button onClick={() => saveHandler("cancel")}>
                           취소
                         </button>
-                      </>
+                      </ModalListItemData>
                     )}
                   </ModalPostForm>
                 </ModalContainer>
               )}
-            </div>
+            </Container>
           }
         />
       )}
@@ -609,6 +712,12 @@ const TitleInput = styled.input`
     font-size: 1.5rem;
   }
 `;
+
+const BtnContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-direction: column-reverse;
+`;
 const BackGroundAssetContainer = styled.div`
   /* box-shadow: 0px 0px 3px gray; */
   padding: 1rem;
@@ -645,9 +754,110 @@ const ToastContainer = styled.div<{ assetOpen: number }>`
     }
   }
 `;
+const Container = styled.div`
+  font-size: 16px;
+  width: 600px;
+  height: 600px;
+`;
 
 const ModalContainer = styled.div`
-  padding: 3rem;
+  padding: 2rem;
+  padding-top: 1rem;
 `;
-const ModalPostForm = styled.div``;
+const ModalPostForm = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  flex-direction: column;
+  width: 100%;
+  height: 65vh;
+  justify-content: space-between;
+`;
+
+const ModalPostHeader = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid ${({ theme }) => theme.color.opacityText3};
+`;
+const ModalListItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &.now{
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+`;
+const ModalListItemData = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Btn = styled.div`
+  display: flex;
+  text-align: center;
+`;
+
+const ToggleBtnText = styled.div``;
+
+const ToggleBtn = styled.div<{ toggle: boolean }>`
+  background-color: ${(props) =>
+    props.toggle
+      ? ({ theme }) => theme.color.hover
+      : ({ theme }) => theme.color.background};
+  &.reserve {
+    background-color: ${(props) =>
+      props.toggle
+        ? ({ theme }) => theme.color.hover
+        : ({ theme }) => theme.color.background};
+  }
+  &.now {
+    background-color: ${(props) =>
+      props.toggle
+        ? ({ theme }) => theme.color.background
+        : ({ theme }) => theme.color.hover};
+  }
+  width:0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  padding: 0.2rem;
+  border: 1px solid gray;
+  cursor: pointer;
+`;
+const ToggleBtnContainer = styled.div`
+width: 4.5rem;
+display:flex;
+text-align: center;
+align-items: center;
+justify-content: space-between;
+`;
+
+const PostBtn = styled.button`
+  /* border: 1px solid ${({ theme }) => theme.color.text1}; */
+  box-shadow: 0px 0px 1px ${({ theme }) => theme.color.text1};
+  width: 10rem;
+  height: 2rem;
+  border-radius: 10px;
+  margin-left: 0.5rem;
+  &.first {
+    background-color: ${({ theme }) => theme.color.text1};
+    color: ${({ theme }) => theme.color.text2};
+  }
+  &.choice {
+    background-color: ${({ theme }) => theme.color.text2};
+    color: ${({ theme }) => theme.color.text1};
+  }
+`;
+
+const BottomBtn = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default EditorHead;

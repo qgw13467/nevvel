@@ -225,4 +225,5 @@ const MoveBtn = styled.button`
 const Space = styled.div`
   width: 24px;
 `;
+
 export default ViewHeader;
