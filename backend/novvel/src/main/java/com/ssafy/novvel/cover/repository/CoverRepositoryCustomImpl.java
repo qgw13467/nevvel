@@ -164,8 +164,8 @@ public class CoverRepositoryCustomImpl implements CoverRepositoryCustom {
     private Predicate checkKeyword(String keyword) {
         log.info(keyword);
         if("".equals(keyword)) return null;
-        return cover.title.like(keyword)
-            .or(cover.member.nickname.eq(keyword));
+        return cover.title.contains(keyword)
+            .or(cover.member.nickname.contains(keyword));
     }
 
     private OrderSpecifier<?> order(CoverSortType coverSortType) {
