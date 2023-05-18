@@ -256,7 +256,11 @@ public class AssetRepositoryImpl implements AssetReposiotryCustom {
 
         Page<AssetSearchDto> result = new PageImpl<>(
                 assets.stream()
-                        .map(asset -> new AssetSearchDto(asset))
+                        .map(asset -> {
+                            AssetSearchDto assetSearchDto = new AssetSearchDto(asset);
+                            assetSearchDto.setIsAvailable(true);
+                            return assetSearchDto;
+                        })
                         .collect(Collectors.toList())
                 , pageable,
                 count
